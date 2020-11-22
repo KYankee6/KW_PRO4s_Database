@@ -21,16 +21,15 @@ router.get('/index', function(req,res,next) {
             if (err) console.error("err : " + err);
             console.log("name rows : " + JSON.stringify(row));
             
-            res.render('index', {title: '메인 화면', row:row[0]});
+            connection.query(deansList, function(err, rows) {
+                if (err) console.error("err : " + err);
+            
+            res.render('index', {title: '메인 화면', row:row[0], rows:rows});
             connection.release();
-
+            });
             // Don't use the connection here, it has been returned to the pool.
         });
-        connection.query(deansList, function(err, rows) {
-            if (err) console.error("err : " + err);
-            console.log("dean rows : " + JSON.stringify(rows));
-            res.render('index', {rows:rows});
-        });
+        
     });
 });
 

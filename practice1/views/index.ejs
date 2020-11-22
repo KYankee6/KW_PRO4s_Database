@@ -22,7 +22,7 @@
 <div style="float:right">
 <%=row.stu_name%>님 환영합니다~
 <a href="https://google.com" class="btn">개인정보</a>
-<a href="https://naver.com" class="btn">로그아웃</a>
+<a href="/login" class="btn">로그아웃</a>
 </div>
 <br>
 <br>
@@ -32,19 +32,32 @@
         <td><a href="https://naver.com" style="text-decoration:none; color: white" >학습결과</a></td>
         <td><a href="https://naver.com" style="text-decoration:none; color: white">시간표</a></td>
         <td><a href="https://naver.com" style="text-decoration:none; color: white">수강신청</a></td>
-        <td><a href="/board" style="text-decoration:none; color: white">공지사항</a></td>
+        <td><a href="/board/board_list/1" style="text-decoration:none; color: white">공지사항</a></td>
         <td><a href="https://naver.com" style="text-decoration:none; color: white">친구 목록</a></td>
     </tr>
 </table>
 <br>
 <br>
 <h1> Dean's List</h1>
-<table style = "width: 60%" border="1">
+<table style = "border-collapse : collapse; width: 60% " border="1">
     <tr>
         <td>NAME</td>
         <td>GRADE</td>
         <td>TOTAL CREDIT</td>
     </tr>
+<%
+    for(var i = 0; i < 3; i++) {
+        var oneItem = rows[i];
+
+%>
+    <tr>
+        <td><%=oneItem.stu_name%></td>
+        <td><%=oneItem.avg_grade%></td>
+        <td><%=oneItem.sum_credit%></td>
+    </tr>
+<%
+    }
+%>
 </table>
 </body>
 </html>

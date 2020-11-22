@@ -9,7 +9,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var joinRouter = require('./routes/joinForm');
 var loginRouter = require('./routes/loginForm');
-
+var board = require('./routes/board');
 var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
