@@ -17,10 +17,11 @@ router.get('/index', function(req,res,next) {
         // Use the connection
         var stunameSQL = "SELECT stu_name FROM register_info WHERE ID='2016722066'";
         var deansList = "SELECT * FROM ranking WHERE open_date='2020-03-01'";
+        var Timetable = "SELECT select * from current_time_table where stu_id = '2016722066'";
+        
         connection.query(stunameSQL, function (err, row) {
             if (err) console.error("err : " + err);
             console.log("name rows : " + JSON.stringify(row));
-            
             connection.query(deansList, function(err, rows) {
                 if (err) console.error("err : " + err);
             
