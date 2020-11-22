@@ -4,7 +4,7 @@ var router = express.Router();
 var mysql = require('mysql');
 var pool = mysql.createPool({
     connectionLimit: 6,
-    host: '10.20.22.36',
+    host: 'l0.20.22.36',
     user: 'potatonion',
     database: 'database2',
     password: 'pro4spro4s!' 
