@@ -3,18 +3,18 @@ var router = express.Router();
 
 var mysql = require('mysql');
 var pool = mysql.createPool({
-    connectionLimit: 6,
-    host: '10.20.22.36',
-    user: 'potatonion',
-    database: 'database2',
-    password: 'pro4spro4s!' 
-});
+    connectionLimit: 5,
+    host: 'localhost',
+    user: 'root',
+    database: 'Database2',
+    password: 'chickrush'
+})
 
-router.get('/', function(req, res, next){
+router.get('/board', function(req, res, next){
     res.redirect('/board/board_list/1');
 });
 
-router.get('.board_list/:page', function(req,res,next){
+router.get('/board_list/:page', function(req,res,next){
     pool.getConnection(function (err, connection){
         var boardSelectList = "SELECT idx, title, writer, write_date, star, hit from board where lec_num = '000-201801-007'";
         connection.query(boardSelectList, function (err, rows) {

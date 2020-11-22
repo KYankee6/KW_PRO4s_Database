@@ -5,21 +5,35 @@
     <link rel='stylesheet' href='/stylesheets/style.css'/>
 </head>
 <body>
+<style>
+    .btn{
+      text-decoration: none;
+      font-size:1;
+      color:black;
+      margin:5px;
+      padding:5px 5px 5px 5px;
+      display:inline-block;
+      border-radius: 1px;
+      background-color: lightgray;
+      border-color: black;
+      transition:all 0.1s;
+      }
+</style>
 <div style="float:right">
 <%=row.stu_name%>님 환영합니다~
-<a href="https://google.com" class="button">개인정보</a>
-<a href="https://naver.com" class="button">로그아웃</a>
+<a href="https://google.com" class="btn">개인정보</a>
+<a href="https://naver.com" class="btn">로그아웃</a>
 </div>
 <br>
 <br>
-<table border="1">
+<table style="border-collapse : collapse; background-color:rgb(115, 35, 46); width: 100%">
     <tr>
-        <td><a href="https://naver.com">KWUniversity</a></td>
-        <td><a href="https://naver.com">학습결과</a></td>
-        <td><a href="https://naver.com">시간표</a></td>
-        <td><a href="https://naver.com">수강신청</a></td>
-        <td><a href="https://naver.com">공지사항</a></td>
-        <td><a href="https://naver.com">친구 목록</a></td>
+        <td><a href="/index" style="text-decoration:none; text-align:center"><img src="./Kwangwoon_mark_1.jpg" width=121 height=40></a></td>
+        <td><a href="https://naver.com" style="text-decoration:none; color: white" >학습결과</a></td>
+        <td><a href="https://naver.com" style="text-decoration:none; color: white">시간표</a></td>
+        <td><a href="https://naver.com" style="text-decoration:none; color: white">수강신청</a></td>
+        <td><a href="https://naver.com" style="text-decoration:none; color: white">공지사항</a></td>
+        <td><a href="https://naver.com" style="text-decoration:none; color: white">친구 목록</a></td>
     </tr>
 </table>
 
