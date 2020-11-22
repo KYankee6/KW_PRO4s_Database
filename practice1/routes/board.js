@@ -11,7 +11,7 @@ var pool = mysql.createPool({
 })
 
 router.get('/board', function(req, res, next){
-    res.redirect('/board/board_list/1');
+    res.redirect('/board_list/1');
 });
 
 router.get('/board_list/:page', function(req,res,next){
