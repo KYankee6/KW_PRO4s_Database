@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.sned('joinForm.js Check');
+  res.send('joinForm.js Check');
 });
 
 module.exports = router;
