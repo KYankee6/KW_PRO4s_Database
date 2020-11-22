@@ -20,7 +20,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 //app.use('/board/read/', express.static('./image'));
 app.use('/', indexRouter);
-app.use('/index', usersRouter);
 //app.use('/join', join);
 //app.use('/board', board);
 // catch 404 and forward to error handler
