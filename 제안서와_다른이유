@@ -3,3 +3,5 @@ BCNF 정규식을 맞춰주기 위하여 Superkey가 아닌 Functional dependenc
 lec_num->lec_name, credit이 존재하였다.
 그런데 이 정규식을 맞추기 위하여 다른 테이블을 만드는 것이 조금 직관적이지 못하고, 이름을 얻기 위하여 다시 조인하는 것이 오히려 효율을 떨어뜨린다고 생각하여
 정규화 하지 않았다.
+
+Professor relation을 만들면 중복이 줄어들 것.
