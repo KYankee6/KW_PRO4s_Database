@@ -5,3 +5,5 @@ lec_num->lec_name, credit이 존재하였다.
 정규화 하지 않았다.
 
 Professor relation을 만들면 중복이 줄어들 것.
+
+NULL값이 들어가는걸 줄일것.
