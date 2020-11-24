@@ -4,7 +4,7 @@ var router = express.Router();
 var mysql = require('mysql');
 var pool = mysql.createPool({
     connectionLimit: 6,
-    host: 'l0.20.22.36',
+    host: '223.194.46.202',
     user: 'potatonion',
     database: 'database2',
     password: 'pro4spro4s!' 
@@ -15,7 +15,7 @@ router.get('/', function(req, res, next){
 });
 
 router.get('/list/:page', function(req,res,next){
-    pool.getConnection(function (err, connection){
+    pool.getConnection(function (err, connection){  
         var boardSelectList = "SELECT idx, title, writer, write_date, star, hit from board where lec_num = '000-201801-007'";
         connection.query(boardSelectList, function (err, rows) {
             if(err) console.error("err : " + err);
