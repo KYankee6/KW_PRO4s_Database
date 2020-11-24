@@ -54,7 +54,7 @@ router.post('/', function(req,res,next){
       else if(results.length>0){
         //req.session.loggedin=true;
         //req.session.stu_id = student_id;
-        res.redirect('/');
+        res.redirect('/index');
       }
       else{
         res.redirect('/login?e=' + encodeURIComponent('Incorrect username or password'));
