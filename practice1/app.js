@@ -9,6 +9,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var joinRouter = require('./routes/joinForm');
 var boardRouter = require('./routes/board');
+var loginRouter = require('./routes/loginForm');
 var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -22,11 +23,10 @@ app.use(express.static(__dirname + '/image'));
 //app.use('/board/read/', express.static('./image'));
 app.use('/', indexRouter);
 //app.use('/join', join);
-app.use('/board', board);
 app.use('/users', usersRouter);
 app.use('/join', joinRouter);
 app.use('/board', boardRouter);
-
+app.use('/login', loginRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
