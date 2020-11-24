@@ -18,6 +18,8 @@
     "morgan": "~1.9.1",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.6",
-    "package.json": "^2.0.1"
+    "package.json": "^2.0.1",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0"
   }
 }
