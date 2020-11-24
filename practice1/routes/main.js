@@ -4,10 +4,10 @@ var router = express.Router();
 var mysql = require('mysql');
 var pool = mysql.createPool({
     connectionLimit: 5,
-    host: 'localhost',
+    host: '223.194.46.205',
     user: 'root',
     database: 'database2',
-    password: 'chickrush'
+    password: 'pro4spro4s!'
 })
 
 router.get('/', function(req, res, next) {

@@ -4,11 +4,11 @@ var router = express.Router();
 var mysql = require('mysql');
 var pool = mysql.createPool({
     connectionLimit: 5,
-    host: 'localhost',
+    host: '223.194.46.205',
     user: 'root',
-    database: 'Database2',
-    password: 'chickrush'
-})
+    database: 'database2',
+    password: 'pro4spro4s!'
+});
 
 router.get('/board', function(req, res, next){
     res.redirect('/board_list/1');
