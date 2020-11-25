@@ -1,29 +1,37 @@
 var express = require('express');
+var session = require('express-session');
+var mysql = require('mysql');
+var MySQLStore = require('express-mysql-session')(session);
 var http = require('http');
 var router = express.Router();
 var serverStatic = require('serve-static');
 var path = require('path');
 var cookieParser = require('cookie-parser');
-var session = require('express-session');
 //var passport = require('./config/passport');
 var bodyParser = require('body-parser');
-var mysql = require('mysql');
 var crypto = require('crypto');
 var url = require('url');
-var bodyParser_post = require('body-parser');
-
 
 //app.use(serveStatic(path.join(__dirname, 'public')));
 
 
 var connection = mysql.createConnection({
-  connectionLimit: 5,
+  connectionLimit: 20,
   host: '223.194.46.205',
   port: 3306,
   database: 'database2',
   user: 'root',
   password: 'pro4spro4s!'
 });
+
+var options ={
+  connectionLimit: 20,
+  host: '223.194.46.205',
+  port: 3306,
+  database: 'database2',
+  user: 'root',
+  password: 'pro4spro4s!'
+};
 connection.connect((err) => {
   if (err) {
     console.log('Not connected to DB');
@@ -33,16 +41,18 @@ connection.connect((err) => {
     console.log('Sucess Connected');
   }
 });
-const { request, response } = require('../app');
-
-
 var app = express();
+
+const { request, response } = require('../app');
+var sessionStore = new MySQLStore(options);
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(session({
   secret: 'secret',
   resave: true,
-  saveUninitialized: true
+  saveUninitialized: true,
+  store: sessionStore
 }));
 var router = express.Router();
 
@@ -60,7 +70,10 @@ var router = express.Router();
 app.get('/', function (req, res, next) {
   console.log('세션 유저 확인후 루팅');
   if (req.session.user) {
-    res.redirect('/index', { title: 'login' });
+    console.log(req.session);
+    req.session.save(function(){
+      res.redirect('index');
+    });
   }
   else {
     res.render('loginForm');
@@ -82,10 +95,7 @@ app.post('/', function (req, res, next) {
   // })
   if (req.session.user) {
     console.log('already logged in');
-    res.writeHead(200, { "Content-Type": "text/html;characterset=utf8" });
-    res.write('<h1>already Login</h1>');
-    res.write('<a href="/index">Move</a>');
-    res.end();
+    res.redirect('index');
   }
   else if (in_stu_id && in_passwd) {
     var sqlForIDPW = "select * from register_info where ID =? and Passwd = ?";
@@ -106,12 +116,8 @@ app.post('/', function (req, res, next) {
           name: 'UsersNames!!!!!',
           authorized: true
         };
-        res.redirect(url.format({
-          pathname: "/",
-          query: {
-            "stu_id": req.body.student_id
-          }
-        }));
+
+        res.redirect('index');
       }
       else {
         res.send("<script>alert('아이디 혹은 비밀번호를 확인하세요.');history.back();</script>")
@@ -119,10 +125,16 @@ app.post('/', function (req, res, next) {
       }
       res.end();
     });
-  } else {
-    res.send('아이디 그리고 비밀번호를 입력해주세요');
+  }
+  
+
+   else {
+    res.send("<script>alert('아이디 혹은 비밀번호를 입력하세요.');history.back();</script>")
     res.end();
   }
 });
 
+// app.post('/index', function(req,res){
+//   sess=req.session;
+// });
 module.exports = app;
