@@ -55,8 +55,9 @@ app.get('/', function (req, res, next) {
             connection.query(deansList, function (err, rows) {
                 connection.query(Timetable, function (err, table) {
                     if (err) console.error("err : " + err);
-
-                    res.render('index', { title: '메인 화면', row: row[0], rows: rows, table: table });
+                    console.log("Result: ", table);
+                    
+                    res.render('index', {title: '메인 화면', row:row[0], rows:rows, table:table});
                     connection.release();
                 });
                 if (err) console.error("err : " + err);

@@ -15,13 +15,13 @@ router.get('/', function(req, res, next){
     res.redirect('/board/list/1');
 });
 
-router.get('/list/:page', function(req,res,next){4
+router.get('/list/:page', function(req,res,next){
     pool.getConnection(function (err, connection){  
         var boardSelectList = "SELECT idx, title, writer, write_date, star, hit from board where lec_num = '000-201801-007'";
         connection.query(boardSelectList, function (err, rows) {
             if(err) console.error("err : " + err);
             console.log("rows : " + JSON.stringify(rows));
-
+             
             res.render('list', {title: '공지 및 자료', rows: rows});
             connection.release();
         });
