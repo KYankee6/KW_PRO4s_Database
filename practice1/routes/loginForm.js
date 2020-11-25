@@ -17,7 +17,7 @@ var url = require('url');
 
 var connection = mysql.createConnection({
   connectionLimit: 20,
-  host: '192.168.0.56',
+  host: '223.194.46.205',
   port: 3306,
   database: 'database2',
   user: 'root',
@@ -26,7 +26,7 @@ var connection = mysql.createConnection({
 
 var options = {
   connectionLimit: 20,
-  host: '192.168.0.56',
+  host: '223.194.46.205',
   port: 3306,
   database: 'database2',
   user: 'root',
