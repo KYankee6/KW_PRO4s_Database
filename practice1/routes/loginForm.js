@@ -17,16 +17,16 @@ var url = require('url');
 
 var connection = mysql.createConnection({
   connectionLimit: 20,
-  host: '223.194.46.205',
+  host: '192.168.0.56',
   port: 3306,
   database: 'database2',
   user: 'root',
   password: 'pro4spro4s!'
 });
 
-var options ={
+var options = {
   connectionLimit: 20,
-  host: '223.194.46.205',
+  host: '192.168.0.56',
   port: 3306,
   database: 'database2',
   user: 'root',
@@ -68,16 +68,7 @@ var router = express.Router();
 
 /* GET home page. */
 app.get('/', function (req, res, next) {
-  console.log('세션 유저 확인후 루팅');
-  if (req.session.user) {
-    console.log(req.session);
-    req.session.save(function(){
-      res.redirect('index');
-    });
-  }
-  else {
     res.render('loginForm');
-  }
 });
 
 
@@ -95,7 +86,7 @@ app.post('/', function (req, res, next) {
   // })
   if (req.session.user) {
     console.log('already logged in');
-    res.redirect('index');
+    res.redirect('/index');
   }
   else if (in_stu_id && in_passwd) {
     var sqlForIDPW = "select * from register_info where ID =? and Passwd = ?";
@@ -113,25 +104,26 @@ app.post('/', function (req, res, next) {
         {
           id: in_stu_id,
           pw: in_passwd,
-          name: 'UsersNames!!!!!',
           authorized: true
         };
 
-        res.redirect('index');
+        req.session.save(() => {
+          res.redirect('/index');
+        });
       }
       else {
-        res.send("<script>alert('아이디 혹은 비밀번호를 확인하세요.');history.back();</script>")
+        res.send("<script>alert('아이디 혹은 비밀번호를 확인하세요.');history.back();</script>");
         //res.redirect('/login?e=' + encodeURIComponent('Incorrect username or password'));
       }
-      res.end();
     });
   }
-  
 
-   else {
+
+  else {
     res.send("<script>alert('아이디 혹은 비밀번호를 입력하세요.');history.back();</script>")
     res.end();
   }
+
 });
 
 // app.post('/index', function(req,res){
