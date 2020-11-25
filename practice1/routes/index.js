@@ -49,11 +49,11 @@ app.get('/', function (req, res, next) {
         //Use the connection
         var stunameSQL = "SELECT stu_name FROM register_info WHERE ID=?";
         var deansList = "SELECT * FROM ranking WHERE open_date='2020-03-01'";
-        var Timetable = "SELECT * FROM current_time_table WHERE stu_id = '2016722066'";
+        var Timetable = "SELECT * FROM current_time_table WHERE stu_id = ?";
         console.log(req.session.user);
         connection.query(stunameSQL, [req.session.user.id], function (err, row) {
             connection.query(deansList, function (err, rows) {
-                connection.query(Timetable, function (err, table) {
+                connection.query(Timetable, [req.session.user.id],function (err, table) {
                     if (err) console.error("err : " + err);
                     console.log("Result: ", table);
                     
