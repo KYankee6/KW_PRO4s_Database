@@ -49,27 +49,77 @@ app.get('/', function (req, res, next) {
         //Use the connection
         var stunameSQL = "SELECT stu_name FROM register_info WHERE ID=?";
         var deansList = "SELECT * FROM ranking WHERE open_date='2020-03-01'";
-        var Timetable = "SELECT * FROM current_time_table WHERE stu_id = '2016722066'";
+        var Timetable = "SELECT * FROM current_time_table WHERE stu_id = ?";
+        var array = [];
+        for (var i = 0; i < 6; i++) {
+            array[i] = []
+            for (var j = 0; j < 5; j++) {
+                array[i][j] = "-";
+            }
+        }
         if (req.session.user) {
             console.log(req.session.user);
             connection.query(stunameSQL, [req.session.user.id], function (err, row) {
                 connection.query(deansList, function (err, rows) {
-                    connection.query(Timetable, function (err, table) {
+                    connection.query(Timetable, [req.session.user.id], function (err, table) {
                         if (err) console.error("err : " + err);
+                        for (var i = 0; i < table.length; i++) {
+                            var num1 = table[i].time_stamp[3];
+                            num1 *= 1;
+                            var num2;
+                            if (table[i].time_stamp[1] == 'O') {
+                                num2 = 1;
+                            }
+                            else if (table[i].time_stamp[1] == 'U') {
+                                num2 = 2;
+                            }
+                            else if (table[i].time_stamp[1] == 'E') {
+                                num2 = 3;
+                            }
+                            else if (table[i].time_stamp[1] == 'H') {
+                                num2 = 4;
+                            }
+                            else {
+                                num2 = 5;
+                            }
+                            array[i][j] = table[i].lec_name;
+                        }
+                        for (var i = 0; i < table.length; i++) {
+                            var num1 = table[i].time_stamp[7];
+                            num1 *= 1;
+                            var num2;
+                            if (table[i].time_stamp[5] == 'O') {
+                                num2 = 1;
+                            }
+                            else if (table[i].time_stamp[5] == 'U') {
+                                num2 = 2;
+                            }
+                            else if (table[i].time_stamp[5] == 'E') {
+                                num2 = 3;
+                            }
+                            else if (table[i].time_stamp[5] == 'H') {
+                                num2 = 4;
+                            }
+                            else {
+                                num2 = 5;
+                            }
+                            array[i][j] = table[i].lec_name;
+                        }
+
                         console.log("Result: ", table);
-                        res.render('index', { title: '메인 화면', row: row[0], rows: rows, table: table });
+                        res.render('index', { title: '메인 화면', row: row[0], rows: rows, array: array });
+                        connection.release();
                     });
                     if (err) console.error("err : " + err);
+                    //Don't use the connection here, it has been returned to the pool.
                 });
-                if (err) console.error("err : " + err);
-                //Don't use the connection here, it has been returned to the pool.
             });
+
         }
         else {
             res.send("<script>alert('만료된 세션');history.back();</script>");
+            connection.release();
         }
-     connection.release();
-
     });
 });
 

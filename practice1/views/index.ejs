@@ -74,44 +74,55 @@
         <td>THU</td>
         <td>FRI</td>
     </tr>
-<%
-        for(var i = 0; i < table.length; i++) {
-            var oneItem = table[i];
-%>
     <tr>
-        <td><%=i+1%></td>
-    <%      if (oneItem.time_stamp[1] == 'o') { %>
-            <td><%=oneItem.lec_name%></td>
-    <%      } else { %>
-            <td></td>
-    <%      } %> 
-
-    <%      if (oneItem.time_stamp[1] == 'u') { %>
-            <td><%=oneItem.lec_name%></td>
-    <%      } else { %>
-            <td></td>
-    <%      } %>
-
-    <%      if (oneItem.time_stamp[1] == 'e') { %>
-            <td><%=oneItem.lec_name%></td>
-    <%      } else { %>
-            <td></td>
-    <%      } %>
-
-    <%      if (oneItem.time_stamp[1] == 'h') { %>
-            <td><%=oneItem.lec_name%></td>
-    <%      } else { %>
-            <td></td>
-    <%      } %>
-        
-    <%      if (oneItem.time_stamp[1] == 'r') { %>
-            <td><%=oneItem.lec_name%></td>
-    <%      } else { %>
-            <td></td>
-    <%      } %>
-
+        <td>1</td>
+        <td><%=array[0][0]%></td>
+        <td><%=array[0][1]%></td>
+        <td><%=array[0][2]%></td>
+        <td><%=array[0][3]%></td>
+        <td><%=array[0][4]%></td>
     </tr>
-<%      } %>
+    <tr>
+        <td>2</td>
+        <td><%=array[1][0]%></td>
+        <td><%=array[1][1]%></td>
+        <td><%=array[1][2]%></td>
+        <td><%=array[1][3]%></td>
+        <td><%=array[1][4]%></td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td><%=array[2][0]%></td>
+        <td><%=array[2][1]%></td>
+        <td><%=array[2][2]%></td>
+        <td><%=array[2][3]%></td>
+        <td><%=array[2][4]%></td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td><%=array[3][0]%></td>
+        <td><%=array[3][1]%></td>
+        <td><%=array[3][2]%></td>
+        <td><%=array[3][3]%></td>
+        <td><%=array[3][4]%></td>
+    </tr>
+    <tr>
+        <td>5</td>
+        <td><%=array[4][0]%></td>
+        <td><%=array[4][1]%></td>
+        <td><%=array[4][2]%></td>
+        <td><%=array[4][3]%></td>
+        <td><%=array[4][4]%></td>
+    </tr>
+    <tr>
+        <td>6</td>
+        <td><%=array[5][0]%></td>
+        <td><%=array[5][1]%></td>
+        <td><%=array[5][2]%></td>
+        <td><%=array[5][3]%></td>
+        <td><%=array[5][4]%></td>
+    </tr>
+    
 </table>
 </center>
 </body>
