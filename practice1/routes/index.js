@@ -6,7 +6,7 @@ var bodyParser = require('body-parser');
 
 var options = {
     connectionLimit: 20,
-    host: '192.168.0.56',
+    host: '223.194.46.205',
     port: 3306,
     database: 'database2',
     user: 'root',
@@ -17,7 +17,7 @@ var sessionStore = new MySQLStore(options);
 var mysql = require('mysql');
 var pool = mysql.createPool({
     connectionLimit: 5,
-    host: '192.168.0.56',
+    host: '223.194.46.205',
     user: 'root',
     database: 'database2',
     password: 'pro4spro4s!'
