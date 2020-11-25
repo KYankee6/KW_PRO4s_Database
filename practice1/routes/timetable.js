@@ -36,69 +36,103 @@ app.use(session({
 
 app.get('/', function (req, res, next) {
     pool.getConnection(function (err, connection) {
-        
+        //Use the connection
+        var stunameSQL = "SELECT stu_name FROM register_info WHERE ID=?";
+        var deansList = "SELECT * FROM ranking WHERE open_date='2020-03-01'";
         var Timetable = "SELECT * FROM current_time_table WHERE stu_id = ?";
-        var array = new Array(6);
+        var lec_name = new Array(6);
+        var professor = new Array(6);
+        var timeStamp = new Array(6);
+        var color = new Array(6);
         for (var i = 0; i < 6; i++) {
-            array[i] = new Array(5);
+            lec_name[i] = new Array(5);
+            professor[i] = new Array(5);
+            timeStamp[i] = new Array(5);
+            color[i] = new Array(5);
             for (var j = 0; j < 5; j++) {
-                array[i][j] = " ";
+                lec_name[i][j] = " ";
+                professor[i][j] = " ";
+                timeStamp[i][j] = " ";
+                color[i][j] = 0;
             }
         }
-
+        console.log(lec_name);
         if (req.session.user) {
             console.log(req.session.user);
-            connection.query(Timetable, [req.session.user.id], function (err, row) {
-                
-                if (err) console.error("err : " + err);
-                for (var i = 0; i < table.length; i++) {
-                    var num1 = Number(table[i].time_stamp[3]);
-                    num1 = num1 - 1;
-                    var num2;
-                    if (table[i].time_stamp[1] == 'O') {
-                        num2 = 0;
-                    }
-                    else if (table[i].time_stamp[1] == 'U') {
-                        num2 = 1;
-                    }
-                    else if (table[i].time_stamp[1] == 'E') {
-                        num2 = 2;
-                    }
-                    else if (table[i].time_stamp[1] == 'H') {
-                        num2 = 3;
-                    }
-                    else {
-                        num2 = 4;
-                    }
-                    console.log(num2, num1, table[i].time_stamp);
-                    array[num1][num2] = array[num1][num2].replace(" ", table[i].lec_name + "\n" + table[i].professor + "(" + table[i].time_stamp + ")");
-                }
-                console.log(array);
-                for (var i = 0; i < table.length; i++) {
-                    var num1 = Number(table[i].time_stamp[7]);
-                    num1 = num1 - 1;
-                    var num2;
-                    if (table[i].time_stamp[5] == 'O') {
-                        num2 = 0;
-                    }
-                    else if (table[i].time_stamp[5] == 'U') {
-                        num2 = 1;
-                    }
-                    else if (table[i].time_stamp[5] == 'E') {
-                        num2 = 2;
-                    }
-                    else if (table[i].time_stamp[5] == 'H') {
-                        num2 = 3;
-                    }
-                    else {
-                        num2 = 4;
-                    }
-                    array[num1][num2] = array[num1][num2].replace(" ", table[i].lec_name + "\n" + table[i].professor + "(" + table[i].time_stamp + ")");
-                }
+            connection.query(stunameSQL, [req.session.user.id], function (err, row) {
+                    connection.query(Timetable, [req.session.user.id], function (err, table) {
+                        if (err) console.error("err : " + err);
+                        for (var i = 0; i < table.length; i++) {
+                            var num1 = Number(table[i].time_stamp[3]);
+                            num1 = num1 - 1;
+                            var num2;
+                            if (table[i].time_stamp[1] == 'O') {
+                                num2 = 0;
+                            }
+                            else if (table[i].time_stamp[1] == 'U') {
+                                num2 = 1;
+                            }
+                            else if (table[i].time_stamp[1] == 'E') {
+                                num2 = 2;
+                            }
+                            else if (table[i].time_stamp[1] == 'H') {
+                                num2 = 3;
+                            }
+                            else {
+                                num2 = 4;
+                            }
+                            console.log(num2, num1, table[i].time_stamp);
+                            lec_name[num1][num2] = lec_name[num1][num2].replace(" ", table[i].lec_name);
+                            professor[num1][num2] = professor[num1][num2].replace(" ",  table[i].professor);
+                            timeStamp[num1][num2] = timeStamp[num1][num2].replace(" ",  "("+table[i].time_stamp+")");
+                            color[num1][num2] = i;
+                        }
+                        for (var i = 0; i < table.length; i++) {
+                            var num1 = Number(table[i].time_stamp[7]);
+                            num1 = num1 - 1;
+                            var num2;
+                            if (table[i].time_stamp[5] == 'O') {
+                                num2 = 0;
+                            }
+                            else if (table[i].time_stamp[5] == 'U') {
+                                num2 = 1;
+                            }
+                            else if (table[i].time_stamp[5] == 'E') {
+                                num2 = 2;
+                            }
+                            else if (table[i].time_stamp[5] == 'H') {
+                                num2 = 3;
+                            }
+                            else {
+                                num2 = 4;
+                            }
+                            lec_name[num1][num2] = lec_name[num1][num2].replace(" ", table[i].lec_name);
+                            professor[num1][num2] = professor[num1][num2].replace(" ",  table[i].professor);
+                            timeStamp[num1][num2] = timeStamp[num1][num2].replace(" ",  "("+table[i].time_stamp+")");
+                            color[num1][num2] = i;
+                        }
 
-                res.render('timetable', { title: '시간표', array:array});
-                connection.release();
+                        console.log("Result: ", lec_name);
+                        res.render('timetable', { title: '시간표', row: row[0], lec_name: lec_name, professor:professor, timeStamp:timeStamp });
+                        connection.release();
+                    });
+                    if (err) console.error("err : " + err);
+                    //Don't use the connection here, it has been returned to the pool.
             });
+
+        }
+        else {
+            res.send("<script>alert('만료된 세션');history.back();</script>");
+            connection.release();
         }
     });
 });
+
+
+app.post('/logout', function (req, res) {
+    delete req.session.user;
+    req.session.save(() => {
+        res.redirect('/login');
+    });
+});
+module.exports = app;
