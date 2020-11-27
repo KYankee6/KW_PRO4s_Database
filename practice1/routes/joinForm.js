@@ -33,6 +33,7 @@ router.post('/', join_image.single('image'), (req, res) => {
   var email = req.body.email;
   var address = req.body.address;
   var RRN = req.body.RRN;
+  console.log("?");
   if (req.file)
     var image = cur;
   else
@@ -42,6 +43,7 @@ router.post('/', join_image.single('image'), (req, res) => {
     var sqlForInsertBoard = "insert into register_info(id, passwd, stu_name, email, address, RRN, image) values(?,?,?,?,?,?,?)";
     connection.query(sqlForInsertBoard, datas, function (err, rows) {
       if (err) {
+        console.error(err);
         if (err.code == "ER_NO_REFERENCED_ROW_2")
           res.send("<script>alert('존재하지 않는 학번입니다.');history.back();</script>");
         else if (err.code == "ER_DUP_ENTRY")
@@ -49,7 +51,7 @@ router.post('/', join_image.single('image'), (req, res) => {
       }
       else {
         console.log("rows : " + JSON.stringify(rows));
-        res.redirect('/joinForm');
+        res.redirect('/login');
       }
       connection.release();
     });
@@ -61,6 +63,7 @@ router.get('/join_image', function (req, res) {
 });
 
 router.get('/', function (req, res) {
+  console.log('왜안되지;');
   res.render('joinForm', { title: '회원가입' });
 });
 

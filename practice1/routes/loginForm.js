@@ -121,6 +121,17 @@ app.post('/', function (req, res, next) {
 
 });
 
+app.post('/', function(req, res) {
+  res.redirect('/joinForm');
+});
+
+app.post('/', function(req, res) {
+  res.redirect('/find_ID');
+});
+
+app.post('/', function(req, res) {
+  res.redirect('/find_passwd');
+});
 // app.post('/index', function(req,res){
 //   sess=req.session;
 // });
