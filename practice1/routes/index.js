@@ -92,7 +92,6 @@ app.get('/', function (req, res, next) {
                             else {
                                 num2 = 4;
                             }
-                            console.log(num2, num1, table[i].time_stamp);
                             lec_name[num1][num2] = lec_name[num1][num2].replace(" ", table[i].lec_name);
                             professor[num1][num2] = professor[num1][num2].replace(" ",  table[i].professor);
                             timeStamp[num1][num2] = timeStamp[num1][num2].replace(" ",  "("+table[i].time_stamp+")");
