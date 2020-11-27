@@ -2,15 +2,10 @@ var express = require('express');
 var session = require('express-session');
 var mysql = require('mysql');
 var MySQLStore = require('express-mysql-session')(session);
-var http = require('http');
-var router = express.Router();
-var serverStatic = require('serve-static');
-var path = require('path');
 var cookieParser = require('cookie-parser');
 //var passport = require('./config/passport');
 var bodyParser = require('body-parser');
 var crypto = require('crypto');
-var url = require('url');
 
 //app.use(serveStatic(path.join(__dirname, 'public')));
 
