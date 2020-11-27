@@ -50,7 +50,6 @@
         {
             var oneItem = lecs[i];
         %>
-
             <option value="/board/list/<%=oneItem.lec_num%>"><%=oneItem.lec_name%></option>
             <%
             }
@@ -58,6 +57,7 @@
 
 
         </select>
+    
     </form>
     <table border="1">
         <tr>
@@ -71,9 +71,26 @@
         for(var i=0; i<contents.length; i++)
         {
             var oneItem1 = contents[i];
-    %>
+        %>
         <tr>
-            <td><%=oneItem1.idx%></td>
+            <td>
+                <%
+                if(oneItem1.star==1)
+                {
+                %>
+                    <img src="/star.jpg" width=20 height=20>
+                <%
+                }
+                %>
+                <%
+                if(oneItem1.star==0)
+                {
+                %>
+                    <%=i+1%>
+                <%    
+                }
+                %>
+                </td>
             <td><a href="/board/read/<%=oneItem1.idx%>"><%=oneItem1.title%></a></td>
             <td><%=oneItem1.writer%></td>
             <td><%=oneItem1.write_date%></td>
@@ -81,7 +98,7 @@
         </tr>
         <%
         }
-    %>
+        %>
     </table>
 </body>
 

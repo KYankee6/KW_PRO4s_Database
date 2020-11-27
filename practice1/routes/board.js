@@ -12,7 +12,8 @@ var pool = mysql.createPool({
     user: 'root',
     port: 3306,
     database: 'database2',
-    password: 'pro4spro4s!'
+    password: 'pro4spro4s!',
+    dateStrings:'date'
 });
 
 
@@ -22,7 +23,8 @@ var options = {
     port: 3306,
     database: 'database2',
     user: 'root',
-    password: 'pro4spro4s!'
+    password: 'pro4spro4s!',
+    dateStrings:'date'
 };
 
 
@@ -66,7 +68,7 @@ app.get('/list/:page', function (req, res, next) {
     console.log(url);
     pool.getConnection(function (err, connection) {
         var getLecsQuery = "select lec_name,lec_num from board_information where stu_id = ?";
-        var getBoardContentQuery = "select * from board_content where lec_num =? and stu_id = ?";
+        var getBoardContentQuery = "select * from board_content where lec_num =? and stu_id = ? order by star DESC";
         var stunameSQL = "SELECT stu_name FROM register_info WHERE ID=?";
         var stu_name;
         if (req.session.user) {
@@ -78,7 +80,7 @@ app.get('/list/:page', function (req, res, next) {
                 if (err) console.error("err : " + err);
                 //console.log("rows : " + JSON.stringify(rows));
                 connection.query(getBoardContentQuery, [url, req.session.user.id], function (err, content) {
-                    // console.log(content);
+                    console.log(content);
 
                     res.render('list', { title: '공지 및 자료', row: stu_name[0], lecs: lectures, contents: content });
                 });
@@ -152,4 +154,5 @@ app.post('/logout', function (req, res) {
     });
 });
 
+//function star_sort
 module.exports = app;
