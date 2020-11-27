@@ -11,6 +11,7 @@ var joinRouter = require('./routes/joinForm');
 var boardRouter = require('./routes/board');
 var loginRouter = require('./routes/loginForm');
 var timetableRouter = require('./routes/timetable');
+var friendRouter = require('./routes/friend');
 //var logoutRouter = require('./routes/logout');
 var app = express();
 // view engine setup
@@ -31,6 +32,7 @@ app.use('/board', boardRouter);
 app.use('/login', loginRouter);
 app.use('/index', indexRouter);
 app.use('/timetable', timetableRouter);
+app.use('/friend', friendRouter);
 //app.use('/logout',logoutRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

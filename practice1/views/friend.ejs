@@ -19,10 +19,11 @@
       transition:all 0.1s;
       white-space: nowrap;
       }
+
 </style>
 <br>
 <div style="float:right;">
-<%=row.stu_name%>님 환영합니다~
+<%=stu_name%>님 환영합니다~
 <form action="https://google.com" method "get" style="display:inline"><button type='submit' class='.btn'>개인정보</button></form>
 <form action="/index/logout" method ="post" style="display:inline"><button type='submit' class='.btn'>로그아웃</button></form>
 <br>
@@ -38,52 +39,35 @@
         <td align="center"><a href="/friend" style="text-decoration:none; color: white">친구 목록</a></td>
     </tr>
 </table>
-<br>
-<form>
-    <select onchange="if(this.value) location.href=(this.value);">
-        <option value="none">나의 시간표</option>
-<%
-    for(var i=0; i<loc.length; i++)
-    {
-        var oneItem = loc[i];
-%>
+<br><br>
 
-        <option value="/timetable/location/<%=oneItem.location%>"><%=oneItem.location%>시간표</option>
-        <%
-        }
-    %>
-    </select>
-</form>
-<br>
-<h1> My Timetable </h1>
-<table style = "border-collapse : collapse; width: 90%;" border="1">
-    <tr>
-        <td width="20px" align="center"></td>
-        <td width="150px" align="center">MON</td>
-        <td width="150px" align="center">TUE</td>
-        <td width="150px" align="center">WEN</td>
-        <td width="150px" align="center">THU</td>
-        <td width="150px" align="center">FRI</td>
-    </tr>
+<center>
+    <h1> Friend List </h1>
+    <form action="/friend" method="POST">
+        <input id="stu_id" name="stu_id" type="text" pleaceholder="ID">
+        <button type="submit ">친구추가</button>
+    </form>
+    <br>
+    <table style="width: 50%; margin: 10px; padding:5px 5px 5px 5px;">
+        <tr>
+            <td align = "center" style = "background-color: lightgray;" height=30>Student ID</td>
+            <td align = "center" style = "background-color: lightgray;">Name</td>
+            <td align = "center" style = "background-color: lightgray;">Major</td>
+        </tr>
 <%
-    var index = 0;
-    for(var i = 0; i < 6; i++) {
-        index = i + 1;
+for(var i = 0; i < rows.length; i++) {
+    var oneItem = rows[i];
 %>
-    <tr>
-        <td align="center"><%=index%></td>
-<%
-        for(var j = 0; j < 5; j++) {
-%>
-        <td width="150px" height="80px"><h5><%=lec_name[i][j]%></h5><h6> <%=professor[i][j]%> <%=location[i][j]%></h6></td>
-<%
-        }
-%>
-    </tr>
+        <tr>
+            <td align = "center" height=30><%=oneItem.stu_id%></td>
+            <td align = "center"><%=oneItem.stu_name%></td>
+            <td align = "center"><%=oneItem.major%></td>
+            <td align = "center" style="background-color: grey; border-radius: 6px;"><a href="/friend/<%=oneItem.stu_id%>" style="text-decoration:none; color: rgb(255, 255, 255)">조회</a></td>
+            
+        </tr>
 <%
     }
 %>
-</table>
+    </table>
 </center>
 </body>
-</html>
