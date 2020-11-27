@@ -52,17 +52,17 @@ app.get('/', function (req, res, next) {
         var Timetable = "SELECT * FROM current_time_table WHERE stu_id = ?";
         var lec_name = new Array(6);
         var professor = new Array(6);
-        var timeStamp = new Array(6);
+        var location = new Array(6);
         var color = new Array(6);
         for (var i = 0; i < 6; i++) {
             lec_name[i] = new Array(5);
             professor[i] = new Array(5);
-            timeStamp[i] = new Array(5);
+            location[i] = new Array(5);
             color[i] = new Array(5);
             for (var j = 0; j < 5; j++) {
                 lec_name[i][j] = " ";
                 professor[i][j] = " ";
-                timeStamp[i][j] = " ";
+                location[i][j] = " ";
                 color[i][j] = 0;
             }
         }
@@ -94,7 +94,7 @@ app.get('/', function (req, res, next) {
                             }
                             lec_name[num1][num2] = lec_name[num1][num2].replace(" ", table[i].lec_name);
                             professor[num1][num2] = professor[num1][num2].replace(" ",  table[i].professor);
-                            timeStamp[num1][num2] = timeStamp[num1][num2].replace(" ",  "("+table[i].time_stamp+")");
+                            location[num1][num2] = location[num1][num2].replace(" ",  "("+table[i].location+")");
                             color[num1][num2] = i;
                         }
                         for (var i = 0; i < table.length; i++) {
@@ -118,12 +118,12 @@ app.get('/', function (req, res, next) {
                             }
                             lec_name[num1][num2] = lec_name[num1][num2].replace(" ", table[i].lec_name);
                             professor[num1][num2] = professor[num1][num2].replace(" ",  table[i].professor);
-                            timeStamp[num1][num2] = timeStamp[num1][num2].replace(" ",  "("+table[i].time_stamp+")");
+                            location[num1][num2] = location[num1][num2].replace(" ",  "("+table[i].location+")");
                             color[num1][num2] = i;
                         }
 
                         console.log("Result: ", lec_name);
-                        res.render('index', { title: '메인 화면', row: row[0], rows: rows, lec_name: lec_name, professor:professor, timeStamp:timeStamp });
+                        res.render('index', { title: '메인 화면', row: row[0], rows: rows, lec_name: lec_name, professor:professor, location:location });
                         connection.release();
                     });
                     if (err) console.error("err : " + err);

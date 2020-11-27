@@ -22,7 +22,7 @@
 </style>
 <br>
 <div style="float:right;">
-<%=row.stu_name%>님 환영합니다~
+<%=stu_name%>님 환영합니다~
 <form action="https://google.com" method "get" style="display:inline"><button type='submit' class='.btn'>개인정보</button></form>
 <form action="/index/logout" method ="post" style="display:inline"><button type='submit' class='.btn'>로그아웃</button></form>
 <br>
@@ -30,7 +30,7 @@
 <center>
 <table style="border-collapse : collapse; background-color:rgb(115, 35, 46); width: 100%">
     <tr>
-        <td><a href="/index" style="text-decoration:none; text-align:center"><img src="./Kwangwoon_mark_1.jpg" width=121 height=40></a></td>
+        <td><a href="/index" style="text-decoration:none; text-align:center"><img src="/Kwangwoon_mark_1.jpg" width=121 height=40></a></td>
         <td align="center"><a href="https://naver.com" style="text-decoration:none; color: white" >학습결과</a></td>
         <td align="center"><a href="/timetable" style="text-decoration:none; color: white">시간표</a></td>
         <td align="center"><a href="https://naver.com" style="text-decoration:none; color: white">수강신청</a></td>
@@ -39,23 +39,25 @@
     </tr>
 </table>
 <br>
+
 <form>
     <select onchange="if(this.value) location.href=(this.value);">
-        <option value="none">나의 시간표</option>
+        <option value="none"><%=url%>시간표</option>
 <%
-    for(var i=0; i<loc.length; i++)
+    for(var i=0; i<locs.length; i++)
     {
-        var oneItem = loc[i];
+        var oneItem = locs[i];
 %>
 
         <option value="/timetable/location/<%=oneItem.location%>"><%=oneItem.location%>시간표</option>
-        <%
+<%
         }
-    %>
+%>
+        <option value="/timetable">나의 시간표</option>
     </select>
 </form>
 <br>
-<h1> My Timetable </h1>
+<h1> <%=url%> Timetable </h1>
 <table style = "border-collapse : collapse; width: 90%;" border="1">
     <tr>
         <td width="20px" align="center"></td>
@@ -75,7 +77,7 @@
 <%
         for(var j = 0; j < 5; j++) {
 %>
-        <td width="150px" height="80px"><h5><%=lec_name[i][j]%></h5><h6> <%=professor[i][j]%> <%=location[i][j]%></h6></td>
+        <td width="150px" height="80px"><h5><%=lec_name[i][j]%></h5><h6> <%=professor[i][j]%></h6></td>
 <%
         }
 %>

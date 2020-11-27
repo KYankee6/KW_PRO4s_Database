@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(__dirname + '/image'));
-//app.use('/board/read/', express.static('./image'));
+app.use('/board/read/', express.static('./image'));
 app.use('/', loginRouter);
 //app.use('/join', join);
 app.use('/users', usersRouter);

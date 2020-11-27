@@ -32,14 +32,13 @@
 <table style="border-collapse : collapse; background-color:rgb(115, 35, 46); width: 100%">
     <tr>
         <td><a href="/index" style="text-decoration:none; text-align:center"><img src="./Kwangwoon_mark_1.jpg" width=121 height=40></a></td>
-        <td><a href="https://naver.com" style="text-decoration:none; color: white" >학습결과</a></td>
-        <td><a href="/timetable" style="text-decoration:none; color: white">시간표</a></td>
-        <td><a href="https://naver.com" style="text-decoration:none; color: white">수강신청</a></td>
-        <td><a href="/board/list/1" style="text-decoration:none; color: white">공지사항</a></td>
-        <td><a href="https://naver.com" style="text-decoration:none; color: white">친구 목록</a></td>
+        <td align="center"><a href="https://naver.com" style="text-decoration:none; color: white" >학습결과</a></td>
+        <td align="center"><a href="/timetable" style="text-decoration:none; color: white">시간표</a></td>
+        <td align="center"><a href="https://naver.com" style="text-decoration:none; color: white">수강신청</a></td>
+        <td align="center"><a href="/board/list/1" style="text-decoration:none; color: white">공지사항</a></td>
+        <td align="center"><a href="https://naver.com" style="text-decoration:none; color: white">친구 목록</a></td>
     </tr>
 </table>
-<br>
 <br>
 <h1> Dean's List</h1>
 <table style = "border-collapse : collapse; width: 60% " border="1">
@@ -84,7 +83,7 @@
 <%
         for(var j = 0; j < 5; j++) {
 %>
-        <td width="150px" height="80px"><h5><%=lec_name[i][j]%></h5><h6> <%=professor[i][j]%> <%=timeStamp[i][j]%></h6></td>
+        <td width="150px" height="80px"><h5><%=lec_name[i][j]%></h5><h6> <%=professor[i][j]%> <%=location[i][j]%></h6></td>
 <%
         }
 %>
