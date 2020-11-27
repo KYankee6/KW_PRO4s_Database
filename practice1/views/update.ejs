@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+</head>
+<body>
+    <h1><%= title %></h1>
+    <form action="/update" method="post" onsubmit="return UPDATE_check();" enctype="multipart/form-data">
+        <table border="3" width ="600" height="150" bordercolor=lightgray>
+            <tr>
+                <th>아이디</th>
+                <td><%=rows.id%></td>
+            </tr>
+            <tr>
+                <th>비밀번호</th>
+                <td><input type="password" name="passwd" id="passwd" size="12" maxlength="12" value="<%=rows.passwd%>"></td>
+            </tr>
+            <tr>
+                <th>비밀번호확인</th>
+                <td><input type="password" name="passwd2" id="passwd2" size="12" maxlength="12" value="<%=rows.passwd%>"></td>
+            </tr>
+            <tr>
+                <th>이름</th>
+                <td><%=rows.stu_name%></td>
+            </tr>
+            <tr>
+                <th>주소</th>
+                <td><input type="text" name="address" id="address" size="30" maxlength="50" value="<%=rows.address%>"></td>
+            </tr>
+            <tr>
+                <th>주민번호</th>
+                <td><%=rows.RRN%></td>
+            </tr>
+            <tr>
+                <th>이메일주소</th>
+                <td>
+                    <input type="text" name="email" id="email" size="20" maxlength="25" value="<%=rows.email%>">
+                </td>
+            </tr>
+            <tr>
+                <th>이미지</th>
+                <td><input type = "file" name="image" id="image" accept="*"></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" name="submit" value="수정">
+                    <input type="reset" name="cancel" value="취소">
+                </td>
+            </tr>
+        </table>
+    </form>
+    <script>
+        function UPDATE_check()
+        { 
+            if($("#passwd").val().trim() == "")
+            {
+                var message = "비밀번호를 입력해 주세요";
+                $("#passwd").val("");
+                $("#passwd").focus();
+                alert(message);
+                return false;
+            }
+            if($("#passwd2").val() != $("#passwd").val())
+            {
+                var message = "비밀번호가 일치하지 않습니다";
+                $("#passwd2").val("");
+                $("#passwd2").focus();
+                alert(message);
+                return false;
+            }
+            if($("#address").val().trim() == "")
+            {
+                var message = "주소를 입력해 주세요";
+                $("#address").val("");
+                $("#address").focus();
+                alert(message);
+                return false;
+            }
+            if($("#email").val().trim() == "")
+            {
+                var message = "이메일을 입력해 주세요";
+                $("#email").val("");
+                $("#email").focus();
+                alert(message);
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</body>
+</html>

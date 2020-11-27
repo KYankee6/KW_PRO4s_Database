@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+</head>
+<body>
+    <h1><%= title %></h1>
+    <form action="/find_passwd" method="post" onsubmit="return Passwd_check();">
+        <table border="3" width ="600" height="150" bordercolor=lightgray>
+            <% if(!locals.result){%>
+            <tr>
+                <th>이름</th>
+                <td><input type="text" name="stu_name" id="stu_name" size="10" maxlength="10"></td>
+            </tr>
+            <tr>
+                <th>주민번호</th>
+                <td>
+                    <input type="hidden" name="RRN" id="RRN">
+                    <input type="text" name="RRN1" id="RRN1" size="6" maxlength="6">
+                    -
+                    <input type="password" name="RRN2" id="RRN2" size="7" maxlength="7">
+                </td>
+            </tr>
+            <tr>
+                <th>ID</th>
+                <td><input type="text" name="id" id="id" size="12" maxlength="12"></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" name="submit" value="확인">
+                    <input type="reset" name="cancel" value="취소">
+                </td>
+            </tr>
+            <%
+                }%>
+            <% if(locals.result){%>
+            <tr>
+                    <td colspan="3">
+                        <h8>찾으시는 비밀번호는 <%= result.passwd%>입니다.</h8>
+                    </td>
+                    <td><a href="/update">돌아가기</a></td>
+            </tr>
+            <%
+                }%>
+        </table>
+    </form>
+    <script>
+        function Passwd_check()
+        {   
+            if($("#stu_name").val().trim() == "")
+            {
+                var message = "이름을 입력해 주세요";
+                $("#stu_name").val("");
+                $("#stu_name").focus();
+                alert(message);
+                return false;
+            }
+            if($("#RRN1").val().trim() == "")
+            {
+                var message = "주민번호 앞자리를 입력해 주세요";
+                $("#RRN1").val("");
+                $("#RRN1").focus();
+                alert(message);
+                return false;
+            }
+            if($("#RRN2").val().trim() == "")
+            {
+                var message = "주민번호 뒷자리를 입력해 주세요";
+                $("#RRN2").val("");
+                $("#RRN2").focus();
+                alert(message);
+                return false;
+            }
+            var RRN= $("#RRN1").val() +'-'+ $("#RRN2").val();
+            $("#RRN").val(RRN);
+            if($("#id").val().trim() == "")
+            {
+                var message = "id를 입력해 주세요";
+                $("#id").val("");
+                $("#id").focus();
+                alert(message);
+                return false;
+            }
+            return true;
+        }
+    </script>
+</body>
+</html>
