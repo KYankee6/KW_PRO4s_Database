@@ -1,6 +1,10 @@
 var express = require('express');
 var router = express.Router();
-
+var session = require('express-session');
+var MySQLStore = require('express-mysql-session')(session);
+var cookieParser = require('cookie-parser');
+//var passport = require('./config/passport');
+var bodyParser = require('body-parser');
 var mysql = require('mysql');
 var pool = mysql.createPool({
     connectionLimit: 6,
@@ -11,9 +15,36 @@ var pool = mysql.createPool({
     password: 'pro4spro4s!'
 });
 
-router.get('/', function (req, res, next) {
+
+var options = {
+    connectionLimit: 20,
+    host: '223.194.46.205',
+    port: 3306,
+    database: 'database2',
+    user: 'root',
+    password: 'pro4spro4s!'
+};
+
+
+var app = express();
+
+const { request, response } = require('../app');
+var sessionStore = new MySQLStore(options);
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true,
+    store: sessionStore
+}));
+
+app.get('/', function (req, res, next) {
     res.redirect('/board/list/1');
 });
+
+
 /*
 router.get('/list/:page', function(req,res,next){
     pool.getConnection(function (err, connection){  
@@ -29,29 +60,35 @@ router.get('/list/:page', function(req,res,next){
 });*/
 
 //가짜 삭제할것
-router.get('/list/:page', function (req, res, next) {
+app.get('/list/:page', function (req, res, next) {
     //var name = req.params.name;
     const url = req.params.page;
     console.log(url);
     pool.getConnection(function (err, connection) {
-        var getLecsQuery = "select lec_name,lec_num from board_information where stu_id = '2016722066'";
-        var getBoardContentQuery = "select * from board_content where lec_num =? and stu_id = '2016722066'"; 
-        var stunameSQL = "SELECT stu_name FROM register_info WHERE ID='2016722066'";
+        var getLecsQuery = "select lec_name,lec_num from board_information where stu_id = ?";
+        var getBoardContentQuery = "select * from board_content where lec_num =? and stu_id = ?";
+        var stunameSQL = "SELECT stu_name FROM register_info WHERE ID=?";
         var stu_name;
-        connection.query(stunameSQL, function (err, row) {
-            stu_name=row;
-        });
-        //var classname = "select L.lec_name from lecture_info as L, class_info as C where L.lec_num = C.lec_num and C.grade is null and C.stu_id = '2016722066'"
-        connection.query(getLecsQuery, function (err, lectures) {
-            if (err) console.error("err : " + err);
-            //console.log("rows : " + JSON.stringify(rows));
-            connection.query(getBoardContentQuery, [url] ,function(err, content){
-                console.log(content);
-
-                res.render('list', { title: '공지 및 자료', row:stu_name, lecs: lectures,  contents:content});
+        if (req.session.user) {
+            connection.query(stunameSQL, [req.session.user.id], function (err, row) {
+                stu_name = row;
             });
+            //var classname = "select L.lec_name from lecture_info as L, class_info as C where L.lec_num = C.lec_num and C.grade is null and C.stu_id = '2016722066'"
+            connection.query(getLecsQuery, [req.session.user.id], function (err, lectures) {
+                if (err) console.error("err : " + err);
+                //console.log("rows : " + JSON.stringify(rows));
+                connection.query(getBoardContentQuery, [url, req.session.user.id], function (err, content) {
+                    // console.log(content);
+
+                    res.render('list', { title: '공지 및 자료', row: stu_name[0], lecs: lectures, contents: content });
+                });
+                connection.release();
+            });
+        }
+        else {
+            res.send("<script>alert('만료된 세션');history.back();</script>");
             connection.release();
-        });
+        }
     });
 });
 // router.get('/list/:page', function (req, res, next) {
@@ -68,22 +105,22 @@ router.get('/list/:page', function (req, res, next) {
 //         });
 //     });
 // });
-    /*
+/*
 router.get('/list/:idx', function (req, res, next) {
-    pool.getConnection(function (err, connection) {
-        var classname = "select L.lec_name from lecture_info as L, class_info as C where L.lec_num = C.lec_num and C.grade is null and C.stu_id = '2016722066'"
-        connection.query(classname, function (err, rows_name) {
-            if (err) console.error("err : " + err);
-            console.log("rows : " + JSON.stringify(rows_name));
+pool.getConnection(function (err, connection) {
+    var classname = "select L.lec_name from lecture_info as L, class_info as C where L.lec_num = C.lec_num and C.grade is null and C.stu_id = '2016722066'"
+    connection.query(classname, function (err, rows_name) {
+        if (err) console.error("err : " + err);
+        console.log("rows : " + JSON.stringify(rows_name));
 
-            res.render('list', { title: '공지 및 자료', rows_name: rows_name });
-            connection.release();
-        });
+        res.render('list', { title: '공지 및 자료', rows_name: rows_name });
+        connection.release();
     });
+});
 });*/
 
-    
-router.get('/read/:idx', function (req, res, next) {
+
+app.get('/read/:idx', function (req, res, next) {
     const idx = req.params.idx;
     pool.getConnection(function (err, connection) {
         var sql = "select idx, title, writer, write_date, star, file_name, content, hit, L.lec_name from board as B, lecture_info as L where B.lec_num = L.lec_num"
@@ -102,9 +139,17 @@ router.get('/read/:idx', function (req, res, next) {
 });
 
 //파일 다운로드
-router.get("/download/:name", function (req, res, next) {
+app.get("/download/:name", function (req, res, next) {
     const name = req.params.name;
     res.download(`./file/${name.replace(":", "")}`);
 });
 
-module.exports = router;
+
+app.post('/logout', function (req, res) {
+    delete req.session.user;
+    req.session.save(() => {
+        res.redirect('/login');
+    });
+});
+
+module.exports = app;
