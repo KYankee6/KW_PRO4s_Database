@@ -12,7 +12,8 @@ var pool = mysql.createPool({
     user: 'root',
     port: 3306,
     database: 'database2',
-    password: 'pro4spro4s!'
+    password: 'pro4spro4s!',
+    dateStrings:'date'
 });
 
 
@@ -22,7 +23,8 @@ var options = {
     port: 3306,
     database: 'database2',
     user: 'root',
-    password: 'pro4spro4s!'
+    password: 'pro4spro4s!',
+    dateStrings:'date'
 };
 
 
@@ -63,10 +65,10 @@ router.get('/list/:page', function(req,res,next){
 app.get('/list/:page', function (req, res, next) {
     //var name = req.params.name;
     const url = req.params.page;
-    console.log(url);
+    //console.log(url);
     pool.getConnection(function (err, connection) {
         var getLecsQuery = "select lec_name,lec_num from board_information where stu_id = ?";
-        var getBoardContentQuery = "select * from board_content where lec_num =? and stu_id = ?";
+        var getBoardContentQuery = "select * from board_content where lec_num =? and stu_id = ? order by star DESC";
         var stunameSQL = "SELECT stu_name FROM register_info WHERE ID=?";
         var stu_name;
         if (req.session.user) {
@@ -78,7 +80,7 @@ app.get('/list/:page', function (req, res, next) {
                 if (err) console.error("err : " + err);
                 //console.log("rows : " + JSON.stringify(rows));
                 connection.query(getBoardContentQuery, [url, req.session.user.id], function (err, content) {
-                    // console.log(content);
+                    console.log(content);
 
                     res.render('list', { title: '공지 및 자료', row: stu_name[0], lecs: lectures, contents: content });
                 });
@@ -125,16 +127,26 @@ app.get('/read/:idx', function (req, res, next) {
     pool.getConnection(function (err, connection) {
         var sql = "select idx, title, writer, write_date, star, file_name, content, hit, L.lec_name from board as B, lecture_info as L where B.lec_num = L.lec_num"
         var hitp = "update board set hit = hit + 1 where idx=?";
-
-        connection.query(sql, [idx], function (err, row) {
-            if (err) console.error(err);
-            console.log("1개 글 조회 결과 확인 : ", row);
-            res.render('read', { title: "공지 및 자료", row: row[Number(idx.replace(":", "")) - 1] });
+        var stunameSQL = "SELECT stu_name FROM register_info WHERE ID=?";
+        var stu_name;
+        if (req.session.user) {
+            connection.query(stunameSQL, [req.session.user.id], function (err, row) {
+                stu_name = row;
+            });
+            connection.query(sql, [req.session.user.id], function (err, row) {
+                if (err) console.error(err);
+                console.log("1개 글 조회 결과 확인 : ", row);
+                res.render('read', { title: "공지 및 자료", row: row[Number(idx.replace(":", "")) - 1] });
+                connection.release();
+            });
+            connection.query(hitp, [req.session.user.id], function (req, row) {
+                console.log("조회수 올라간다");
+            });
+        }
+        else {
+            res.send("<script>alert('만료된 세션');history.back();</script>");
             connection.release();
-        });
-        connection.query(hitp, [idx], function (req, row) {
-            console.log("조회수 올라간다");
-        });
+        }
     });
 });
 
@@ -152,4 +164,5 @@ app.post('/logout', function (req, res) {
     });
 });
 
+//function star_sort
 module.exports = app;
