@@ -87,9 +87,15 @@ app.post('/enroll/search', function (req, res, next) {
 app.get('/enroll', function (req, res, next) {
     pool.getConnection(function (err, connection) {
         //Use the connection
-        var baseQuery = "SELECT * FROM enrolled_list WHERE stu_id=?";
+        var baseQuery = "SELECT * FROM enrolled_list WHERE stu_id = ?";
+        var stunameSQL = "SELECT stu_name FROM register_info WHERE ID=?";
+        var stu_name = [];
+        var stu_id = req.session.user.id;
         var array = [];
         if (req.session.user) {
+            connection.query(stunameSQL, [req.session.user.id], function(err, name) {
+                stu_name = name[0].stu_name;
+            });
             connection.query(baseQuery, [req.session.user.id], function (err, enr_row) {
                 if (err) console.error("err : " + err);
                 console.log(enr_row);
@@ -97,7 +103,7 @@ app.get('/enroll', function (req, res, next) {
                     if (enr_row[i].major_minor == 1) enr_row[i].major_minor = "전공";
                     else enr_row[i].major_minor = "교양";
                 }
-                res.render('enroll', { title: "수강 신청", enr_row: enr_row });
+                res.render('enroll', { title: "수강 신청", enr_row: enr_row, stu_name:stu_name, stu_id:stu_id});
             });
         }
         else {
@@ -152,6 +158,19 @@ app.get('/enroll/selectandshow/:lec_num', function (req, res, next){
     }
 });
 });
+
+
+app.post('/enroll/drop', function (req, res, next) {
+    pool.getConnection(function (err, connection) {
+        var dropSQL = "DELETE FROM class_info WHERE stu_id = ? and lec_num = ?";
+        console.log(req.body.lesson_selected, req.session.user.id);
+        connection.query(dropSQL, [req.session.user.id, req.body.lesson_selected], function(err, result) {
+            res.send("<script>alert('강의 삭제 완료.');history.back();</script>");
+            res.end();
+        });
+    });
+});
+
 app.get('/', function (req, res, next) {
     pool.getConnection(function (err, connection) {
         //Use the connection
