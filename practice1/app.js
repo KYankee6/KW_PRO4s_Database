@@ -19,7 +19,7 @@ var app = express();
 var updateRouter = require('./routes/update');
 var find_IDRouter = require('./routes/find_ID');
 var find_passwdRouter = require('./routes/find_passwd');
-var chartRouter = require('./routes/chart');
+var gradeRouter = require('./routes/grade');
 // var resultRouter = require('./routes/result');
 
 // view engine setup
@@ -45,7 +45,7 @@ app.use('/joinForm', joinRouter);
 app.use('/update', updateRouter);
 app.use('/find_ID', find_IDRouter);
 app.use('/find_passwd', find_passwdRouter);
-app.use('/chart', chartRouter);
+app.use('/grade', gradeRouter);
 // app.use('/result', resultRouter);
 
 // catch 404 and forward to error handler

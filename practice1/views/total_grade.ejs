@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title><%= title %></title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+    google.charts.load('current', { 'packages': ['line'] });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+
+      var rows = new Array();
+      var data = new google.visualization.DataTable();
+      data.addColumn('number', '학기');
+      data.addColumn('number', '종합');
+      data.addColumn('number', '전공');
+      data.addColumn('number', '교양');
+
+      for (var i = 0; i < 10; i++) {
+        rows.push([i, i * 2, i * i, i * (i - 1)]);
+      }
+      //console.log(grades);
+      data.addRows(rows);
+
+      var options = {
+        width: 900,
+        height: 500
+      };
+
+      var chart = new google.charts.Line(document.getElementById('linechart_material'));
+
+      chart.draw(data, google.charts.Line.convertOptions(options));
+
+    }
+  </script>
+</head>
+
+<body>
+  <center>
+    <style>
+      .btn {
+        text-decoration: none;
+        font-size: 1;
+        color: black;
+        margin: 5px;
+        padding: 5px 5px 5px 5px;
+        display: inline-block;
+        border-radius: 1px;
+        background-color: lightgray;
+        border-color: black;
+        transition: all 0.1s;
+      }
+    </style>
+    <div style="float:right">
+      <%=row.stu_name%>님 환영합니다~
+      <form action="https://google.com" method "get" style="display:inline"><button type='submit'
+          class='.btn'>개인정보</button></form>
+      <form action="/index/logout" method="post" style="display:inline"><button type='submit' class='.btn'>로그인</button>
+      </form>
+    </div>
+    <br>
+    <br>
+    <table style="border-collapse : collapse; background-color:rgb(115, 35, 46); width: 100%">
+      <tr>
+        <td><a href="/index" style="text-decoration:none; text-align:center"><img src="/Kwangwoon_mark_1.jpg" width=121
+              height=40></a></td>
+        <td><a href="/grade/total_grade" style="text-decoration:none; color: white">학습결과</a></td>
+        <td><a href="https://naver.com" style="text-decoration:none; color: white">시간표</a></td>
+        <td><a href="https://naver.com" style="text-decoration:none; color: white">수강신청</a></td>
+        <td><a href="/board/list/1" style="text-decoration:none; color: white">공지사항</a></td>
+        <td><a href="https://naver.com" style="text-decoration:none; color: white">친구 목록</a></td>
+      </tr>
+    </table>
+    <h1><%= title%></h1>
+    <br>
+    <br>
+    <table style="border-collapse : collapse; width: 50% " border="1">
+      <tr>
+        <td>학번</td>
+        <td>이름</td>
+      </tr>
+      <tr>
+        <td><%=grades[0].stu_id%></td>
+        <td><%=grades[0].stu_name%></td>
+      </tr>
+    </table>
+    <table style="border-collapse : collapse; width: 50% " border="1">
+      <tr>
+        <td>학기</td>
+        <td>취득학점</td>
+        <td>성적</td>
+      </tr>
+      <%
+        for(var i=0; i<grades.length; i++)
+        {
+            var oneItem2 = grades[i];
+        %>
+      <tr>
+        <td>
+          <%
+                if(oneItem2.open_date.getMonth()+1 == 3)
+                {
+                %>
+          <%=oneItem2.open_date.getFullYear()%>-1
+          <%
+                }
+                %>
+          <%
+                if(oneItem2.open_date.getMonth()+1 == 9)
+                {
+                %>
+          <%=oneItem2.open_date.getFullYear()%>-2
+          <%
+                }
+                %>
+        </td>
+        <td><%=oneItem2.sum_credit%></td>
+        <td><%=oneItem2.avg_grade%></td>
+      </tr>
+      <%
+        }
+        %>
+    </table>
+    <br>
+    <br>
+    <div id="linechart_material" style="width: 900px; height: 500px"></div>
+    <br>
+    <%
+    for(var i=0; i<semesters_cnt.length; i++)
+    {
+        var oneItem4 = semesters_cnt[i];
+    %>
+    <table style="border-collapse : collapse; width: 50% " border="1">
+      <tr>
+        <td><%
+            if(oneItem4.open_date.getMonth()+1 == 3)
+            {
+            %>
+          <%=oneItem4.open_date.getFullYear()%>-1
+          <%
+            }
+            %>
+          <%
+            if(oneItem4.open_date.getMonth()+1 == 9)
+            {
+            %>
+          <%=oneItem4.open_date.getFullYear()%>-2
+          <%
+            }
+            %></td>
+      </tr>
+      <tr>
+        <td>학정번호</td>
+        <td>과목</td>
+        <td>학점</td>
+        <td>성적</td>
+        <td>강의평가</td>
+        <td>강의평</td>
+      </tr>
+      <%
+        for(var j=0; j<semesters.length; j++)
+        {
+            var oneItem3 = semesters[j];
+        %>
+      <%
+            if(oneItem4.open_date.getTime() == oneItem3.open_date.getTime())
+            {
+            %>
+      <tr>
+        <td><%=oneItem3.lec_num%></td>
+        <td><%=oneItem3.lec_name%></td>
+        <td><%=oneItem3.credit%></td>
+        <td><%=oneItem3.grade%></td>
+        <td><%=oneItem3.lec_eval%></td>
+        <td><%-oneItem3.lec_eval_comment%></td>
+      </tr>
+      <%
+            }
+            %>
+      <%
+        }
+        %>
+      <br>
+    </table>
+    <%
+    }
+    %>
+  </center>
+</body>
+
+</html>
