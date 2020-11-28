@@ -223,13 +223,20 @@ app.post('/enroll/apply', function(req, res, next) {
         }
         if (curSelectLesson && isNoSameLecture && isTimeAvailable && isUnderMaxCredit) {
             connection.query(myLessonQuery, [lec_num], function(err3, my_lesson) {
+                if (err3) {
+                    console.log(err3);
+                }
                 curSelectLesson[0] = curSelectLesson[0].replace(" ", my_lesson[0].lec_num);
                 curSelectLesson[1] = curSelectLesson[1].replace(" ", my_lesson[0].lec_name);
                 curSelectLesson[2] = curSelectLesson[2].replace(" ", stu_id);
                 curSelectLesson[3] = curSelectLesson[3].replace(" ", my_lesson[0].credit);
-                console.log(curSelectLesson);
+                //console.log(curSelectLesson);
+                console.log(information);
                 connection.query(TakeLessonQuery, curSelectLesson, function(err, next) {
-                    res.redirect('back');
+                    if (err) {
+                        console.log(err);
+                    }
+                    res.redirect("back");
                 });
             });
 
@@ -388,6 +395,17 @@ app.post('/logout', function(req, res) {
     delete req.session.user;
     req.session.save(() => {
         res.redirect('/login');
+    });
+});
+
+app.post('/enroll/drop', function(req, res, next) {
+    pool.getConnection(function(err, connection) {
+        var dropSQL = "DELETE FROM class_info WHERE stu_id = ? and lec_num = ?";
+        console.log(req.body.lesson_selected, req.session.user.id);
+        connection.query(dropSQL, [req.session.user.id, req.body.lesson_selected], function(err, result) {
+            res.redirect("back");
+
+        });
     });
 });
 module.exports = app;
