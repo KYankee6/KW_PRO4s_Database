@@ -55,6 +55,7 @@ app.get('/total_grade', function (req, res, next) {
         var getSemesterCount = "select distinct open_date from open_class_info where stu_id=? ORDER BY `open_date`";
         var getMajorGrade = "select * from major_minor_grade where stu_id = ? and major_minor = 1";
         var getMinorGrade = "select * from major_minor_grade where stu_id = ? and major_minor = 0";
+        var getMajorMinorGrade = "select * from major_minor_grade where stu_id = ?";
         var stunameSQL = "SELECT stu_name FROM register_info WHERE ID=?";
         var stu_name;
         if (req.session.user) {
@@ -79,6 +80,12 @@ app.get('/total_grade', function (req, res, next) {
                                 //console.log(semester);
                             });
                         });
+                        connection.query(getMajorMinorGrade, [req.session.user.id], function (err, major_minor)
+                        {
+                            res.render('total_grade', { title: "수강/성적 조회", row: stu_name[0], grades: grade, semesters: semester, semesters_cnt: semester_cnt, major_minors: major_minor});
+                            console.log(semester_cnt);
+                            console.log(semester);
+                        })
                     });
                     //res.render('total_grade', { title: "수강/성적 조회", row: stu_name[0], grades: grade, semesters: semester});
                     //console.log(semester);
@@ -96,4 +103,31 @@ app.get('/total_grade', function (req, res, next) {
     });
 });
 
+app.get('/give_eval/:page', function (req, res) {
+    var url = req.params.page;
+    pool.getConnection(function (err, connection) {
+        var eval = Number(url[url.length - 1]);
+        if (eval == 0) eval = 10;
+        url = url.substr(0, url.length -1);
+        console.log(url, eval);
+        var updateEval = "UPDATE class_info SET lec_eval = ? WHERE stu_id = ? and lec_num = ?";
+        connection.query(updateEval, [eval, req.session.user.id, url], function (err, result) {
+            if (err) console.log('err : ', err);
+            res.redirect('back');
+        });
+    });
+});
+
+app.post('/comment/:page', function (req, res) {
+    var url = req.params.page;
+    console.log('?');
+    pool.getConnection(function (err, connection) {
+        var insertComment = "UPDATE class_info SET lec_eval_comment = ? WHERE stu_id = ? and lec_num = ?";
+        connection.query(insertComment, [req.body.comment, req.session.user.id, url], function (err, result) {
+            console.log(result);
+            if (err) console.log('err : ', err);
+            res.redirect('back');
+        });
+    });
+});
 module.exports = app;

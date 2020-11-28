@@ -44,11 +44,10 @@
         }
     </style>
     <div style="float:right">
-        <%= enr_row[0].stu_name %>님 환영합니다~
+        <%= stu_name %>님 환영합니다~
 
-        <form action="/index/logout" method="post">
-            <a href="https://google.com" class="btn">개인정보</a>
-            <button type='submit' class="btn">Logout</button>
+        <form action="/update" method "get" style="display:inline"><button type='submit' class='.btn'>개인정보</button></form>
+        <form action="/index/logout" method ="post" style="display:inline"><button type='submit' class='.btn'>로그아웃</button></form>
         </form>
     </div>
     <br>
@@ -57,11 +56,11 @@
             <tr>
                 <td><a href="/index" style="text-decoration:none; text-align:center"><img src="/Kwangwoon_mark_1.jpg"
                             width=121 height=40></a></td>
-                <td><a href="https://naver.com" style="text-decoration:none; color: white">학습결과</a></td>
-                <td><a href="https://naver.com" style="text-decoration:none; color: white">시간표</a></td>
-                <td><a href="/index" style="text-decoration:none; color: white">수강신청</a></td>
+                <td><a href="/grade/total_grade" style="text-decoration:none; color: white">학습결과</a></td>
+                <td><a href="/timetable" style="text-decoration:none; color: white">시간표</a></td>
+                <td><a href="/index/enroll" style="text-decoration:none; color: white">수강신청</a></td>
                 <td><a href="/board/list/1" style="text-decoration:none; color: white">공지사항</a></td>
-                <td><a href="https://naver.com" style="text-decoration:none; color: white">친구 목록</a></td>
+                <td><a href="/friend" style="text-decoration:none; color: white">친구 목록</a></td>
             </tr>
         </table>
     </center>
@@ -72,7 +71,7 @@
             <td>학기</td>
             <td>3-2</td>
             <td>학번</td>
-            <td><%= enr_row[0].stu_id %></td>
+            <td><%= stu_id %></td>
         </tr>
     </table>
     <br>
@@ -157,9 +156,8 @@
 
     <h2 style="display: inline">수강신청 내역</h2>
     <div style="float:right">
-        <form action="/index/enroll/giveup" method="post" style="display: inline;direction: rtl;">
+        <form action="/index/enroll/drop" method="post" style="display: inline;direction: rtl;">
             <button type='submit' class="btn">강의포기</button>
-        </form>
     </div>
     <table class="Tstyle" ;>
         <tr>
@@ -174,16 +172,19 @@
         <% for(var i=0; i<enr_row.length; i++){  %>
         <tr>
             <form action="/index/enroll_search" method="post">
-                <td><input type="checkbox" name="lesson_selected" value="<%=enr_row[i].lec_num%>"></td>
+                <td><input type="radio" name="lesson_selected" value="<%=enr_row[i].lec_num%>"></td>
                 <td id="s_lec_name"><%=enr_row[i].lec_name%></td>
-                <td><%=enr_row[i].professor%></td>
+                <td><%=enr_row[i].professor%></td> 
                 <td id="s_lec_major_minor"><%=enr_row[i].major_minor%></td>
                 <td id="s_lec_credit"><%=enr_row[i].credit%></td>
                 <td><%=enr_row[i].time_stamp%></td>
                 <td id="s_lec_location"><%=enr_row[i].location%></td>
-            </form>
         </tr>
         <%}%>
-
+        <tr>
+            <input type="reset" value="재선택">
+        </tr>
+    </form>
+</form>
     </table>
 </body>

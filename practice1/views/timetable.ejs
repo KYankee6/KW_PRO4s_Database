@@ -28,16 +28,16 @@
 <br>
 </div>
 <center>
-<table style="border-collapse : collapse; background-color:rgb(115, 35, 46); width: 100%">
-    <tr>
-        <td><a href="/index" style="text-decoration:none; text-align:center"><img src="./Kwangwoon_mark_1.jpg" width=121 height=40></a></td>
-        <td align="center"><a href="https://naver.com" style="text-decoration:none; color: white" >학습결과</a></td>
-        <td align="center"><a href="/timetable" style="text-decoration:none; color: white">시간표</a></td>
-        <td align="center"><a href="https://naver.com" style="text-decoration:none; color: white">수강신청</a></td>
-        <td align="center"><a href="/board/list/1" style="text-decoration:none; color: white">공지사항</a></td>
-        <td align="center"><a href="/friend" style="text-decoration:none; color: white">친구 목록</a></td>
-    </tr>
-</table>
+    <table style="border-collapse : collapse; background-color:rgb(115, 35, 46); width: 100%">
+        <tr>
+            <td><a href="/index" style="text-decoration:none; text-align:center"><img src="/Kwangwoon_mark_1.jpg" width=121 height=40></a></td>
+            <td><a href="/grade/total_grade" style="text-decoration:none; color: white">학습결과</a></td>
+            <td><a href="/timetable" style="text-decoration:none; color: white">시간표</a></td>
+            <td><a href="/index/enroll" style="text-decoration:none; color: white">수강신청</a></td>
+            <td><a href="/board/list/1" style="text-decoration:none; color: white">공지사항</a></td>
+            <td><a href="/friend" style="text-decoration:none; color: white">친구 목록</a></td>
+        </tr>
+    </table>
 <br>
 <form>
     <select onchange="if(this.value) location.href=(this.value);">
@@ -75,7 +75,8 @@
 <%
         for(var j = 0; j < 5; j++) {
 %>
-        <td width="150px" height="80px"><h5><%=lec_name[i][j]%></h5><h6> <%=professor[i][j]%> <%=location[i][j]%></h6></td>
+        <td width="150px" height="80px"><h5><a href="/board/list/<%=lec_num[i][j]%>" style="text-decoration:none; color: black;"><%=lec_name[i][j]%></a></h5>
+            <h6><a href="/timetable/professor/<%=lec_num[i][j]%>"><%=professor[i][j]%></a><%=location[i][j]%></h6></td>
 <%
         }
 %>
