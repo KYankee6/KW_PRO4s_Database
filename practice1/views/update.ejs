@@ -46,7 +46,7 @@
             <tr>
                 <td colspan="2">
                     <input type="submit" name="submit" value="수정">
-                    <input type="reset" name="cancel" value="취소">
+                    <button type="button" onclick="location.href='/index'">취소</button>
                 </td>
             </tr>
         </table>
@@ -86,7 +86,7 @@
                 alert(message);
                 return false;
             }
-
+            alert("수정이 완료되었습니다.");
             return true;
         }
     </script>
