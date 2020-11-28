@@ -15,23 +15,6 @@
 
 <body>
     <style>
-        body {
-            font-family: 'lato', sans-serif;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin-left: auto;
-            margin-right: auto;
-            padding-left: 10px;
-            padding-right: 10px;
-        }
-
-        h2 {
-            font-size: 26px;
-            margin: 20px 0;
-            text-align: center;
-        }
 
 
         .btn {
@@ -59,7 +42,7 @@
         }
     </style>
     <div style="float:right">
-        <%= enr_row[0].stu_name %>님 환영합니다~
+        <%=stu_name %>님 환영합니다~
 
         <form action="/index/logout" method="post">
             <a href="https://google.com" class="btn">개인정보</a>
@@ -87,7 +70,7 @@
             <td>학기</td>
             <td>3-2</td>
             <td>학번</td>
-            <td><%= enr_row[0].stu_id %></td>
+            <td><%= stu_id %></td>
         </tr>
     </table>
     <br>
@@ -97,20 +80,19 @@
     <h2 style="display: inline">선택 강좌 정보</h2>
     <div style="float:right">
 
-        <!-- <form action="/index/enroll/search" method="post" style="display: inline;direction: rtl;">
-            <input type="text" name="lec_name_for_search" id="lec_name_for_search">
-            <button type='submit' name="btn_search" class="btn">강의검색</button>
-        </form> -->
         <form action="/index/enroll/apply" method="post" style="display: inline;">
             <button type='submit' name="lesson_take" class="btn">수강신청</button>
-        </form>
+        
     </div>
 
     <table class="Tstyle" ;>
         <tr>
             <td>교과목명</td>
             <td id="c_lec_name">
+
                 <% if(locals.sh_enr_row){%>
+                    <input type="hidden" name="lec_num" id="lec_num" value="<%=sh_enr_row[0].lec_num%>"/>
+
                 <%=sh_enr_row[0].lec_name%>
                 <% } %>
             </td>
@@ -137,52 +119,18 @@
             </td>
         </tr>
     </table>
+</form>
     <br>
     <br>
     <h2 style="display: inline">개설강좌 내역(클릭)</h2>
     <div style="float:right">
 
-        <form action="/index/enroll/search" method="post" style="display: inline;direction: rtl;"
-            >
+        <form action="/index/enroll/search" method="post" style="display: inline;direction: rtl;">
             <input type="text" name="lec_name_for_search" id="lec_name_for_search">
             <button type='submit' name="btn_search" class="btn">강의검색</button>
         </form>
         </div>  
-        <div class="container">
-            <h2>Responsive Tables Using LI <small>Triggers on 767px</small></h2>
-            <ul class="responsive-table">
-              <li class="table-header">
-                <div class="col col-1">Job Id</div>
-                <div class="col col-2">Customer Name</div>
-                <div class="col col-3">Amount Due</div>
-                <div class="col col-4">Payment Status</div>
-              </li>
-              <li class="table-row">
-                <div class="col col-1" data-label="Job Id">42235</div>
-                <div class="col col-2" data-label="Customer Name">John Doe</div>
-                <div class="col col-3" data-label="Amount">$350</div>
-                <div class="col col-4" data-label="Payment Status">Pending</div>
-              </li>
-              <li class="table-row">
-                <div class="col col-1" data-label="Job Id">42442</div>
-                <div class="col col-2" data-label="Customer Name">Jennifer Smith</div>
-                <div class="col col-3" data-label="Amount">$220</div>
-                <div class="col col-4" data-label="Payment Status">Pending</div>
-              </li>
-              <li class="table-row">
-                <div class="col col-1" data-label="Job Id">42257</div>
-                <div class="col col-2" data-label="Customer Name">John Smith</div>
-                <div class="col col-3" data-label="Amount">$341</div>
-                <div class="col col-4" data-label="Payment Status">Pending</div>
-              </li>
-              <li class="table-row">
-                <div class="col col-1" data-label="Job Id">42311</div>
-                <div class="col col-2" data-label="Customer Name">John Carpenter</div>
-                <div class="col col-3" data-label="Amount">$115</div>
-                <div class="col col-4" data-label="Payment Status">Pending</div>
-              </li>
-            </ul>
-          </div>
+ 
     <table class="Tstyle" ;>
         
         <tr>

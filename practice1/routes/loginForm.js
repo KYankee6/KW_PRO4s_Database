@@ -99,6 +99,7 @@ app.post('/', function (req, res, next) {
         {
           id: in_stu_id,
           pw: in_passwd,
+          name: results[0].stu_name,
           authorized: true
         };
 
