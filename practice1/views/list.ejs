@@ -32,7 +32,7 @@
     <table style="border-collapse : collapse; background-color:rgb(115, 35, 46); width: 100%">
         <tr>
             <td><a href="/index" style="text-decoration:none; text-align:center"><img src="/Kwangwoon_mark_1.jpg" width=121 height=40></a></td>
-            <td><a href="https://naver.com" style="text-decoration:none; color: white" >학습결과</a></td>
+            <td><a href="/grade/total_grade" style="text-decoration:none; color: white" >학습결과</a></td>
             <td><a href="/timetable" style="text-decoration:none; color: white">시간표</a></td>
             <td><a href="/index/enroll" style="text-decoration:none; color: white">수강신청</a></td>
             <td><a href="/board/list/1" style="text-decoration:none; color: white">공지사항</a></td>
@@ -50,14 +50,14 @@
         {
             var oneItem = lecs[i];
         %>
-
-            <option value="/board/list/<%=oneItem.lec_num%>"><%=oneItem.lec_name%></option>
+            <option value="/board/list/<%=oneItem.lec_num%>"><%=oneItem.lec_num%></option>
             <%
             }
         %>
 
 
         </select>
+    
     </form>
     <table border="1">
         <tr>
@@ -71,9 +71,26 @@
         for(var i=0; i<contents.length; i++)
         {
             var oneItem1 = contents[i];
-    %>
+        %>
         <tr>
-            <td><%=oneItem1.idx%></td>
+            <td>
+                <%
+                if(oneItem1.star==1)
+                {
+                %>
+                    <img src="/star.jpg" width=20 height=20>
+                <%
+                }
+                %>
+                <%
+                if(oneItem1.star==0)
+                {
+                %>
+                    <%=i+1%>
+                <%    
+                }
+                %>
+                </td>
             <td><a href="/board/read/<%=oneItem1.idx%>"><%=oneItem1.title%></a></td>
             <td><%=oneItem1.writer%></td>
             <td><%=oneItem1.write_date%></td>
@@ -81,7 +98,7 @@
         </tr>
         <%
         }
-    %>
+        %>
     </table>
 </body>
 

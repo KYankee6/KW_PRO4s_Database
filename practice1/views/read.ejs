@@ -11,6 +11,37 @@
             document.location.href = '/board//download/:<%=row.file_name%>'
         }
     </script>
+    <style>
+        .btn{
+          text-decoration: none;
+          font-size:1;
+          color:black;
+          margin:5px;
+          padding:5px 5px 5px 5px;
+          display:inline-block;
+          border-radius: 1px;
+          background-color: lightgray;
+          border-color: black;
+          transition:all 0.1s;
+          }
+    </style>
+    <div style="float:right">
+    <%=row.stu_name%>님 환영합니다~
+    <form action="https://google.com" method "get" style="display:inline"><button type='submit' class='.btn'>개인정보</button></form>
+    <form action="/index/logout" method ="post" style="display:inline"><button type='submit' class='.btn'>로그인</button></form>
+    </div>
+    <br>
+    <br>
+    <table style="border-collapse : collapse; background-color:rgb(115, 35, 46); width: 100%">
+        <tr>
+            <td><a href="/index" style="text-decoration:none; text-align:center"><img src="/Kwangwoon_mark_1.jpg" width=121 height=40></a></td>
+            <td><a href="/grade/total_grade" style="text-decoration:none; color: white" >학습결과</a></td>
+            <td><a href="https://naver.com" style="text-decoration:none; color: white">시간표</a></td>
+            <td><a href="https://naver.com" style="text-decoration:none; color: white">수강신청</a></td>
+            <td><a href="/board/list/1" style="text-decoration:none; color: white">공지사항</a></td>
+            <td><a href="https://naver.com" style="text-decoration:none; color: white">친구 목록</a></td>
+        </tr>
+    </table>
 <h1><%= title %></h1>
 
 
