@@ -217,6 +217,17 @@ app.get('/location/:page', function (req, res, next) {
     });
 });
 
+app.get('/professor/:page', function(req, res) {
+    const url = req.params.page;
+    pool.getConnection(function (err, connection) {
+        var professorPN = "SELECT DISTINCT professor_phone FROM lecture_info WHERE lec_num = ?";
+        connection.query(professorPN, [url], function(err, result) {
+            
+            res.send("<script>alert(JSON.stringify(result));history.back(-1);</script>");
+        });
+    });
+});
+
 app.post('/logout', function (req, res) {
     delete req.session.user;
     req.session.save(() => {
