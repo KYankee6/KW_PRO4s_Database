@@ -53,7 +53,8 @@ app.get('/total_grade', function (req, res, next) {
         var gettotalgradesql = "select * from total_grade where stu_id = ?";
         var getSemesterGradeSql = "select * from open_class_info where stu_id = ?"
         var getSemesterCount = "select distinct open_date from open_class_info where stu_id=? ORDER BY `open_date`";
-        var getMajorMinorGrade = "select * from major_minor_grade where stu_id = ?";
+        var getMajorGrade = "select * from major_minor_grade where stu_id = ? and major_minor = 1";
+        var getMinorGrade = "select * from major_minor_grade where stu_id = ? and major_minor = 0";
         var stunameSQL = "SELECT stu_name FROM register_info WHERE ID=?";
         var stu_name;
         if (req.session.user) {
@@ -69,12 +70,16 @@ app.get('/total_grade', function (req, res, next) {
                 //console.log(grade);
                 connection.query(getSemesterGradeSql, [req.session.user.id], function (err, semester){
                     connection.query(getSemesterCount,  [req.session.user.id], function (err, semester_cnt){
-                        connection.query(getMajorMinorGrade, [req.session.user.id], function (err, major_minor)
-                        {
-                            res.render('total_grade', { title: "수강/성적 조회", row: stu_name[0], grades: grade, semesters: semester, semesters_cnt: semester_cnt, major_minors: major_minor});
-                            console.log(semester_cnt);
-                            console.log(semester);
-                        })
+                        connection.query(getMajorGrade, [req.session.user.id], function (err, major){
+                            connection.query(getMinorGrade, [req.session.user.id], function (err, minor){
+                                res.render('total_grade', { title: "수강/성적 조회", row: stu_name[0], grades: grade, semesters: semester, semesters_cnt: semester_cnt, majors: major, minors: minor});
+                                //console.log(semester_cnt);
+                                //console.log(semester);
+                                //console.log(grade);
+                                //console.log(major);
+                                //console.log(minor);
+                            });
+                        });
                     });
                     //res.render('total_grade', { title: "수강/성적 조회", row: stu_name[0], grades: grade, semesters: semester});
                     //console.log(semester);
@@ -92,4 +97,24 @@ app.get('/total_grade', function (req, res, next) {
     });
 });
 
+app.post('/', function(req, res){
+    var responseData = {};
+   
+    var query =  connection.query('select score from scoreboard where uid="ma" ORDER BY num DESC limit 10', function(err,rows){ 
+      responseData.score = [];
+      if(err) throw err;
+      if(rows[0]){
+        responseData.result = "ok";
+        rows.forEach(function(val){
+          responseData.score.push(val.score);
+        })
+      }
+      else{
+        responseData.result = "none";
+        responseData.score = "";
+      }
+      res.json(responseData);
+    });
+  });
+  
 module.exports = app;
