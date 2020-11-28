@@ -44,6 +44,114 @@ app.use(session({
 //     });
 // });
 
+app.post('/enroll/search', function (req, res, next) {
+    pool.getConnection(function (err, connection) {
+        //Use the connection
+        var baseQuery = "SELECT * FROM lecture_info WHERE lec_name like ? and open_date='2020-09-01'";
+        var underQuery = "SELECT * FROM enrolled_list WHERE stu_id=?";
+        var reqSearch = req.body.lec_name_for_search;
+        var array = [];
+
+        if (req.session.user && reqSearch) {
+            connection.query(underQuery, [req.session.user.id], function (err, enr_row) {
+                if (err) console.error("err : " + err);
+                // console.log(enr_row);
+                for (var i = 0; i < enr_row.length; i++) {
+                    if (enr_row[i].major_minor == 1) enr_row[i].major_minor = "전공";
+                    else enr_row[i].major_minor = "교양";
+                }
+                array = enr_row;
+            });
+            connection.query(baseQuery, [reqSearch + "%"], function (err, s_enr_row) {
+                if (err) console.error("err : " + err);
+                //console.log(s_enr_row);
+                for (var i = 0; i < s_enr_row.length; i++) {
+                    if (s_enr_row[i].major_minor == 1) s_enr_row[i].major_minor = "전공";
+                    else s_enr_row[i].major_minor = "교양";
+                }
+                console.log(s_enr_row);
+                res.render('enroll', { title: "수강 신청", s_enr_row: s_enr_row, enr_row: array });
+            });
+        }
+        else if (!reqSearch) {
+            res.send("<script>alert('입력란을 채워주세요.');history.back();</script>");
+            connection.release();
+        }
+        else {
+            res.send("<script>alert('만료된 세션');history.back();</script>");
+            connection.release();
+        }
+    });
+});
+
+app.get('/enroll', function (req, res, next) {
+    pool.getConnection(function (err, connection) {
+        //Use the connection
+        var baseQuery = "SELECT * FROM enrolled_list WHERE stu_id=?";
+        var array = [];
+        if (req.session.user) {
+            connection.query(baseQuery, [req.session.user.id], function (err, enr_row) {
+                if (err) console.error("err : " + err);
+                console.log(enr_row);
+                for (var i = 0; i < enr_row.length; i++) {
+                    if (enr_row[i].major_minor == 1) enr_row[i].major_minor = "전공";
+                    else enr_row[i].major_minor = "교양";
+                }
+                res.render('enroll', { title: "수강 신청", enr_row: enr_row });
+            });
+        }
+        else {
+            res.send("<script>alert('만료된 세션');history.back();</script>");
+            connection.release();
+        }
+    });
+});
+app.get('/enroll/selectandshow/:lec_num', function (req, res, next){
+    pool.getConnection(function (err, connection) {
+    var lec_num = req.params.lec_num;
+    var selandshowQuery = "select lec_name,location,credit,major_minor from lecture_info where lec_num =?";
+    var baseQuery = "SELECT * FROM lecture_info WHERE lec_name like ? and open_date='2020-09-01'";
+    var underQuery = "SELECT * FROM enrolled_list WHERE stu_id=?";
+    var reqSearch = req.query.lec_name_for_search;
+    console.log(reqSearch);
+    var array = [];
+    var sharr = [];
+    if (lec_num) {
+        connection.query(selandshowQuery, [lec_num], function (err, shenr_row) {
+            if (err) console.error("err : " + err);
+            // console.log(enr_row);
+            for (var i = 0; i < shenr_row.length; i++) {
+                if (shenr_row[i].major_minor == 1) shenr_row[i].major_minor = "전공";
+                else shenr_row[i].major_minor = "교양";
+            }
+            sharr = shenr_row;
+        });
+        connection.query(underQuery, [req.session.user.id], function (err, enr_row) {
+            if (err) console.error("err : " + err);
+            // console.log(enr_row);
+            for (var i = 0; i < enr_row.length; i++) {
+                if (enr_row[i].major_minor == 1) enr_row[i].major_minor = "전공";
+                else enr_row[i].major_minor = "교양";
+            }
+            array = enr_row;
+        });
+        connection.query(baseQuery, [reqSearch + "%"], function (err, s_enr_row) {
+            if (err) console.error("err : " + err);
+            //console.log(s_enr_row);
+            for (var i = 0; i < s_enr_row.length; i++) {
+                if (s_enr_row[i].major_minor == 1) s_enr_row[i].major_minor = "전공";
+                else s_enr_row[i].major_minor = "교양";
+            }
+            //console.log(s_enr_row);
+            res.render('enroll', { title: "수강 신청", s_enr_row: s_enr_row, enr_row: array,sh_enr_row:sharr});
+        });
+    }
+    else {
+        res.send("<script>alert('원하시는 과목을 선택해주세요');history.back();</script>");
+        connection.release();
+    }
+});
+});
 app.get('/', function (req, res, next) {
     pool.getConnection(function (err, connection) {
         //Use the connection
@@ -68,7 +176,7 @@ app.get('/', function (req, res, next) {
         }
         console.log(lec_name);
         if (req.session.user) {
-            console.log(req.session.user);
+            //console.log(req.session.user);
             connection.query(stunameSQL, [req.session.user.id], function (err, row) {
                 connection.query(deansList, function (err, rows) {
                     connection.query(Timetable, [req.session.user.id], function (err, table) {
