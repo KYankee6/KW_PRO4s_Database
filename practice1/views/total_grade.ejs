@@ -130,14 +130,40 @@
             if(oneItem4.open_date.getTime() == oneItem3.open_date.getTime())
             {
             %>
-            <tr>
-                <td><%=oneItem3.lec_num%></td>
-                <td><%=oneItem3.lec_name%></td>
-                <td><%=oneItem3.credit%></td>
-                <td><%=oneItem3.grade%></td>
-                <td><%=oneItem3.lec_eval%></td>
-                <td><%-oneItem3.lec_eval_comment%></td>
-            </tr>
+                <tr>
+                    <td><%=oneItem3.lec_num%></td>
+                    <td><%=oneItem3.lec_name%></td>
+                    <td><%=oneItem3.credit%></td>
+                    <td><%=oneItem3.grade%></td>
+                        <% if(oneItem3.lec_eval != null || oneItem3.grade == null) { %>
+                    <td><%=oneItem3.lec_eval%></td>
+                        <% } else { %>
+                    <td>
+                        <select id = "lec_eval" name = "lec_eval" onchange="if(this.value) location.href=(this.value);">
+                            <option value="none"> </option>
+                            <option value="/grade/give_eval/<%=oneItem3.lec_num%>0">10</option>
+                            <option value="/grade/give_eval/<%=oneItem3.lec_num%>9">9</option>
+                            <option value="/grade/give_eval/<%=oneItem3.lec_num%>8">8</option>
+                            <option value="/grade/give_eval/<%=oneItem3.lec_num%>7">7</option>
+                            <option value="/grade/give_eval/<%=oneItem3.lec_num%>6">6</option>
+                            <option value="/grade/give_eval/<%=oneItem3.lec_num%>5">5</option>
+                            <option value="/grade/give_eval/<%=oneItem3.lec_num%>4">4</option>
+                            <option value="/grade/give_eval/<%=oneItem3.lec_num%>3">3</option>
+                            <option value="/grade/give_eval/<%=oneItem3.lec_num%>2">2</option>
+                            <option value="/grade/give_eval/<%=oneItem3.lec_num%>1">1</option>
+                        <% } %>
+                        </select>
+                    </td>
+                        <% if(oneItem3.lec_eval_comment != null || oneItem3.grade == null) { %>
+                    <td><%=oneItem3.lec_eval_comment%></td>
+                        <% } else { %>
+                    <td>
+                        <form action="/grade/comment/<%=oneItem3.lec_num%>" method="POST">
+                            <input id="comment" name="comment" type="text" pleaceholder="ID" maxlength="40" value="40자 이내 입력" onfocus="this.value=''">
+                        </form>
+                    </td>
+                        <% } %>
+                </tr>
             <%
             }
             %>
@@ -150,6 +176,7 @@
     }
     %>
 </center>
+
 </body>
 
 </html>

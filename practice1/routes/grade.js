@@ -92,4 +92,31 @@ app.get('/total_grade', function (req, res, next) {
     });
 });
 
+app.get('/give_eval/:page', function (req, res) {
+    var url = req.params.page;
+    pool.getConnection(function (err, connection) {
+        var eval = Number(url[url.length - 1]);
+        if (eval == 0) eval = 10;
+        url = url.substr(0, url.length -1);
+        console.log(url, eval);
+        var updateEval = "UPDATE class_info SET lec_eval = ? WHERE stu_id = ? and lec_num = ?";
+        connection.query(updateEval, [eval, req.session.user.id, url], function (err, result) {
+            if (err) console.log('err : ', err);
+            res.redirect('back');
+        });
+    });
+});
+
+app.post('/comment/:page', function (req, res) {
+    var url = req.params.page;
+    console.log('?');
+    pool.getConnection(function (err, connection) {
+        var insertComment = "UPDATE class_info SET lec_eval_comment = ? WHERE stu_id = ? and lec_num = ?";
+        connection.query(insertComment, [req.body.comment, req.session.user.id, url], function (err, result) {
+            console.log(result);
+            if (err) console.log('err : ', err);
+            res.redirect('back');
+        });
+    });
+});
 module.exports = app;
