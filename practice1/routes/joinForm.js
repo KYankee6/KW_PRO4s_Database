@@ -26,6 +26,10 @@ var join_image = multer({
   }),
 });
 
+router.get('/', function (req, res) {
+  res.render('joinForm', { title: '회원가입' });
+});
+
 router.post('/', join_image.single('image'), (req, res) => {
   var id = req.body.id;
   var passwd = req.body.passwd;
@@ -63,7 +67,6 @@ router.get('/join_image', function (req, res) {
 });
 
 router.get('/', function (req, res) {
-  console.log('왜안되지;');
   res.render('joinForm', { title: '회원가입' });
 });
 
