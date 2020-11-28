@@ -32,7 +32,7 @@
     <table style="border-collapse : collapse; background-color:rgb(115, 35, 46); width: 100%">
         <tr>
             <td><a href="/index" style="text-decoration:none; text-align:center"><img src="/Kwangwoon_mark_1.jpg" width=121 height=40></a></td>
-            <td><a href="https://naver.com" style="text-decoration:none; color: white" >학습결과</a></td>
+            <td><a href="/grade/total_grade" style="text-decoration:none; color: white" >학습결과</a></td>
             <td><a href="https://naver.com" style="text-decoration:none; color: white">시간표</a></td>
             <td><a href="https://naver.com" style="text-decoration:none; color: white">수강신청</a></td>
             <td><a href="/board/list/1" style="text-decoration:none; color: white">공지사항</a></td>
@@ -50,7 +50,7 @@
         {
             var oneItem = lecs[i];
         %>
-            <option value="/board/list/<%=oneItem.lec_num%>"><%=oneItem.lec_name%></option>
+            <option value="/board/list/<%=oneItem.lec_num%>"><%=oneItem.lec_num%></option>
             <%
             }
         %>
