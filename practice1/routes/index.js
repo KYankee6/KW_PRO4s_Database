@@ -174,14 +174,12 @@ app.get('/enroll/selectandshow/:lec_num', function (req, res, next){
 });
 });
 
-
 app.post('/enroll/drop', function (req, res, next) {
     pool.getConnection(function (err, connection) {
         var dropSQL = "DELETE FROM class_info WHERE stu_id = ? and lec_num = ?";
         console.log(req.body.lesson_selected, req.session.user.id);
         connection.query(dropSQL, [req.session.user.id, req.body.lesson_selected], function(err, result) {
-            res.send("<script>alert('강의 삭제 완료.');history.back();</script>");
-            res.end();
+            res.redirect('back');
         });
     });
 });
