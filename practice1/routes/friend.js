@@ -101,9 +101,9 @@ app.get('/:page', function (req, res, next) {
         //Use the connection
         const url = req.params.page;
         var stunameSQL = "SELECT stu_name FROM register_info WHERE ID=?";
-        var friendnameSQL = "SELECT stu_name FROM register_info WHERE ID=?";
+        var friendinfoSQL = "SELECT stu_name FROM register_info WHERE ID=?";
         var Timetable = "SELECT * FROM current_time_table WHERE stu_id = ?";
-        var friendName = [];
+        var friendInfo = [];
         var professor = new Array(6);
         var location = new Array(6);
         var color = new Array(6);
@@ -123,8 +123,8 @@ app.get('/:page', function (req, res, next) {
         console.log(lec_name);
         if (req.session.user) {
             console.log(req.session.user);
-            connection.query(friendnameSQL, [url], function (err, row) {
-                friendName = row[0].stu_name;
+            connection.query(friendinfoSQL, [url], function (err, row) {
+                friendInfo = row[0];
             });
                 connection.query(stunameSQL, [req.session.user.id], function (err, row) {
                         connection.query(Timetable, [url], function (err, table) {
@@ -180,7 +180,7 @@ app.get('/:page', function (req, res, next) {
                             }
 
                         console.log("Result: ", lec_name);
-                        res.render('friend_timetable', { title: '친구 시간표', row: row[0], lec_name: lec_name, professor:professor, location:location, url:url, friendName:friendName});
+                        res.render('friend_timetable', { title: '친구 시간표', row: row[0], lec_name: lec_name, professor:professor, location:location, url:url, friendInfo:friendInfo});
                         connection.release();
                     });
                     if (err) console.error("err : " + err);

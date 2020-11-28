@@ -60,7 +60,7 @@ router.post('/', join_image.single('image'), (req, res) => {
             if (err) console.log("에러에러에러에러ㅔㅇ러ㅔㅇ러");
             else {
                 console.log("rows : " + JSON.stringify(rows));
-                res.redirect('/update');
+                res.redirect('/index');
             }
             connection.release();
         });

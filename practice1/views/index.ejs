@@ -26,7 +26,7 @@
 <br>
 <div style="float:right;">
 <%=row.stu_name%>님 환영합니다~
-<form action="https://google.com" method "get" style="display:inline"><button type='submit' class='.btn'>개인정보</button></form>
+<form action="/update" method "get" style="display:inline"><button type='submit' class='.btn'>개인정보</button></form>
 <form action="/index/logout" method ="post" style="display:inline"><button type='submit' class='.btn'>로그아웃</button></form>
 <br>
 </div>
@@ -34,7 +34,7 @@
 <table style="border-collapse : collapse; background-color:rgb(115, 35, 46); width: 100%">
     <tr>
         <td><a href="/index" style="text-decoration:none; text-align:center"><img src="./Kwangwoon_mark_1.jpg" width=121 height=40></a></td>
-        <td align="center"><a href="https://naver.com" style="text-decoration:none; color: white" >학습결과</a></td>
+        <td align="center"><a href="/grade/total_grade" style="text-decoration:none; color: white" >학습결과</a></td>
         <td align="center"><a href="/timetable" style="text-decoration:none; color: white">시간표</a></td>
         <td align="center"><a href="/index/enroll" style="text-decoration:none; color: white">수강신청</a></td>
         <td align="center"><a href="/board/list/1" style="text-decoration:none; color: white">공지사항</a></td>
@@ -43,25 +43,31 @@
 </table>
 <br>
 <h1> Dean's List</h1>
-<table style = "border-collapse : collapse; width: 60% " border="1">
+<table style = "border-collapse : collapse; width: 60%; border-right:none; border-left:none;" border="1">
     <tr>
+        <td style = "background-color: lightgray;"></td>
         <td style = "background-color: lightgray;">NAME</td>
         <td style = "background-color: lightgray;">GRADE</td>
         <td style = "background-color: lightgray;">TOTAL CREDIT</td>
     </tr>
-<%
-    for(var i = 0; i < 3; i++) {
-        var oneItem = rows[i];
-
-%>
-            <tr>
-                <td><%=oneItem.stu_name%></td>
-                <td><%=oneItem.avg_grade%></td>
-                <td><%=oneItem.sum_credit%></td>
-            </tr>
-            <%
-    }
-%>
+    <tr>
+        <td align="center"><img src="/Dean1st.png" width=30 height=30></td>
+        <td><%=rows[0].stu_name%></td>
+        <td><%=rows[0].avg_grade%></td>
+        <td><%=rows[0].sum_credit%></td>
+    </tr>
+    <tr>
+        <td align="center"><img src="/Dean2nd.png" width=30 height=30></td>
+        <td><%=rows[1].stu_name%></td>
+        <td><%=rows[1].avg_grade%></td>
+        <td><%=rows[1].sum_credit%></td>
+    </tr>
+    <tr>
+        <td align="center"><img src="/Dean3rd.png" width=30 height=30></td>
+        <td><%=rows[2].stu_name%></td>
+        <td><%=rows[2].avg_grade%></td>
+        <td><%=rows[2].sum_credit%></td>
+    </tr>
 </table>
 <br>
 <br>

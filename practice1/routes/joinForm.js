@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var bodyParser = require('body-parser')
 
 var multer = require('multer'); // 이미지
 var path = require('path'); // 이미지
@@ -38,6 +37,7 @@ router.post('/', join_image.single('image'), (req, res) => {
   var email = req.body.email;
   var address = req.body.address;
   var RRN = req.body.RRN;
+  console.log("?");
   if (req.file)
     var image = cur;
   else
@@ -47,6 +47,7 @@ router.post('/', join_image.single('image'), (req, res) => {
     var sqlForInsertBoard = "insert into register_info(id, passwd, stu_name, email, address, RRN, image) values(?,?,?,?,?,?,?)";
     connection.query(sqlForInsertBoard, datas, function (err, rows) {
       if (err) {
+        console.error(err);
         if (err.code == "ER_NO_REFERENCED_ROW_2")
           res.send("<script>alert('존재하지 않는 학번입니다.');history.back();</script>");
         else if (err.code == "ER_DUP_ENTRY")
@@ -63,6 +64,10 @@ router.post('/', join_image.single('image'), (req, res) => {
 
 router.get('/join_image', function (req, res) {
   res.render('join_image');
+});
+
+router.get('/', function (req, res) {
+  res.render('joinForm', { title: '회원가입' });
 });
 
 module.exports = router;
