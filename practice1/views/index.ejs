@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
 </head>
+
 <body>
 <style>
     .btn{
@@ -34,7 +36,7 @@
         <td><a href="/index" style="text-decoration:none; text-align:center"><img src="./Kwangwoon_mark_1.jpg" width=121 height=40></a></td>
         <td align="center"><a href="https://naver.com" style="text-decoration:none; color: white" >학습결과</a></td>
         <td align="center"><a href="/timetable" style="text-decoration:none; color: white">시간표</a></td>
-        <td align="center"><a href="https://naver.com" style="text-decoration:none; color: white">수강신청</a></td>
+        <td align="center"><a href="/index/enroll" style="text-decoration:none; color: white">수강신청</a></td>
         <td align="center"><a href="/board/list/1" style="text-decoration:none; color: white">공지사항</a></td>
         <td align="center"><a href="/friend" style="text-decoration:none; color: white">친구 목록</a></td>
     </tr>
@@ -52,12 +54,12 @@
         var oneItem = rows[i];
 
 %>
-    <tr>
-        <td><%=oneItem.stu_name%></td>
-        <td><%=oneItem.avg_grade%></td>
-        <td><%=oneItem.sum_credit%></td>
-    </tr>
-<%
+            <tr>
+                <td><%=oneItem.stu_name%></td>
+                <td><%=oneItem.avg_grade%></td>
+                <td><%=oneItem.sum_credit%></td>
+            </tr>
+            <%
     }
 %>
 </table>
@@ -94,4 +96,5 @@
 </table>
 </center>
 </body>
+
 </html>
