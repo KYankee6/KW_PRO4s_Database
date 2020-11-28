@@ -50,9 +50,16 @@ app.post('/enroll/search', function (req, res, next) {
         var baseQuery = "SELECT * FROM lecture_info WHERE lec_name like ? and open_date='2020-09-01'";
         var underQuery = "SELECT * FROM enrolled_list WHERE stu_id=?";
         var reqSearch = req.body.lec_name_for_search;
+        var stunameSQL = "SELECT stu_name FROM register_info WHERE ID=?"
+        var stu_name = [];
+        var stu_id = req.session.user.id;
         var array = [];
 
         if (req.session.user && reqSearch) {
+            
+            connection.query(stunameSQL, [req.session.user.id], function(err, name) {
+                stu_name = name[0].stu_name;
+            });
             connection.query(underQuery, [req.session.user.id], function (err, enr_row) {
                 if (err) console.error("err : " + err);
                 // console.log(enr_row);
@@ -70,7 +77,7 @@ app.post('/enroll/search', function (req, res, next) {
                     else s_enr_row[i].major_minor = "교양";
                 }
                 console.log(s_enr_row);
-                res.render('enroll', { title: "수강 신청", s_enr_row: s_enr_row, enr_row: array });
+                res.render('enroll', { title: "수강 신청", s_enr_row: s_enr_row, enr_row: array, stu_name:stu_name, stu_id:stu_id });
             });
         }
         else if (!reqSearch) {
@@ -88,7 +95,7 @@ app.get('/enroll', function (req, res, next) {
     pool.getConnection(function (err, connection) {
         //Use the connection
         var baseQuery = "SELECT * FROM enrolled_list WHERE stu_id = ?";
-        var stunameSQL = "SELECT stu_name FROM register_info WHERE ID=?";
+        var stunameSQL = "SELECT stu_name FROM register_info WHERE ID=?"
         var stu_name = [];
         var stu_id = req.session.user.id;
         var array = [];
@@ -118,10 +125,18 @@ app.get('/enroll/selectandshow/:lec_num', function (req, res, next){
     var selandshowQuery = "select lec_name,location,credit,major_minor from lecture_info where lec_num =?";
     var baseQuery = "SELECT * FROM lecture_info WHERE lec_name like ? and open_date='2020-09-01'";
     var underQuery = "SELECT * FROM enrolled_list WHERE stu_id=?";
+    var stunameSQL = "SELECT stu_name FROM register_info WHERE ID=?";
     var reqSearch = req.query.lec_name_for_search;
     console.log(reqSearch);
     var array = [];
     var sharr = [];
+    var stu_name = [];
+    var stu_id = req.session.user.id;
+    if (req.session.user) {
+        connection.query(stunameSQL, [req.session.user.id], function(err, name) {
+            stu_name = name[0].stu_name;
+        });
+    }
     if (lec_num) {
         connection.query(selandshowQuery, [lec_num], function (err, shenr_row) {
             if (err) console.error("err : " + err);
@@ -149,7 +164,7 @@ app.get('/enroll/selectandshow/:lec_num', function (req, res, next){
                 else s_enr_row[i].major_minor = "교양";
             }
             //console.log(s_enr_row);
-            res.render('enroll', { title: "수강 신청", s_enr_row: s_enr_row, enr_row: array,sh_enr_row:sharr});
+            res.render('enroll', { title: "수강 신청", s_enr_row: s_enr_row, enr_row: array,sh_enr_row:sharr, stu_name:stu_name, stu_id:stu_id});
         });
     }
     else {
