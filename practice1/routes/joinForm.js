@@ -27,6 +27,10 @@ var join_image = multer({
   }),
 });
 
+router.get('/', function (req, res) {
+  res.render('joinForm', { title: '회원가입' });
+});
+
 router.post('/', join_image.single('image'), (req, res) => {
   var id = req.body.id;
   var passwd = req.body.passwd;
@@ -50,7 +54,7 @@ router.post('/', join_image.single('image'), (req, res) => {
       }
       else {
         console.log("rows : " + JSON.stringify(rows));
-        res.redirect('/joinForm');
+        res.redirect('/login');
       }
       connection.release();
     });
@@ -59,10 +63,6 @@ router.post('/', join_image.single('image'), (req, res) => {
 
 router.get('/join_image', function (req, res) {
   res.render('join_image');
-});
-
-router.get('/', function (req, res) {
-  res.render('joinForm', { title: '회원가입' });
 });
 
 module.exports = router;
