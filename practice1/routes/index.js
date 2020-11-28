@@ -92,7 +92,7 @@ app.get('/enroll', function (req, res, next) {
         if (req.session.user) {
             connection.query(baseQuery, [req.session.user.id], function (err, enr_row) {
                 if (err) console.error("err : " + err);
-                console.log(enr_row);
+                //console.log(enr_row);
                 for (var i = 0; i < enr_row.length; i++) {
                     if (enr_row[i].major_minor == 1) enr_row[i].major_minor = "전공";
                     else enr_row[i].major_minor = "교양";
@@ -108,12 +108,15 @@ app.get('/enroll', function (req, res, next) {
 });
 app.get('/enroll/selectandshow/:lec_num', function (req, res, next){
     pool.getConnection(function (err, connection) {
+    console.log("param")
+    console.log(req.params);
     var lec_num = req.params.lec_num;
     var selandshowQuery = "select lec_name,location,credit,major_minor from lecture_info where lec_num =?";
     var baseQuery = "SELECT * FROM lecture_info WHERE lec_name like ? and open_date='2020-09-01'";
     var underQuery = "SELECT * FROM enrolled_list WHERE stu_id=?";
     var reqSearch = req.query.lec_name_for_search;
     console.log(reqSearch);
+    console.log(req.body);
     var array = [];
     var sharr = [];
     if (lec_num) {
