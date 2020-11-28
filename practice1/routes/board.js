@@ -70,10 +70,11 @@ app.get('/list/:page', function (req, res, next) {
         var getLecsQuery = "select lec_name,lec_num from board_information where stu_id = ?";
         var getBoardContentQuery = "select * from board_content where lec_num =? and stu_id = ? order by star DESC";
         var stunameSQL = "SELECT stu_name FROM register_info WHERE ID=?";
-        var stu_name;
+        var stu_name = [];
         if (req.session.user) {
             connection.query(stunameSQL, [req.session.user.id], function (err, row) {
-                stu_name = row;
+                stu_name = row[0].stu_name;
+                console.log('이름이뭐에요?', row);
             });
             //var classname = "select L.lec_name from lecture_info as L, class_info as C where L.lec_num = C.lec_num and C.grade is null and C.stu_id = '2016722066'"
             connection.query(getLecsQuery, [req.session.user.id], function (err, lectures) {
@@ -82,7 +83,7 @@ app.get('/list/:page', function (req, res, next) {
                 connection.query(getBoardContentQuery, [url, req.session.user.id], function (err, content) {
                     console.log(content);
 
-                    res.render('list', { title: '공지 및 자료', row: stu_name[0], lecs: lectures, contents: content });
+                    res.render('list', { title: '공지 및 자료', stu_name:stu_name, lecs: lectures, contents: content, url:url });
                 });
                 connection.release();
             });
@@ -128,15 +129,15 @@ app.get('/read/:idx', function (req, res, next) {
         var sql = "select idx, title, writer, write_date, star, file_name, content, hit, L.lec_name from board as B, lecture_info as L where B.lec_num = L.lec_num"
         var hitp = "update board set hit = hit + 1 where idx=?";
         var stunameSQL = "SELECT stu_name FROM register_info WHERE ID=?";
-        var stu_name;
+        var stu_name = [];
         if (req.session.user) {
             connection.query(stunameSQL, [req.session.user.id], function (err, row) {
-                stu_name = row;
+                stu_name = row[0].stu_name;
             });
             connection.query(sql, [req.session.user.id], function (err, row) {
                 if (err) console.error(err);
                 console.log("1개 글 조회 결과 확인 : ", row);
-                res.render('read', { title: "공지 및 자료", row: row[Number(idx.replace(":", "")) - 1] });
+                res.render('read', { title: "공지 및 자료", row: row[Number(idx.replace(":", "")) - 1], stu_name:stu_name});
                 connection.release();
             });
             connection.query(hitp, [req.session.user.id], function (req, row) {
