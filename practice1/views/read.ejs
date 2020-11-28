@@ -6,7 +6,13 @@
     <link rel='stylesheet' href="'/stylesheets/style.css"/>
 </head>
 <body>
+    <script>
+        function handleClick() {
+            document.location.href = '/board//download/:<%=row.file_name%>'
+        }
+    </script>
 <h1><%= title %></h1>
+
 
 <form action="/board/read" method="get">
     <table border="1">
@@ -26,6 +32,10 @@
         <tr>
             <td>내용</td>
             <td><%=row.content%></td>
+        </tr>
+        <tr>
+            <td>파일</td>
+            <td onclick="handleClick()"><%=row.file_name%></td>
         </tr>
         <tr>
             <td>조회수</td>

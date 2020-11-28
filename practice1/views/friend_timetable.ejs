@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+</head>
+<body>
+<style>
+    .btn{
+      text-decoration: none;
+      font-size:1;
+      color:black;
+      margin:5px;
+      padding:5px 5px 5px 5px;
+      display:inline;
+      border-radius: 1px;
+      background-color: lightgray;
+      border-color: black;
+      transition:all 0.1s;
+      white-space: nowrap;
+      }
+</style>
+<br>
+<div style="float:right;">
+<%=row.stu_name%>님 환영합니다~
+<form action="https://google.com" method "get" style="display:inline"><button type='submit' class='.btn'>개인정보</button></form>
+<form action="/index/logout" method ="post" style="display:inline"><button type='submit' class='.btn'>로그아웃</button></form>
+<br>
+</div>
+<center>
+<table style="border-collapse : collapse; background-color:rgb(115, 35, 46); width: 100%">
+    <tr>
+        <td><a href="/index" style="text-decoration:none; text-align:center"><img src="/Kwangwoon_mark_1.jpg" width=121 height=40></a></td>
+        <td align="center"><a href="https://naver.com" style="text-decoration:none; color: white" >학습결과</a></td>
+        <td align="center"><a href="/timetable" style="text-decoration:none; color: white">시간표</a></td>
+        <td align="center"><a href="https://naver.com" style="text-decoration:none; color: white">수강신청</a></td>
+        <td align="center"><a href="/board/list/1" style="text-decoration:none; color: white">공지사항</a></td>
+        <td align="center"><a href="/friend" style="text-decoration:none; color: white">친구 목록</a></td>
+    </tr>
+</table>
+<br>
+<br>
+<h1> <%=friendName%>'s Timetable </h1>
+</center>
+<form action="/friend/delete/<%=url%>" method ="post" style="display:inline"><button type='submit' class='.btn'>친구삭제</button></form>
+<center>
+<table style = "border-collapse : collapse; width: 80%;" border="1">
+    <tr>
+        <td width="20px" align="center"></td>
+        <td width="150px" align="center">MON</td>
+        <td width="150px" align="center">TUE</td>
+        <td width="150px" align="center">WEN</td>
+        <td width="150px" align="center">THU</td>
+        <td width="150px" align="center">FRI</td>
+    </tr>
+<%
+    var index = 0;
+    for(var i = 0; i < 6; i++) {
+        index = i + 1;
+%>
+    <tr>
+        <td align="center"><%=index%></td>
+<%
+        for(var j = 0; j < 5; j++) {
+%>
+        <td width="150px" height="80px"><h5><%=lec_name[i][j]%></h5><h6> <%=professor[i][j]%> <%=location[i][j]%></h6></td>
+<%
+        }
+%>
+    </tr>
+<%
+    }
+%>
+</table>
+</center>
+</body>
+</html>
