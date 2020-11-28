@@ -2,18 +2,16 @@
 <html>
 
 <head>
-    <title><%= title %></title>
+    <title>
+        <%= title %>
+    </title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"> </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+    </script>
     <script>
-       function onClick(){
-        $("#c_lec_name").val(sh_enr_row[0].lec_name);
-        $("#c_lec_credit").val(sh_enr_row[0].lec_credit);
-        $("#c_lec_major_minor").val(sh_enr_row[0].major_minor);
-        $("#c_lec_location").val(sh_enr_row[0].lec_name);
-        return;
+        function onClick(obj) {
+            document.getElementById("c_lec_name").innerHTML = $(obj[0].lec_name);
         }
-       
     </script>
 </head>
 
@@ -31,7 +29,7 @@
             border-color: black;
             transition: all 0.1s;
         }
-
+        
         .Tstyle {
             width: 100%;
             border-collapse: collapse;
@@ -46,16 +44,17 @@
     <div style="float:right">
         <%= stu_name %>님 환영합니다~
 
-        <form action="/update" method "get" style="display:inline"><button type='submit' class='.btn'>개인정보</button></form>
-        <form action="/index/logout" method ="post" style="display:inline"><button type='submit' class='.btn'>로그아웃</button></form>
-        </form>
+            <form action="/update" method "get" style="display:inline"><button type='submit' class='.btn'>개인정보</button></form>
+            <form action="/index/logout" method="post" style="display:inline"><button type='submit' class='.btn'>로그아웃</button></form>
+            </form>
     </div>
     <br>
     <center>
         <table style="border-collapse : collapse; background-color:rgb(115, 35, 46); width: 100%">
             <tr>
-                <td><a href="/index" style="text-decoration:none; text-align:center"><img src="/Kwangwoon_mark_1.jpg"
-                            width=121 height=40></a></td>
+                <td>
+                    <a href="/index" style="text-decoration:none; text-align:center"><img src="/Kwangwoon_mark_1.jpg" width=121 height=40></a>
+                </td>
                 <td><a href="/grade/total_grade" style="text-decoration:none; color: white">학습결과</a></td>
                 <td><a href="/timetable" style="text-decoration:none; color: white">시간표</a></td>
                 <td><a href="/index/enroll" style="text-decoration:none; color: white">수강신청</a></td>
@@ -71,59 +70,71 @@
             <td>학기</td>
             <td>3-2</td>
             <td>학번</td>
-            <td><%= stu_id %></td>
+            <td>
+                <%= stu_id %>
+            </td>
         </tr>
     </table>
     <br>
     <br>
     <br>
 
-    <h2 style="display: inline">개설강좌 내역</h2>
+    <h2 style="display: inline">선택 강좌 정보</h2>
     <div style="float:right">
 
-        <form action="/index/enroll/search" method="post" style="display: inline;direction: rtl;"
-            onsubmit="return onSearch()">
-            <input type="text" name="lec_name_for_search" id="lec_name_for_search">
-            <button type='submit' name="btn_search" class="btn">강의검색</button>
-        </form>
         <form action="/index/enroll/apply" method="post" style="display: inline;">
             <button type='submit' name="lesson_take" class="btn">수강신청</button>
-        </form>
+
     </div>
+
     <table class="Tstyle" ;>
         <tr>
             <td>교과목명</td>
             <td id="c_lec_name">
-            <% if(locals.sh_enr_row){%>
-                <%=sh_enr_row[0].lec_name%>
-            <% } %>
-        </td>
+
+                <% if(locals.sh_enr_row){%>
+                    <input type="hidden" name="lec_num" id="lec_num" value="<%=sh_enr_row[0].lec_num%>" />
+
+                    <%=sh_enr_row[0].lec_name%>
+                        <% } %>
+            </td>
             <td>학점</td>
             <td id="c_lec_credit">
-            <% if(locals.sh_enr_row){%>
-                <%=sh_enr_row[0].credit%>
-             <% }%>
+                <% if(locals.sh_enr_row){%>
+                    <%=sh_enr_row[0].credit%>
+                        <% }%>
             </td>
         </tr>
 
         <tr>
             <td>이수</td>
             <td id="c_lec_major_minor">
-            <% if(locals.sh_enr_row){%>
-                <%=sh_enr_row[0].major_minor%>
-            <%}%>
+                <% if(locals.sh_enr_row){%>
+                    <%=sh_enr_row[0].major_minor%>
+                        <%}%>
             </td>
             <td>강의실</td>
             <td id="c_lec_location">
-            <% if(locals.sh_enr_row){%>
-                <%=sh_enr_row[0].location%>
-            <%}%>
+                <% if(locals.sh_enr_row){%>
+                    <%=sh_enr_row[0].location%>
+                        <%}%>
             </td>
         </tr>
     </table>
+    </form>
     <br>
     <br>
+    <h2 style="display: inline">개설강좌 내역(클릭)</h2>
+    <div style="float:right">
+
+        <form action="/index/enroll/search" method="post" style="display: inline;direction: rtl;">
+            <input type="text" name="lec_name_for_search" id="lec_name_for_search">
+            <button type='submit' name="btn_search" class="btn">강의검색</button>
+        </form>
+    </div>
+
     <table class="Tstyle" ;>
+
         <tr>
             <td>교과목</td>
             <td>담당교수</td>
@@ -134,19 +145,31 @@
         </tr>
         <% if(locals.s_enr_row){%>
 
-        <% for(var i=0; i<s_enr_row.length; i++){
+            <% for(var i=0; i<s_enr_row.length; i++){
             %>
-        <tr style = "cursor:pointer;" onClick = "location.href='/index/enroll/selectandshow/<%=s_enr_row[i].lec_num%>'">
-            <input type="hidden" name="lec_num" value="<%=s_enr_row[i].lec_num%>">
-            <td width=150><%=s_enr_row[i].lec_name%></td>
-            <td width=150><%=s_enr_row[i].professor%></td>
-            <td width=150><%=s_enr_row[i].major_minor%></td>
-            <td width=150><%=s_enr_row[i].credit%></td>
-            <td width=150><%=s_enr_row[i].time_stamp%></td>
-            <td width=150><%=s_enr_row[i].location%></td>
-        </tr>
-        <%}%>
-<%    }%>
+                <tr style="cursor:pointer;" onClick="location.href='/index/enroll/selectandshow/<%=s_enr_row[i].lec_num%>'">
+                    <input type="hidden" name="lec_num" value="<%=s_enr_row[i].lec_num%>">
+                    <td width=150>
+                        <%=s_enr_row[i].lec_name%>
+                    </td>
+                    <td width=150>
+                        <%=s_enr_row[i].professor%>
+                    </td>
+                    <td width=150>
+                        <%=s_enr_row[i].major_minor%>
+                    </td>
+                    <td width=150>
+                        <%=s_enr_row[i].credit%>
+                    </td>
+                    <td width=150>
+                        <%=s_enr_row[i].time_stamp%>
+                    </td>
+                    <td width=150>
+                        <%=s_enr_row[i].location%>
+                    </td>
+                </tr>
+                <%}%>
+                    <%    }%>
 
     </table>
 
@@ -170,21 +193,33 @@
             <td>장소</td>
         </tr>
         <% for(var i=0; i<enr_row.length; i++){  %>
-        <tr>
-            <form action="/index/enroll_search" method="post">
-                <td><input type="radio" name="lesson_selected" value="<%=enr_row[i].lec_num%>"></td>
-                <td id="s_lec_name"><%=enr_row[i].lec_name%></td>
-                <td><%=enr_row[i].professor%></td> 
-                <td id="s_lec_major_minor"><%=enr_row[i].major_minor%></td>
-                <td id="s_lec_credit"><%=enr_row[i].credit%></td>
-                <td><%=enr_row[i].time_stamp%></td>
-                <td id="s_lec_location"><%=enr_row[i].location%></td>
-        </tr>
-        <%}%>
-        <tr>
-            <input type="reset" value="재선택">
-        </tr>
-    </form>
-</form>
+            <tr>
+                <form action="/index/enroll_search" method="post">
+                    <td><input type="radio" name="lesson_selected" value="<%=enr_row[i].lec_num%>"></td>
+                    <td id="s_lec_name">
+                        <%=enr_row[i].lec_name%>
+                    </td>
+                    <td>
+                        <%=enr_row[i].professor%>
+                    </td>
+                    <td id="s_lec_major_minor">
+                        <%=enr_row[i].major_minor%>
+                    </td>
+                    <td id="s_lec_credit">
+                        <%=enr_row[i].credit%>
+                    </td>
+                    <td>
+                        <%=enr_row[i].time_stamp%>
+                    </td>
+                    <td id="s_lec_location">
+                        <%=enr_row[i].location%>
+                    </td>
+            </tr>
+            <%}%>
+                <tr>
+                    <input type="reset" value="재선택">
+                </tr>
+                </form>
+                </form>
     </table>
 </body>
