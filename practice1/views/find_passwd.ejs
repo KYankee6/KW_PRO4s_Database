@@ -30,7 +30,7 @@
             <tr>
                 <td colspan="2">
                     <input type="submit" name="submit" value="확인">
-                    <input type="reset" name="cancel" value="취소">
+                    <button type="button" onclick="location.href='/login'">취소</button>
                 </td>
             </tr>
             <%
@@ -40,7 +40,9 @@
                     <td colspan="3">
                         <h8>찾으시는 비밀번호는 <%= result.passwd%>입니다.</h8>
                     </td>
-                    <td><a href="/login">돌아가기</a></td>
+                    <td colspan="3">
+                        <button type="button" onclick="location.href='/login'">돌아가기</button>
+                    </td>
             </tr>
             <%
                 }%>

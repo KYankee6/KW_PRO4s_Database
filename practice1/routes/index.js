@@ -326,20 +326,26 @@ app.get('/', function(req, res, next) {
         //Use the connection
         var stunameSQL = "SELECT stu_name FROM register_info WHERE ID=?";
         var deansList = "SELECT * FROM ranking WHERE open_date='2020-03-01'";
-        var Timetable = "SELECT * FROM current_time_table WHERE stu_id = ?";
-        var lec_name = new Array(6);
+        var Timetable = "SELECT * FROM current_time_table natural join lecture_info WHERE stu_id = ?";
         var professor = new Array(6);
         var location = new Array(6);
+        var lec_num = new Array(6);
+        var lec_name = new Array(6);
+        var phone = new Array(6);
         var color = new Array(6);
         for (var i = 0; i < 6; i++) {
             lec_name[i] = new Array(5);
             professor[i] = new Array(5);
             location[i] = new Array(5);
+            lec_num[i] = new Array(5);
+            phone[i] = new Array(5);
             color[i] = new Array(5);
             for (var j = 0; j < 5; j++) {
                 lec_name[i][j] = " ";
                 professor[i][j] = " ";
                 location[i][j] = " ";
+                lec_num[i][j] = " ";
+                phone[i][j] = " ";
                 color[i][j] = 0;
             }
         }
@@ -369,10 +375,13 @@ app.get('/', function(req, res, next) {
                             else {
                                 num2 = 4;
                             }
+                            console.log(num2, num1, table[i].time_stamp);
                             lec_name[num1][num2] = lec_name[num1][num2].replace(" ", table[i].lec_name);
                             professor[num1][num2] = professor[num1][num2].replace(" ", table[i].professor);
                             location[num1][num2] = location[num1][num2].replace(" ", "(" + table[i].location + ")");
-                            color[num1][num2] = i;
+                            lec_num[num1][num2] = lec_num[num1][num2].replace(" ", table[i].lec_num);
+                            phone[num1][num2] = phone[num1][num2].replace(" ", table[i].professor_phone);
+                            color[num1][num2] = i + 1;
                         }
                         for (var i = 0; i < table.length; i++) {
                             var num1 = Number(table[i].time_stamp[7]);
@@ -396,7 +405,9 @@ app.get('/', function(req, res, next) {
                             lec_name[num1][num2] = lec_name[num1][num2].replace(" ", table[i].lec_name);
                             professor[num1][num2] = professor[num1][num2].replace(" ", table[i].professor);
                             location[num1][num2] = location[num1][num2].replace(" ", "(" + table[i].location + ")");
-                            color[num1][num2] = i;
+                            lec_num[num1][num2] = lec_num[num1][num2].replace(" ", table[i].lec_num);
+                            phone[num1][num2] = phone[num1][num2].replace(" ", table[i].professor_phone);
+                            color[num1][num2] = i + 1;
                         }
                         console.log("Result: ", lec_name);
                         res.render('index', {
@@ -405,7 +416,10 @@ app.get('/', function(req, res, next) {
                             rows: rows,
                             lec_name: lec_name,
                             professor: professor,
-                            location: location
+                            location: location,
+                            lec_num: lec_num,
+                            color: color,
+                            phone: phone
                         });
                         connection.release();
                     });

@@ -43,30 +43,29 @@
 </table>
 <br>
 <h1> Dean's List</h1>
-<table style = "border-collapse : collapse; width: 60%; border-right:none; border-left:none;" border="1">
+<table style = "border-collapse : collapse; width: 40%; border-right:none; border-left:none;border-top:none;border-bottom:none;" border="1">
     <tr>
-        <td style = "background-color: lightgray;"></td>
-        <td style = "background-color: lightgray;">NAME</td>
-        <td style = "background-color: lightgray;">GRADE</td>
-        <td style = "background-color: lightgray;">TOTAL CREDIT</td>
+        <td style = "border-color:rgb(255, 255, 255)"></td>
+        <td style = "background-color: lightgray; border-color:rgb(210, 210, 210)">NAME</td>
+        <td style = "background-color: lightgray; border-color:rgb(210, 210, 210)">GRADE</td>
+        <td style = "background-color: lightgray; border-color:rgb(210, 210, 210)">TOTAL CREDIT</td>
+    </tr>    <tr>
+        <td align="center" style = "border-color:rgb(255, 255, 255)"><img src="/Dean1st.png" width=30 height=30></td>
+        <td style = "border-color:rgb(210, 210, 210)"><%=rows[0].stu_name%></td>
+        <td style = "border-color:rgb(210, 210, 210)"><%=rows[0].avg_grade%></td>
+        <td style = "border-color:rgb(210, 210, 210)"><%=rows[0].sum_credit%></td>
     </tr>
     <tr>
-        <td align="center"><img src="/Dean1st.png" width=30 height=30></td>
-        <td><%=rows[0].stu_name%></td>
-        <td><%=rows[0].avg_grade%></td>
-        <td><%=rows[0].sum_credit%></td>
+        <td align="center" style = "border-color:rgb(255, 255, 255)"><img src="/Dean2nd.png" width=30 height=30></td>
+        <td style = "border-color:rgb(210, 210, 210)"><%=rows[1].stu_name%></td>
+        <td style = "border-color:rgb(210, 210, 210)"><%=rows[1].avg_grade%></td>
+        <td style = "border-color:rgb(210, 210, 210)"><%=rows[1].sum_credit%></td>
     </tr>
     <tr>
-        <td align="center"><img src="/Dean2nd.png" width=30 height=30></td>
-        <td><%=rows[1].stu_name%></td>
-        <td><%=rows[1].avg_grade%></td>
-        <td><%=rows[1].sum_credit%></td>
-    </tr>
-    <tr>
-        <td align="center"><img src="/Dean3rd.png" width=30 height=30></td>
-        <td><%=rows[2].stu_name%></td>
-        <td><%=rows[2].avg_grade%></td>
-        <td><%=rows[2].sum_credit%></td>
+        <td align="center" style = "border-color:rgb(255, 255, 255)"><img src="/Dean3rd.png" width=30 height=30></td>
+        <td style = "border-color:rgb(210, 210, 210)"><%=rows[2].stu_name%></td>
+        <td style = "border-color:rgb(210, 210, 210)"><%=rows[2].avg_grade%></td>
+        <td style = "border-color:rgb(210, 210, 210)"><%=rows[2].sum_credit%></td>
     </tr>
 </table>
 <br>
@@ -75,30 +74,50 @@
 <table style = "border-collapse : collapse; width: 60%;" border="1">
     <tr>
         <td width="20px" align="center"></td>
-        <td width="150px" align="center">MON</td>
-        <td width="150px" align="center">TUE</td>
-        <td width="150px" align="center">WEN</td>
-        <td width="150px" align="center">THU</td>
-        <td width="150px" align="center">FRI</td>
+        <td width="150px" align="center" style = "background-color: lightgray; border-color:rgb(210, 210, 210)">MON</td>
+        <td width="150px" align="center" style = "background-color: lightgray; border-color:rgb(210, 210, 210)">TUE</td>
+        <td width="150px" align="center" style = "background-color: lightgray; border-color:rgb(210, 210, 210)">WEN</td>
+        <td width="150px" align="center" style = "background-color: lightgray; border-color:rgb(210, 210, 210)">THU</td>
+        <td width="150px" align="center" style = "background-color: lightgray; border-color:rgb(210, 210, 210)">FRI</td>
     </tr>
-<%
-    var index = 0;
-    for(var i = 0; i < 6; i++) {
-        index = i + 1;
-%>
-    <tr>
-        <td align="center"><%=index%></td>
-<%
-        for(var j = 0; j < 5; j++) {
-%>
-        <td width="150px" height="80px"><h5><%=lec_name[i][j]%></h5><h6> <%=professor[i][j]%> <%=location[i][j]%></h6></td>
-<%
+    <%
+        var index = 0;
+        var colorpick = 0;
+        var a = [];
+        a[0] = 'lightgreen';
+        a[1] = 'lightblue';
+        a[2] = 'lightyellow';
+        a[3] = 'palegoldenrod';
+        a[4] = 'lightcyan';
+        a[5] = 'ivory';
+        a[6] = 'burlywood';
+        a[7] = 'aquamarine';
+    
+        for(var i = 0; i < 6; i++) {
+            index = i + 1;
+    %>
+        <tr>
+            <td align="center"><%=index%></td>
+    <%
+            for (var j = 0; j < 5; j++) {
+                if (lec_num[i][j] != " ") {
+    %>
+        <td width="150px" height="80px" bgcolor='<%=a[(color[i][j])%8]%>' style = "border-color:rgb(210, 210, 210)"><h5><a href="/board/list/<%=lec_num[i][j]%>" style="text-decoration:none; color: black;"><%=lec_name[i][j]%></a></h5>
+        <h6><a href="" onMouseOver="this.innerHTML='<%=phone[i][j]%>'" onMouseOut="this.innerHTML='<%=professor[i][j]%>'" style="text-decoration:none;  color: black"><%=professor[i][j]%></a><%=location[i][j]%></h6></td>
+    <%
+                }
+                else {
+    %>
+        <td width="150px" height="80px" bgcolor='white' style = "border-color:rgb(210, 210, 210)"><h5><a href="/board/list/<%=lec_num[i][j]%>" style="text-decoration:none; color: black;"><%=lec_name[i][j]%></a></h5>
+        <h6><a href="" onMouseOver="this.innerHTML='<%=phone[i][j]%>'" onMouseOut="this.innerHTML='<%=professor[i][j]%>'" style="text-decoration:none;  color: black"><%=professor[i][j]%></a><%=location[i][j]%></h6></td>
+    <%
+                }
+            }
+    %>
+        </tr>
+    <%
         }
-%>
-    </tr>
-<%
-    }
-%>
+    %>
 </table>
 </center>
 </body>

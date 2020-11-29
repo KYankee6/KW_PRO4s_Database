@@ -152,7 +152,7 @@ app.get('/:page', function (req, res, next) {
                                 lec_name[num1][num2] = lec_name[num1][num2].replace(" ", table[i].lec_name);
                                 professor[num1][num2] = professor[num1][num2].replace(" ",  table[i].professor);
                                 location[num1][num2] = location[num1][num2].replace(" ",  "("+table[i].location+")");
-                                color[num1][num2] = i;
+                                color[num1][num2] = i + 1;
                             }
                             for (var i = 0; i < table.length; i++) {
                                 var num1 = Number(table[i].time_stamp[7]);
@@ -176,11 +176,11 @@ app.get('/:page', function (req, res, next) {
                                 lec_name[num1][num2] = lec_name[num1][num2].replace(" ", table[i].lec_name);
                                 professor[num1][num2] = professor[num1][num2].replace(" ",  table[i].professor);
                                 location[num1][num2] = location[num1][num2].replace(" ",  "("+table[i].location+")");
-                                color[num1][num2] = i;
+                                color[num1][num2] = i + 1;
                             }
 
                         console.log("Result: ", lec_name);
-                        res.render('friend_timetable', { title: '친구 시간표', row: row[0], lec_name: lec_name, professor:professor, location:location, url:url, friendInfo:friendInfo});
+                        res.render('friend_timetable', { title: '친구 시간표', row: row[0], lec_name: lec_name, professor:professor, location:location, url:url, friendInfo:friendInfo, color:color});
                         connection.release();
                     });
                     if (err) console.error("err : " + err);
