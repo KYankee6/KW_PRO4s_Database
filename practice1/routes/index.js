@@ -201,9 +201,12 @@ app.post('/enroll/apply', function(req, res, next) {
                     }
                     else {
                         connection.query(totalCreditQuery, [stu_id], function(err4, my_credit) {
-
+                            if (my_credit.length != 0) {
                             isUnderMaxCredit = ((Number(my_credit[0].sum_credit) + Number(my_lesson[0].credit)) <= 21);
-
+                            }
+                            else {
+                                isUnderMaxCredit = true;
+                            }
                             if (err4) {
                                 console.error(err4);
                                 callback('err4:OVER_MAX_CREDIT(!)', null);
@@ -212,9 +215,9 @@ app.post('/enroll/apply', function(req, res, next) {
 
 
                             else if (isNoSameLecture && isTimeAvailable && !isUnderMaxCredit) { //21 학점 넘는경우
-                                // console.log(isNoSameLecture);
-                                // console.log(isTimeAvailable);
-                                // console.log(isUnderMaxCredit);
+                                 //console.log(isNoSameLecture);
+                                 //console.log(isTimeAvailable);
+                                 //console.log(isUnderMaxCredit);
                                 callback('OVER_MAX_CREDIT(!)', null);
                                 //return connection.release();
                             }
