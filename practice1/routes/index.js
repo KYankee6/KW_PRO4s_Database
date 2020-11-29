@@ -3,6 +3,7 @@ var router = express.Router();
 var session = require('express-session');
 var MySQLStore = require('express-mysql-session')(session);
 var bodyParser = require('body-parser');
+var async = require('async');
 var options = {
     connectionLimit: 20,
     host: '223.194.46.205',
@@ -120,51 +121,58 @@ app.get('/enroll', function(req, res, next) {
         }
     });
 });
+
+
 app.post('/enroll/apply', function(req, res, next) {
     pool.getConnection(function(err, connection) {
         var lec_num = req.body.lec_num;
         var checkAlreadyTakenQuery = "select * from enrolled_list where stu_id=? and lec_num=?";
         var checkTimeAvailableQuery = "select time_stamp from enrolled_list where stu_id=?";
         var myLessonQuery = "select * from lecture_info where lec_num=?";
-        var totalCreditQuery = "select * from total_grade where stu_id=?";
-        var applyQuery = "select lec_name,location,credit,major_minor from lecture_info where lec_num =?";
-        var underQuery = "SELECT * FROM enrolled_list WHERE stu_id=?";
+        var totalCreditQuery = "select * from total_grade where stu_id=? and open_date='2020-09-01'";
         var TakeLessonQuery = "insert into class_info(lec_num,lec_name,stu_id,credit) values(?,?,?,?)";
         var stu_id = req.session.user.id;
-        var stu_name = req.session.user.name;
         var isNoSameLecture = true;
         var isTimeAvailable = true;
         var isUnderMaxCredit = true;
-        var information = [];
         var curSelectLesson = new Array(4);
         for (var i = 0; i < 4; i++) {
             curSelectLesson[i] = " ";
         }
-        console.log(lec_num);
         if (lec_num) {
-            connection.query(checkAlreadyTakenQuery, [stu_id, lec_num], function(err1, isAlreadyTaken) {
-                isNoSameLecture = (Number(isAlreadyTaken.length) == 0);
+            function CHECK_NO_SAME_LECTURE(callback) {
+                connection.query(checkAlreadyTakenQuery, [stu_id, lec_num], function(err1, isAlreadyTaken) {
+                    isNoSameLecture = ((isAlreadyTaken.length) == 0);
+                    if (err1) {
+                        console.error(err1);
+                        callback('err1:CHECK_NO_SAME_LECTURE(!)', null);
+                        //return connection.release();
+                    }
+                    if (!isNoSameLecture) { //같은 강좌 수강하는 경우
+                        callback('THERE_IS_SAME_LECTURE(!)', null);
+                    }
+                    else {
+                        callback(null, 'O');
+                    }
+                });
+            }
 
-                if (err1) {
-                    console.log(err1);
-                    //return connection.release();
-                }
-                if (!isNoSameLecture) { //같은 강좌 수강하는 경우
-                    return res.send("<script>alert('같은 강좌를 중복 수강할 수 없습니다');history.back(-1);</script>");
-                }
-            });
-            if (isNoSameLecture) {
+            function CHECK_TIME_AVAILABLE(callback) {
+                //    if (isNoSameLecture) {
                 connection.query(checkTimeAvailableQuery, [stu_id], function(err2, my_enr_rows) {
                     connection.query(myLessonQuery, [lec_num], function(err3, my_lesson) {
                         if (err2) {
-                            console.log(err2);
+                            callback('err2:TIME_TABLE_DUP(!)', null);
+                            console.error(err2);
                             //return connection.release();
                         }
                         else if (err3) {
-                            console.log(err3);
+                            callback('err3:TIME_TABLE_DUP(!)', null);
+                            console.error(err3);
                             //return connection.release();
                         }
                         //시간이 겹치는 경우 확인
+                        isTimeAvailable = true; //Prefix
                         for (var i = 0; i < my_enr_rows.length; i++) {
                             var check1 = my_enr_rows[i].time_stamp.substring(0, 4) == (my_lesson[0].time_stamp.substring(0, 4));
                             var check2 = my_enr_rows[i].time_stamp.substring(4) == (my_lesson[0].time_stamp.substring(4));
@@ -173,76 +181,97 @@ app.post('/enroll/apply', function(req, res, next) {
                             }
                         }
                         if (isNoSameLecture && !isTimeAvailable) {
-                            return res.send("<script>alert('같은 시간에 이미 수강하는 강좌가 존재합니다..');history.back(-1);</script>");
+                            callback('TIME_TABLE_DUP(!)', null);
                             //return connection.release();
+                        }
+                        else {
+                            callback(null, 'O');
                         }
                     });
                 });
+                // }
             }
-            if (isNoSameLecture && isTimeAvailable) {
+
+            function CHECK_UNDER_MAX_CREDIT(callback) {
+                // if (isNoSameLecture && isTimeAvailable) {
                 connection.query(myLessonQuery, [lec_num], function(err3, my_lesson) {
-                    connection.query(totalCreditQuery, [stu_id], function(err4, my_credit) {
-                        isUnderMaxCredit = ((Number(my_credit[0].sum_credit) + Number(my_lesson[0].credit)) <= 21);
-                        console.log(isUnderMaxCredit);
+                    if (err3) {
+                        console.error(err3);
+                        callback('err3:OVER_MAX_CREDIT(!)', null);
+                    }
+                    else {
+                        connection.query(totalCreditQuery, [stu_id], function(err4, my_credit) {
 
-                        if (err4) {
-                            console.log(err4);
-                            //return connection.release();
-                        }
-                        else if (isNoSameLecture && isTimeAvailable && !isUnderMaxCredit) { //21 학점 넘는경우
-                            return res.send("<script>alert('21학점을 넘게 수강할 수 없습니다.');history.back(-1;</script>");
-                            //return connection.release();
-                        }
+                            isUnderMaxCredit = ((Number(my_credit[0].sum_credit) + Number(my_lesson[0].credit)) <= 21);
 
+                            if (err4) {
+                                console.error(err4);
+                                callback('err4:OVER_MAX_CREDIT(!)', null);
+                                //return connection.release();
+                            }
+
+
+                            else if (isNoSameLecture && isTimeAvailable && !isUnderMaxCredit) { //21 학점 넘는경우
+                                // console.log(isNoSameLecture);
+                                // console.log(isTimeAvailable);
+                                // console.log(isUnderMaxCredit);
+                                callback('OVER_MAX_CREDIT(!)', null);
+                                //return connection.release();
+                            }
+                            else {
+                                callback(null, 'O');
+                            }
+                        });
+                    }
+                });
+
+                //  }
+            }
+
+            function TAKE_LESSON(callback) {
+                // if (isNoSameLecture && isTimeAvailable && isUnderMaxCredit) {
+                connection.query(myLessonQuery, [lec_num], function(err3, my_lesson) {
+                    if (err3) {
+                        console.error(err3);
+                    }
+                    curSelectLesson[0] = curSelectLesson[0].replace(" ", my_lesson[0].lec_num);
+                    curSelectLesson[1] = curSelectLesson[1].replace(" ", my_lesson[0].lec_name);
+                    curSelectLesson[2] = curSelectLesson[2].replace(" ", stu_id);
+                    curSelectLesson[3] = curSelectLesson[3].replace(" ", my_lesson[0].credit);
+                    connection.query(TakeLessonQuery, curSelectLesson, function(err, next) {
+                        if (err) {
+                            console.error(err);
+                            callback('ERR_WHILE_INSERT', null);
+                        }
+                        else callback(null, 'O');
                     });
                 });
+                //}
             }
-            connection.query(applyQuery, [lec_num], function(err, shenr_row) {
-                connection.query(underQuery, [req.session.user.id], function(err, enr_row) {
-                    if (err) console.error("err : " + err);
-                    // console.log(enr_row);
-                    for (var i = 0; i < shenr_row.length; i++) {
-                        if (shenr_row[i].major_minor == 1) shenr_row[i].major_minor = "전공";
-                        else shenr_row[i].major_minor = "교양";
-                    }
-                    if (err) console.error("err : " + err);
-                    // console.log(enr_row);
-                    for (var i = 0; i < enr_row.length; i++) {
-                        if (enr_row[i].major_minor == 1) enr_row[i].major_minor = "전공";
-                        else enr_row[i].major_minor = "교양";
-                    }
-                    information = {
-                        title: "수강 신청",
-                        sh_enr_row: shenr_row,
-                        enr_row: enr_row,
-                        stu_id: stu_id,
-                        stu_name: stu_name
-                    }
-                });
-            });
-        }
-        if (curSelectLesson && isNoSameLecture && isTimeAvailable && isUnderMaxCredit) {
-            connection.query(myLessonQuery, [lec_num], function(err3, my_lesson) {
-                if (err3) {
-                    console.log(err3);
-                }
-                curSelectLesson[0] = curSelectLesson[0].replace(" ", my_lesson[0].lec_num);
-                curSelectLesson[1] = curSelectLesson[1].replace(" ", my_lesson[0].lec_name);
-                curSelectLesson[2] = curSelectLesson[2].replace(" ", stu_id);
-                curSelectLesson[3] = curSelectLesson[3].replace(" ", my_lesson[0].credit);
-                //console.log(curSelectLesson);
-                console.log(information);
-                connection.query(TakeLessonQuery, curSelectLesson, function(err, next) {
-                    if (err) {
-                        console.log(err);
-                    }
-                    res.redirect("back");
-                });
-            });
+            async.series([CHECK_NO_SAME_LECTURE, CHECK_TIME_AVAILABLE, CHECK_UNDER_MAX_CREDIT, TAKE_LESSON], function(err, result) {
 
+                if (err) {
+                    if (err == "THERE_IS_SAME_LECTURE(!)") {
+                        res.send("<script>alert('신청한 강좌가 이미 신청 내역에 존재합니다.');history.back();</script>");
+                    }
+                    else if (err == "TIME_TABLE_DUP(!)") {
+                        res.send("<script>alert('신청한 강좌의 시간이 존재하는 강좌와 겹칩니다.');history.back();</script>");
+                    }
+                    else if (err == "OVER_MAX_CREDIT(!)") {
+                        res.send("<script>alert('21학점을 초과하여 수강신청할 수 없습니다.');history.back();</script>");
+                    }
+                    else {
+                        res.send("<script>alert('이러면 나가린데..');history.back();</script>");
+                    }
+                }
+                else if (result) {
+                    res.redirect("/index/enroll");
+                }
+            });
         }
+
         else {
-            res.send("<script>alert('Unexpected Error');history.back();</script>");
+            console.log("unexpected");
         }
         if (connection) {
             return connection.release();
@@ -403,9 +432,9 @@ app.post('/enroll/drop', function(req, res, next) {
         var dropSQL = "DELETE FROM class_info WHERE stu_id = ? and lec_num = ?";
         console.log(req.body.lesson_selected, req.session.user.id);
         connection.query(dropSQL, [req.session.user.id, req.body.lesson_selected], function(err, result) {
-            res.redirect("back");
-
+            res.redirect("/index/enroll");
         });
     });
 });
+
 module.exports = app;
