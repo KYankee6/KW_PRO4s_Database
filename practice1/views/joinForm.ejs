@@ -1,146 +1,149 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <title>
+        <%= title %>
+    </title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
 </head>
+
 <body>
-    <h1><%= title %></h1>
+    <center>
+    <h2>
+        <%= title %>
+    </h2>
     <form action="/joinForm" method="post" onsubmit="return JOIN_check();" enctype="multipart/form-data">
-        <table border="1">
-            <tr>
-                <th>아이디</th>
-                <td><input type="text" name="id" id="id" size="12" maxLength="12"></td>
+        <table style="background-color:rgba(223, 223, 223, 0.353); width:30%">
+            <tr>   
+                <th align="center">아이디</th><tr></tr><tr>
+                <td align="center"><input type="text" name="id" id="id" size="12" maxLength="12" style="width:80%;"></td>
             </tr>
+            <tr></tr>
             <tr>
-                <th>비밀번호</th>
-                <td><input type="password" name="passwd" id="passwd" size="12" maxlength="12"></td>
+                <th align="center">비밀번호</th><tr></tr><tr>
+                <td align="center"><input type="password" name="passwd" id="passwd" size="12" maxlength="12" style="width:80%;"></td>
             </tr>
+            <tr></tr>
             <tr>
-                <th>비밀번호확인</th>
-                <td><input type="password" name="passwd2" id="passwd2" size="12" maxlength="12"></td>
+                <th align="center">비밀번호확인</th><tr></tr><tr>
+                <td align="center"><input type="password" name="passwd2" id="passwd2" size="12" maxlength="12" style="width:80%;"></td>
             </tr>
+            <tr></tr>
             <tr>
-                <th>이름</th>
-                <td><input type="text" name="name" id="name" size="10" maxlength="10"></td>
+                <th align="center">이름</th><tr></tr><tr></tr>
+                <td align="center"><input type="text" name="name" id="name" size="10" maxlength="10" style="width:80%;"></td>
             </tr>
+            <tr></tr>
             <tr>
-                <th>주소</th>
-                <td><input type="text" name="address" id="address" size="30" maxlength="50"></td>
+                <th align="center">주소</th><tr></tr><tr></tr>
+                <td align="center"><input type="text" name="address" id="address" size="30" maxlength="50" style="width:80%;"></td>
             </tr>
+            <tr></tr>
             <tr>
-                <th>주민번호</th>
-                <td>
+                <th align="center">주민번호</th><tr></tr><tr>
+                <td align="center">
                     <input type="hidden" name="RRN" id="RRN">
-                    <input type="text" name="RRN1" id="RRN1" size="6" maxlength="6">
-                    -
-                    <input type="password" name="RRN2" id="RRN2" size="7" maxlength="7">
+                    <input type="text" name="RRN1" id="RRN1" size="6" maxlength="6" style="width:40%;"> - <input type="password" name="RRN2" id="RRN2" size="7" maxlength="7" style="width:40%;">
                 </td>
             </tr>
+            <tr></tr>
             <tr>
-                <th>이메일주소</th>
-                <td>
+                <th align="center">이메일주소</th><tr></tr><tr>
+                <td align="center">
                     <input type="hidden" name="email" id="email">
-                    <input type="text" name="email1" id="email1" size="7" maxlength="12">
-                    @
-                    <input type="text" name="email2" id="email2" size="9" maxlength="15">
+                    <input type="text" name="email1" id="email1" size="7" maxlength="12" style="width:40%;"> @ <input type="text" name="email2" id="email2" size="9" maxlength="15" style="width:40%;">
                 </td>
             </tr>
+            <tr></tr>
             <tr>
-                <th>이미지</th>
-                <td><input type = "file" name="image" id="image" accept="*"></td>
+                <th align="center">이미지</th><tr></tr><tr>
+                <td align="center"><input type="file" name="image" id="image" accept="*" ></td>
             </tr>
+            <tr></tr>
             <tr>
-                <td colspan="2">
-                    <input type="submit" name="submit" value="가입">
-                    <button type="button" onclick="location.href='/login'">취소</button>
+                <td colspan="2" align="center">
+                    <button type="submit" name="submit" value="가입" style="width:40%;">가입</button>
+                    <button type="button" onclick="location.href='/login'" style="width:40%;">취소</button>
                 </td>
             </tr>
         </table>
     </form>
+    </center>
     <script>
-        function JOIN_check()
-        {   
-            if($("#id").val().trim() == "")
-            {
+        function JOIN_check() {
+            if ($("#id").val().trim() == "") {
                 var message = "id를 입력해 주세요";
                 $("#id").val("");
                 $("#id").focus();
                 alert(message);
                 return false;
             }
-            if($("#passwd").val().trim() == "")
-            {
+            if ($("#passwd").val().trim() == "") {
                 var message = "비밀번호를 입력해 주세요";
                 $("#passwd").val("");
                 $("#passwd").focus();
                 alert(message);
                 return false;
             }
-            if($("#passwd2").val() != $("#passwd").val())
-            {
+            if ($("#passwd2").val() != $("#passwd").val()) {
                 var message = "비밀번호가 일치하지 않습니다";
                 $("#passwd2").val("");
                 $("#passwd2").focus();
                 alert(message);
                 return false;
             }
-            if($("#name").val().trim() == "")
-            {
+            if ($("#name").val().trim() == "") {
                 var message = "이름을 입력해 주세요";
                 $("#name").val("");
                 $("#name").focus();
                 alert(message);
                 return false;
             }
-            if($("#address").val().trim() == "")
-            {
+            if ($("#address").val().trim() == "") {
                 var message = "주소를 입력해 주세요";
                 $("#address").val("");
                 $("#address").focus();
                 alert(message);
                 return false;
             }
-            if($("#email1").val().trim() == "")
-            {
+            if ($("#email1").val().trim() == "") {
                 var message = "이메일 앞자리를 입력해 주세요";
                 $("#email1").val("");
                 $("#email1").focus();
                 alert(message);
                 return false;
             }
-            if($("#email2").val().trim() == "")
-            {
+            if ($("#email2").val().trim() == "") {
                 var message = "이메일 뒷자리를 입력해 주세요";
                 $("#email2").val("");
                 $("#email2").focus();
                 alert(message);
                 return false;
             }
-            var email= $("#email1").val() +'@'+ $("#email2").val();
+            var email = $("#email1").val() + '@' + $("#email2").val();
             $("#email").val(email);
 
-            if($("#RRN1").val().trim() == "")
-            {
+            if ($("#RRN1").val().trim() == "") {
                 var message = "주민번호 앞자리를 입력해 주세요";
                 $("#RRN1").val("");
                 $("#RRN1").focus();
                 alert(message);
                 return false;
             }
-            if($("#RRN2").val().trim() == "")
-            {
+            if ($("#RRN2").val().trim() == "") {
                 var message = "주민번호 뒷자리를 입력해 주세요";
                 $("#RRN2").val("");
                 $("#RRN2").focus();
                 alert(message);
                 return false;
             }
-            var RRN= $("#RRN1").val() +'-'+ $("#RRN2").val();
+            var RRN = $("#RRN1").val() + '-' + $("#RRN2").val();
             $("#RRN").val(RRN);
             return true;
         }
     </script>
 </body>
+
 </html>
