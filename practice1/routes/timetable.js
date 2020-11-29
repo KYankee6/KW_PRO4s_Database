@@ -38,23 +38,25 @@ app.get('/', function (req, res, next) {
     pool.getConnection(function (err, connection) {
         //Use the connection
         var stunameSQL = "SELECT stu_name FROM register_info WHERE ID=?";
-        var Timetable = "SELECT * FROM current_time_table WHERE stu_id = ?";
+        var Timetable = "SELECT * FROM current_time_table natural join lecture_info WHERE stu_id = ?";
         var locationQuery = "SELECT DISTINCT location FROM current_time_table";
-        var lecnumSQL = "SELECT lec_num FROM lecture_info WHERE "
         var professor = new Array(6);
         var location = new Array(6);
         var lec_num = new Array(6);
         var lec_name = new Array(6);
+        var phone = new Array(6);
         for (var i = 0; i < 6; i++) {
             lec_name[i] = new Array(5);
             professor[i] = new Array(5);
             location[i] = new Array(5);
             lec_num[i] = new Array(5);
+            phone[i] = new Array(5);
             for (var j = 0; j < 5; j++) {
                 lec_name[i][j] = " ";
                 professor[i][j] = " ";
                 location[i][j] = " ";
                 lec_num[i][j] = " ";
+                phone[i][j] = " ";
             }
         }
         console.log(lec_name);
@@ -88,6 +90,7 @@ app.get('/', function (req, res, next) {
                                 professor[num1][num2] = professor[num1][num2].replace(" ",  table[i].professor);
                                 location[num1][num2] = location[num1][num2].replace(" ",  "("+table[i].location+")");
                                 lec_num[num1][num2] = lec_num[num1][num2].replace(" ", table[i].lec_num);
+                                phone[num1][num2] = phone[num1][num2].replace(" ", table[i].professor_phone);
                             }
                             for (var i = 0; i < table.length; i++) {
                                 var num1 = Number(table[i].time_stamp[7]);
@@ -112,10 +115,11 @@ app.get('/', function (req, res, next) {
                                 professor[num1][num2] = professor[num1][num2].replace(" ",  table[i].professor);
                                 location[num1][num2] = location[num1][num2].replace(" ",  "("+table[i].location+")");
                                 lec_num[num1][num2] = lec_num[num1][num2].replace(" ", table[i].lec_num);
+                                phone[num1][num2] = phone[num1][num2].replace(" ", table[i].professor_phone);
                             }
 
                         console.log("Result: ", lec_num);
-                        res.render('timetable', { title: '시간표', row: row[0], lec_name: lec_name, professor:professor, location:location, loc:loc, lec_num:lec_num});
+                        res.render('timetable', { title: '시간표', row: row[0], lec_name: lec_name, professor:professor, location:location, loc:loc, lec_num:lec_num, phone:phone});
                         connection.release();
                     });
                     if (err) console.error("err : " + err);
@@ -139,13 +143,16 @@ app.get('/location/:page', function (req, res, next) {
         var locationQuery = "SELECT DISTINCT location FROM current_time_table";
         var lec_name = new Array(6);
         var professor = new Array(6);
+        var phone = new Array(6);
         var stu_name = [];
         for (var i = 0; i < 6; i++) {
             lec_name[i] = new Array(5);
             professor[i] = new Array(5);
+            phone[i] = new Array(5);
             for (var j = 0; j < 5; j++) {
                 lec_name[i][j] = " ";
                 professor[i][j] = " ";
+                phone[i][j] = " ";
             }
         }
         if (req.session.user) {
@@ -180,6 +187,7 @@ app.get('/location/:page', function (req, res, next) {
                         console.log(num2, num1, table[i].time_stamp);
                         lec_name[num1][num2] = lec_name[num1][num2].replace(" ", table[i].lec_name);
                         professor[num1][num2] = professor[num1][num2].replace(" ",  table[i].professor);
+                        phone[num1][num2] = phone[num1][num2].replace(" ", table[i].professor_phone);
                     }
                     for (var i = 0; i < table.length; i++) {
                         var num1 = Number(table[i].time_stamp[7]);
@@ -202,10 +210,11 @@ app.get('/location/:page', function (req, res, next) {
                         }
                         lec_name[num1][num2] = lec_name[num1][num2].replace(" ", table[i].lec_name);
                         professor[num1][num2] = professor[num1][num2].replace(" ",  table[i].professor);
+                        phone[num1][num2] = phone[num1][num2].replace(" ", table[i].professor_phone);
                     }
 
 
-                    res.render('location', { title: '강의실', stu_name:stu_name, lec_name: lec_name, professor:professor, url:url, locs:locs});
+                    res.render('location', { title: '강의실', stu_name:stu_name, lec_name: lec_name, professor:professor, url:url, locs:locs, phone:phone});
                 });
                 connection.release();
             });
@@ -214,17 +223,6 @@ app.get('/location/:page', function (req, res, next) {
             res.send("<script>alert('만료된 세션');history.back();</script>");
             connection.release();
         }
-    });
-});
-
-app.get('/professor/:page', function(req, res) {
-    const url = req.params.page;
-    pool.getConnection(function (err, connection) {
-        var professorPN = "SELECT DISTINCT professor_phone FROM lecture_info WHERE lec_num = ?";
-        connection.query(professorPN, [url], function(err, result) {
-            
-            res.send("<script>alert(JSON.stringify(result));history.back(-1);</script>");
-        });
     });
 });
 

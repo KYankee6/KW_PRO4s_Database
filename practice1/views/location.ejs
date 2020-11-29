@@ -77,7 +77,7 @@
 <%
         for(var j = 0; j < 5; j++) {
 %>
-        <td width="150px" height="80px"><h5><%=lec_name[i][j]%></h5><h6> <%=professor[i][j]%></h6></td>
+        <td width="150px" height="80px"><h5><%=lec_name[i][j]%></h5><h6><a href="#" onMouseOver="this.innerHTML='<%=phone[i][j]%>'" onMouseOut="this.innerHTML='<%=professor[i][j]%>'"><%=professor[i][j]%></a></h6></td>
 <%
         }
 %>

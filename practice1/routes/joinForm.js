@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
 
 var multer = require('multer'); // 이미지
 var path = require('path'); // 이미지

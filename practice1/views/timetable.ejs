@@ -61,7 +61,7 @@
         <td width="20px" align="center"></td>
         <td width="150px" align="center">MON</td>
         <td width="150px" align="center">TUE</td>
-        <td width="150px" align="center">WEN</td>
+        <td width="150px" align="center">WED</td>
         <td width="150px" align="center">THU</td>
         <td width="150px" align="center">FRI</td>
     </tr>
@@ -76,7 +76,7 @@
         for(var j = 0; j < 5; j++) {
 %>
         <td width="150px" height="80px"><h5><a href="/board/list/<%=lec_num[i][j]%>" style="text-decoration:none; color: black;"><%=lec_name[i][j]%></a></h5>
-            <h6><a href="/timetable/professor/<%=lec_num[i][j]%>"><%=professor[i][j]%></a><%=location[i][j]%></h6></td>
+            <h6><a href="#" onMouseOver="this.innerHTML='<%=phone[i][j]%>'" onMouseOut="this.innerHTML='<%=professor[i][j]%>'"><%=professor[i][j]%></a><%=location[i][j]%></h6></td>
 <%
         }
 %>

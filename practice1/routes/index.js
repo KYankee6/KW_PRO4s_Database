@@ -150,7 +150,7 @@ app.post('/enroll/apply', function(req, res, next) {
                     //return connection.release();
                 }
                 if (!isNoSameLecture) { //같은 강좌 수강하는 경우
-                    return res.send("<script>alert('같은 강좌를 중복 수강할 수 없습니다');history.back(-1);</script>");
+                    res.send("<script>alert('같은 강좌를 중복 수강할 수 없습니다');history.back(-1);</script>");
                 }
             });
             if (isNoSameLecture) {
@@ -173,7 +173,7 @@ app.post('/enroll/apply', function(req, res, next) {
                             }
                         }
                         if (isNoSameLecture && !isTimeAvailable) {
-                            return res.send("<script>alert('같은 시간에 이미 수강하는 강좌가 존재합니다..');history.back(-1);</script>");
+                            res.send("<script>alert('같은 시간에 이미 수강하는 강좌가 존재합니다..');history.back(-1);</script>");
                             //return connection.release();
                         }
                     });
@@ -190,7 +190,7 @@ app.post('/enroll/apply', function(req, res, next) {
                             //return connection.release();
                         }
                         else if (isNoSameLecture && isTimeAvailable && !isUnderMaxCredit) { //21 학점 넘는경우
-                            return res.send("<script>alert('21학점을 넘게 수강할 수 없습니다.');history.back(-1;</script>");
+                            res.send("<script>alert('21학점을 넘게 수강할 수 없습니다.');history.back(-1;</script>");
                             //return connection.release();
                         }
 
