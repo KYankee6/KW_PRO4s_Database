@@ -24,6 +24,25 @@
           border-color: black;
           transition:all 0.1s;
           }
+          .Tstyle {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+            table-layout: fixed;
+            border-top: 2px #96878e solid;
+            border-bottom: 1px solid #d7d7d7;
+            border-left: 0px solid #d7d7d7;
+            border-right: 0px solid #d7d7d7;
+        }
+        table {
+            width: 100%;
+            border-top: 1px solid #444444;
+            border-collapse: collapse;
+        }
+        th, td {
+            border-bottom: 1px solid #444444;
+            padding: 10px;
+        }
     </style>
     <div style="float:right">
     <%=row.stu_name%>님 환영합니다~
@@ -46,7 +65,7 @@
 
 
 <form action="/board/read" method="get">
-    <table border="1">
+    <table class="Tstyle" ;>
         <input type="hidden" name="idx" value="<%=row.idx%>"/>
         <tr>
             <td>작성자</td>

@@ -50,11 +50,12 @@ app.get('/total_grade', function (req, res, next) {
     //console.log("hello");
     //console.log(url);
     pool.getConnection(function (err, connection) {
-        var gettotalgradesql = "select * from total_grade where stu_id = ?";
-        var getSemesterGradeSql = "select * from open_class_info where stu_id = ?"
+        var gettotalgradesql = "select * from total_grade where stu_id = ? order by open_date";
+        var getSemesterGradeSql = "select * from open_class_info where stu_id = ?";
         var getSemesterCount = "select distinct open_date from open_class_info where stu_id=? ORDER BY `open_date`";
         var getMajorGrade = "select * from major_minor_grade where stu_id = ? and major_minor = 1";
         var getMinorGrade = "select * from major_minor_grade where stu_id = ? and major_minor = 0";
+        var getFailedTable = "select * from failed_table where stu_id = ?;"
         var stunameSQL = "SELECT stu_name FROM register_info WHERE ID=?";
         var stu_name;
         if (req.session.user) {
@@ -72,7 +73,9 @@ app.get('/total_grade', function (req, res, next) {
                     connection.query(getSemesterCount,  [req.session.user.id], function (err, semester_cnt){
                         connection.query(getMajorGrade, [req.session.user.id], function (err, major){
                             connection.query(getMinorGrade, [req.session.user.id], function (err, minor){
-                                res.render('total_grade', { title: "수강/성적 조회", row: stu_name[0], grades: grade, semesters: semester, semesters_cnt: semester_cnt, majors: major, minors: minor});
+                                connection.query(getFailedTable, [req.session.user.id], function (err, failed){
+                                    res.render('total_grade', { title: "수강/성적 조회", row: stu_name[0], grades: grade, semesters: semester, semesters_cnt: semester_cnt, majors: major, minors: minor, faileds: failed});
+                                });
                                 //console.log(semester_cnt);
                                 //console.log(semester);
                                 //console.log(grade);
@@ -97,24 +100,5 @@ app.get('/total_grade', function (req, res, next) {
     });
 });
 
-app.post('/', function(req, res){
-    var responseData = {};
-   
-    var query =  connection.query('select score from scoreboard where uid="ma" ORDER BY num DESC limit 10', function(err,rows){ 
-      responseData.score = [];
-      if(err) throw err;
-      if(rows[0]){
-        responseData.result = "ok";
-        rows.forEach(function(val){
-          responseData.score.push(val.score);
-        })
-      }
-      else{
-        responseData.result = "none";
-        responseData.score = "";
-      }
-      res.json(responseData);
-    });
-  });
-  
+
 module.exports = app;
