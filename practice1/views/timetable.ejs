@@ -58,11 +58,11 @@
 <h1> My Timetable </h1>
 <table style = "border-collapse : collapse; width: 60%; height: 50%" border="1">
     <td width="20px" align="center"></td>
-    <td width="150px" align="center" style = "background-color: lightgray;">MON</td>
-    <td width="150px" align="center" style = "background-color: lightgray;">TUE</td>
-    <td width="150px" align="center" style = "background-color: lightgray;">WEN</td>
-    <td width="150px" align="center" style = "background-color: lightgray;">THU</td>
-    <td width="150px" align="center" style = "background-color: lightgray;">FRI</td>
+    <td width="150px" align="center" style = "background-color: lightgray; border-color:rgb(210, 210, 210)">MON</td>
+    <td width="150px" align="center" style = "background-color: lightgray; border-color:rgb(210, 210, 210)">TUE</td>
+    <td width="150px" align="center" style = "background-color: lightgray; border-color:rgb(210, 210, 210)">WEN</td>
+    <td width="150px" align="center" style = "background-color: lightgray; border-color:rgb(210, 210, 210)">THU</td>
+    <td width="150px" align="center" style = "background-color: lightgray; border-color:rgb(210, 210, 210)">FRI</td>
 <%
     var index = 0;
     var colorpick = 0;
@@ -72,7 +72,7 @@
     a[2] = 'lightyellow';
     a[3] = 'palegoldenrod';
     a[4] = 'lightcyan';
-    a[5] = 'ivory';
+    a[5] = 'pink';
     a[6] = 'burlywood';
     a[7] = 'aquamarine';
 
@@ -85,13 +85,13 @@
         for (var j = 0; j < 5; j++) {
             if (lec_num[i][j] != " ") {
 %>
-    <td width="150px" height="80px" bgcolor='<%=a[(color[i][j])%8]%>'><h5><a href="/board/list/<%=lec_num[i][j]%>" style="text-decoration:none; color: black;"><%=lec_name[i][j]%></a></h5>
+    <td width="150px" height="80px" bgcolor='<%=a[(color[i][j])]%>' style = "border-color:rgb(210, 210, 210)"><h5><a href="/board/list/<%=lec_num[i][j]%>" style="text-decoration:none; color: black;"><%=lec_name[i][j]%></a></h5>
     <h6><a href="" onMouseOver="this.innerHTML='<%=phone[i][j]%>'" onMouseOut="this.innerHTML='<%=professor[i][j]%>'" style="text-decoration:none;  color: black"><%=professor[i][j]%></a><%=location[i][j]%></h6></td>
 <%
             }
             else {
 %>
-    <td width="150px" height="80px" bgcolor='white'><h5><a href="/board/list/<%=lec_num[i][j]%>" style="text-decoration:none; color: black;"><%=lec_name[i][j]%></a></h5>
+    <td width="150px" height="80px" bgcolor='white' style = "border-color:rgb(210, 210, 210)"><h5><a href="/board/list/<%=lec_num[i][j]%>" style="text-decoration:none; color: black;"><%=lec_name[i][j]%></a></h5>
     <h6><a href="" onMouseOver="this.innerHTML='<%=phone[i][j]%>'" onMouseOut="this.innerHTML='<%=professor[i][j]%>'" style="text-decoration:none;  color: black"><%=professor[i][j]%></a><%=location[i][j]%></h6></td>
 <%
             }
