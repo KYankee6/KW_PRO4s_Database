@@ -67,24 +67,44 @@
         <td width="150px" align="center">THU</td>
         <td width="150px" align="center">FRI</td>
     </tr>
-<%
-    var index = 0;
-    for(var i = 0; i < 6; i++) {
-        index = i + 1;
-%>
-    <tr>
-        <td align="center"><%=index%></td>
-<%
-        for(var j = 0; j < 5; j++) {
-%>
-        <td width="150px" height="80px"><h5><%=lec_name[i][j]%></h5><h6><a href="#" onMouseOver="this.innerHTML='<%=phone[i][j]%>'" onMouseOut="this.innerHTML='<%=professor[i][j]%>'"><%=professor[i][j]%></a></h6></td>
-<%
+    <%
+        var index = 0;
+        var colorpick = 0;
+        var a = [];
+        a[0] = 'lightgreen';
+        a[1] = 'lightblue';
+        a[2] = 'lightyellow';
+        a[3] = 'palegoldenrod';
+        a[4] = 'lightcyan';
+        a[5] = 'ivory';
+        a[6] = 'burlywood';
+        a[7] = 'aquamarine';
+    
+        for(var i = 0; i < 6; i++) {
+            index = i + 1;
+    %>
+        <tr>
+            <td align="center"><%=index%></td>
+    <%
+            for (var j = 0; j < 5; j++) {
+                if (lec_num[i][j] != " ") {
+    %>
+        <td width="150px" height="80px" bgcolor='<%=a[(color[i][j])]%>'><h5><%=lec_name[i][j]%></h5>
+        <h6><%=professor[i][j]%><%=location[i][j]%></h6></td>
+    <%
+                }
+                else {
+    %>
+        <td width="150px" height="80px" bgcolor='white'><h5><%=lec_name[i][j]%></h5>
+        <h6><%=professor[i][j]%> <%=location[i][j]%></h6></td>
+    <%
+                }
+            }
+    %>
+        </tr>
+    <%
         }
-%>
-    </tr>
-<%
-    }
-%>
+    %>
 </table>
 </center>
 </body>
