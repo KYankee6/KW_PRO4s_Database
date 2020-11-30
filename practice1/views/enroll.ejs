@@ -25,7 +25,7 @@
             padding: 5px 5px 5px 5px;
             display: inline-block;
             border-radius: 1px;
-            background-color: lightgray;
+            background-color: #ffffff;
             border-color: black;
             transition: all 0.1s;
         }
@@ -35,6 +35,18 @@
             font-size: large;
             border-bottom: 1px solid #444444;
             padding: 10px;
+        }
+        
+        .Tstyle1 {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+            table-layout: fixed;
+            text-align: center;
+            border-top: 2px #96878e solid;
+            border-bottom: 1px solid #d7d7d7;
+            border-left: 0px solid #d7d7d7;
+            border-right: 0px solid #d7d7d7;
         }
         
         .Tstyle {
@@ -94,9 +106,9 @@
 
     </div>
 
-    <table class="Tstyle" ;>
+    <table class="Tstyle1" ;>
         <tr>
-            <td>교과목명</td>
+            <td bgcolor="#f0f0f0">교과목명</td>
             <td id="c_lec_name">
 
                 <% if(locals.sh_enr_row){%>
@@ -105,7 +117,7 @@
                     <%=sh_enr_row[0].lec_name%>
                         <% } %>
             </td>
-            <td>학점</td>
+            <td bgcolor="#f0f0f0">학점</td>
             <td id="c_lec_credit">
                 <% if(locals.sh_enr_row){%>
                     <%=sh_enr_row[0].credit%>
@@ -114,13 +126,13 @@
         </tr>
 
         <tr>
-            <td>이수</td>
+            <td bgcolor="#f0f0f0">이수</td>
             <td id="c_lec_major_minor">
                 <% if(locals.sh_enr_row){%>
                     <%=sh_enr_row[0].major_minor%>
                         <%}%>
             </td>
-            <td>강의실</td>
+            <td bgcolor="#f0f0f0">강의실</td>
             <td id="c_lec_location">
                 <% if(locals.sh_enr_row){%>
                     <%=sh_enr_row[0].location%>
@@ -142,7 +154,7 @@
 
     <table class="Tstyle" ;>
 
-        <tr>
+        <tr bgcolor="#f0f0f0">
             <td>교과목</td>
             <td>담당교수</td>
             <td>이수</td>
@@ -190,7 +202,7 @@
             <button type='submit' class="btn">강의포기</button>
     </div>
     <table class="Tstyle" ;>
-        <tr>
+        <tr bgcolor="#f0f0f0">
             <td>선택</td>
             <td>교과목</td>
             <td>담당교수</td>
