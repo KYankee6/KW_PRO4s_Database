@@ -88,8 +88,8 @@ app.get('/total_grade', function (req, res, next) {
                     //console.log(semester);
                 });
                 //connection.query(getSemesterCount,  [req.session.user.id], function (err, semester_cnt){
-                   // res.render('total_grade', { title: "학기별 성적", row: stu_name[0], grades: grade, semesters_cnt: semester_cnt});
-                   // console.log(semester_cnt);
+                // res.render('total_grade', { title: "학기별 성적", row: stu_name[0], grades: grade, semesters_cnt: semester_cnt});
+                // console.log(semester_cnt);
                 connection.release();
             });
         }

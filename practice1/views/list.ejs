@@ -58,12 +58,13 @@
             <td><a href="https://naver.com" style="text-decoration:none; color: white">친구 목록</a></td>
         </tr>
     </table>
+
     <h1><%= title%></h1>
     <br>
     <br>
     <form style="float: right;">
-        <select  onchange="if(this.value) location.href=(this.value);">
-            <option value="none">선택</option>
+        <select  onchange="if(this.value) location.href=(this.value);" style="width:300px;height:50px">
+            <option value="none">과목선택</option>
             <%
             for(var i=0; i<lecs.length; i++)
             {
@@ -75,13 +76,16 @@
             %>
         </select>
     </form>
-    <table class="Tstyle" ;>
-        <tr>
-            <td>번호</td>
-            <td>제목</td>
-            <td>작성자</td>
-            <td>작성일</td>
-            <td>조회수</td>
+    <br>
+    <br>
+    <br>
+    <table class="Tstyle" >
+        <tr bgcolor="#e9e9e9">
+            <td width="10%" align="center"><h3>번호</h3></td>
+            <td width="60%" align="center"><h3>제목</h3></td>
+            <td width="10%" align="center"><h3>작성자</h3></td>
+            <td width="10%" align="center"><h3>작성일</h3></td>
+            <td width="10%" align="center"><h3>조회수</h3></td>
         </tr>
         <%
         for(var i=0; i<contents.length; i++)
@@ -89,7 +93,7 @@
             var oneItem1 = contents[i];
         %>
         <tr>
-            <td>
+            <td align="center">
                 <%
                 if(oneItem1.star==1)
                 {
@@ -107,10 +111,27 @@
                 }
                 %>
                 </td>
-            <td><a href="/board/read/<%=oneItem1.idx%>"><%=oneItem1.title%></a></td>
-            <td><%=oneItem1.writer%></td>
-            <td><%=oneItem1.write_date%></td>
-            <td><%=oneItem1.hit%></td>
+            <td>
+                <a href="/board/read/<%=oneItem1.idx%>"><%=oneItem1.title%></a>
+                <%
+                    if(oneItem1.file_name!='')
+                    {
+                    %>
+                        <img src="/clip.jpg" width=20 height=20 align="right">
+                    <%
+                    }
+                    %>
+                    <%
+                    if(oneItem1.file_name=='')
+                    {
+                    %>
+                    <%
+                    }
+                %>
+            </td>
+            <td align="center"><%=oneItem1.writer%></td>
+            <td align="center"><%=oneItem1.write_date%></td>
+            <td align="center"><%=oneItem1.hit%></td>
         </tr>
         <%
         }

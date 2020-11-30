@@ -2,7 +2,7 @@
 <html>
 <head>
     <script src = "/javascripts/jquery-3.5.1.min.js"></script>
-    <title><%= title %></title>
+    
     <link rel='stylesheet' href="'/stylesheets/style.css"/>
 </head>
 <body>
@@ -43,6 +43,10 @@
             border-bottom: 1px solid #444444;
             padding: 10px;
         }
+        .atag{
+            text-align: right;
+        }
+
     </style>
     <div style="float:right">
     <%=row.stu_name%>님 환영합니다~
@@ -61,42 +65,39 @@
             <td><a href="https://naver.com" style="text-decoration:none; color: white">친구 목록</a></td>
         </tr>
     </table>
-<h1><%= title %></h1>
+<h1><%= row.lec_name %></h1>
 
 
 <form action="/board/read" method="get">
-    <table class="Tstyle" ;>
+    <table class="Tstyle" >
         <input type="hidden" name="idx" value="<%=row.idx%>"/>
-        <tr>
-            <td>작성자</td>
-            <td><%=row.writer%></td>
+        <tr bgcolor="#e9e9e9">
+            <td><h2><%=row.title%></h2><br><div class="atag"><a align="rignt">작성자: <%=row.writer%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;작성일: <%=row.write_date%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;조회수: <%=row.hit%></a></div></td>
+        </tr>
+            <%
+            if(row.file_name!='')
+            {
+            %>
+            <tr>
+                <td onclick="handleClick()">&nbsp;<img src="/clip.jpg" width=20 height=20>&nbsp;&nbsp;&nbsp;첨부파일&nbsp;&nbsp;&nbsp;&nbsp;<small><%=row.file_name%>&nbsp;&nbsp;</small></td>
+            </tr>
+            <%
+            }
+            %>
+            <%
+            if(row.file_name=='')
+            {
+            %>
+            <%
+            }
+            %>
+
         </tr>
         <tr>
-            <td>작성일</td>
-            <td><%=row.write_date%></td>
-        </tr>
-        <tr>
-            <td>제목</td>
-            <td><%=row.title%></td>
-        </tr>
-        <tr>
-            <td>내용</td>
-            <td><%=row.content%></td>
-        </tr>
-        <tr>
-            <td>파일</td>
-            <td onclick="handleClick()"><%=row.file_name%></td>
-        </tr>
-        <tr>
-            <td>조회수</td>
-            <td><%=row.hit%></td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <a href="/board/list/1">글 목록</a>
-            </td>
+            <td valign=top style="word-break:break-all" height="200"><%=row.content%></td>
         </tr>
     </table>
+    <div class="atag"><button type="button" onclick="location.href='/board/list/<%=row.lec_num%>'">글 목록</button></div>
 </form>
 </body>
 </html>
