@@ -27,10 +27,15 @@ var options = {
 
 var app = express();
 
-const { request, response } = require('../app');
+const {
+    request,
+    response
+} = require('../app');
 var sessionStore = new MySQLStore(options);
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 app.use(bodyParser.json());
 app.use(session({
     secret: 'secret',
@@ -39,25 +44,29 @@ app.use(session({
     store: sessionStore
 }));
 
-app.get('/', function (req, res, next) {
-    pool.getConnection(function (err, connection) {
+app.get('/', function(req, res, next) {
+    pool.getConnection(function(err, connection) {
         var stunameSQL = "SELECT stu_name FROM register_info WHERE ID=?";
         var friendlistSQL = "SELECT s.stu_id as stu_id, s.stu_name as stu_name, s.major as major FROM friend_list as f, student_info as s WHERE f.src_id = ? and s.stu_id = f.dst_id;";
         var stu_name = [];
-        connection.query(stunameSQL, [req.session.user.id], function (err, row) {
+        connection.query(stunameSQL, [req.session.user.id], function(err, row) {
             if (err) console.error("err : " + err);
             stu_name = row[0].stu_name;
         });
-        connection.query(friendlistSQL, [req.session.user.id], function (err, rows) {
+        connection.query(friendlistSQL, [req.session.user.id], function(err, rows) {
             if (err) console.error("err : " + err);
-            res.render('friend', { title: 'Friend List', stu_name:stu_name, rows:rows});
+            res.render('friend', {
+                title: 'Friend List',
+                stu_name: stu_name,
+                rows: rows
+            });
             connection.release();
         });
     });
 });
 
-app.post('/', function (req, res, next) {
-    pool.getConnection(function (err, connection) {
+app.post('/', function(req, res, next) {
+    pool.getConnection(function(err, connection) {
         var findFriendSQL = "select * from register_info where ID = ?";
         var duplicatedSQL = "SELECT * FROM friend_list WHERE src_id = ? and dst_id = ?";
         var addFriendSQL = "insert into friend_list (src_id, dst_id) values(?, ?)";
@@ -68,13 +77,13 @@ app.post('/', function (req, res, next) {
             console.log("src_id", req.session.user.id);
             console.log("dst_id", req.body.stu_id);
             connection.query(duplicatedSQL, [req.session.user.id, req.body.stu_id], function(duperr, isdup) {
-                if(duperr) console.log("err: ", duperr);
+                if (duperr) console.log("err: ", duperr);
                 if (isdup.length > 0) {
                     res.send("<script>alert('우린 이미 친구입니다!');history.back(-1);</script>");
                     res.end();
                 }
                 else {
-                    connection.query(findFriendSQL, req.body.stu_id, function (error, results) {
+                    connection.query(findFriendSQL, req.body.stu_id, function(error, results) {
                         if (error) {
                             console.error("err: " + error);
                             console.log(results);
@@ -96,8 +105,8 @@ app.post('/', function (req, res, next) {
     });
 });
 
-app.get('/:page', function (req, res, next) {
-    pool.getConnection(function (err, connection) {
+app.get('/:page', function(req, res, next) {
+    pool.getConnection(function(err, connection) {
         //Use the connection
         const url = req.params.page;
         var stunameSQL = "SELECT stu_name FROM register_info WHERE ID=?";
@@ -123,68 +132,77 @@ app.get('/:page', function (req, res, next) {
         console.log(lec_name);
         if (req.session.user) {
             console.log(req.session.user);
-            connection.query(friendinfoSQL, [url], function (err, row) {
+            connection.query(friendinfoSQL, [url], function(err, row) {
                 friendInfo = row[0];
             });
-                connection.query(stunameSQL, [req.session.user.id], function (err, row) {
-                        connection.query(Timetable, [url], function (err, table) {
-                            if (err) console.error("err : " + err);
-                            for (var i = 0; i < table.length; i++) {
-                                var num1 = Number(table[i].time_stamp[3]);
-                                num1 = num1 - 1;
-                                var num2;
-                                if (table[i].time_stamp[1] == 'O') {
-                                    num2 = 0;
-                                }
-                                else if (table[i].time_stamp[1] == 'U') {
-                                    num2 = 1;
-                                }
-                                else if (table[i].time_stamp[1] == 'E') {
-                                    num2 = 2;
-                                }
-                                else if (table[i].time_stamp[1] == 'H') {
-                                    num2 = 3;
-                                }
-                                else {
-                                    num2 = 4;
-                                }
-                                console.log(num2, num1, table[i].time_stamp);
-                                lec_name[num1][num2] = lec_name[num1][num2].replace(" ", table[i].lec_name);
-                                professor[num1][num2] = professor[num1][num2].replace(" ",  table[i].professor);
-                                location[num1][num2] = location[num1][num2].replace(" ",  "("+table[i].location+")");
-                                color[num1][num2] = i + 1;
-                            }
-                            for (var i = 0; i < table.length; i++) {
-                                var num1 = Number(table[i].time_stamp[7]);
-                                num1 = num1 - 1;
-                                var num2;
-                                if (table[i].time_stamp[5] == 'O') {
-                                    num2 = 0;
-                                }
-                                else if (table[i].time_stamp[5] == 'U') {
-                                    num2 = 1;
-                                }
-                                else if (table[i].time_stamp[5] == 'E') {
-                                    num2 = 2;
-                                }
-                                else if (table[i].time_stamp[5] == 'H') {
-                                    num2 = 3;
-                                }
-                                else {
-                                    num2 = 4;
-                                }
-                                lec_name[num1][num2] = lec_name[num1][num2].replace(" ", table[i].lec_name);
-                                professor[num1][num2] = professor[num1][num2].replace(" ",  table[i].professor);
-                                location[num1][num2] = location[num1][num2].replace(" ",  "("+table[i].location+")");
-                                color[num1][num2] = i + 1;
-                            }
-
-                        console.log("Result: ", lec_name);
-                        res.render('friend_timetable', { title: '친구 시간표', row: row[0], lec_name: lec_name, professor:professor, location:location, url:url, friendInfo:friendInfo, color:color});
-                        connection.release();
-                    });
+            connection.query(stunameSQL, [req.session.user.id], function(err, row) {
+                connection.query(Timetable, [url], function(err, table) {
                     if (err) console.error("err : " + err);
-                    //Don't use the connection here, it has been returned to the pool.
+                    for (var i = 0; i < table.length; i++) {
+                        var num1 = Number(table[i].time_stamp[3]);
+                        num1 = num1 - 1;
+                        var num2;
+                        if (table[i].time_stamp[1] == 'O') {
+                            num2 = 0;
+                        }
+                        else if (table[i].time_stamp[1] == 'U') {
+                            num2 = 1;
+                        }
+                        else if (table[i].time_stamp[1] == 'E') {
+                            num2 = 2;
+                        }
+                        else if (table[i].time_stamp[1] == 'H') {
+                            num2 = 3;
+                        }
+                        else {
+                            num2 = 4;
+                        }
+                        console.log(num2, num1, table[i].time_stamp);
+                        lec_name[num1][num2] = lec_name[num1][num2].replace(" ", table[i].lec_name);
+                        professor[num1][num2] = professor[num1][num2].replace(" ", table[i].professor);
+                        location[num1][num2] = location[num1][num2].replace(" ", "(" + table[i].location + ")");
+                        color[num1][num2] = i + 1;
+                    }
+                    for (var i = 0; i < table.length; i++) {
+                        var num1 = Number(table[i].time_stamp[7]);
+                        num1 = num1 - 1;
+                        var num2;
+                        if (table[i].time_stamp[5] == 'O') {
+                            num2 = 0;
+                        }
+                        else if (table[i].time_stamp[5] == 'U') {
+                            num2 = 1;
+                        }
+                        else if (table[i].time_stamp[5] == 'E') {
+                            num2 = 2;
+                        }
+                        else if (table[i].time_stamp[5] == 'H') {
+                            num2 = 3;
+                        }
+                        else {
+                            num2 = 4;
+                        }
+                        lec_name[num1][num2] = lec_name[num1][num2].replace(" ", table[i].lec_name);
+                        professor[num1][num2] = professor[num1][num2].replace(" ", table[i].professor);
+                        location[num1][num2] = location[num1][num2].replace(" ", "(" + table[i].location + ")");
+                        color[num1][num2] = i + 1;
+                    }
+
+                    console.log("Result: ", lec_name);
+                    res.render('friend_timetable', {
+                        title: '친구 시간표',
+                        row: row[0],
+                        lec_name: lec_name,
+                        professor: professor,
+                        location: location,
+                        url: url,
+                        friendInfo: friendInfo,
+                        color: color
+                    });
+                    connection.release();
+                });
+                if (err) console.error("err : " + err);
+                //Don't use the connection here, it has been returned to the pool.
             });
         }
         else {
@@ -195,14 +213,14 @@ app.get('/:page', function (req, res, next) {
 });
 
 
-app.post('/delete/:page', function (req, res) {
+app.post('/delete/:page', function(req, res) {
     const url = req.params.page;
-    pool.getConnection(function (err, connection) {
+    pool.getConnection(function(err, connection) {
         var deleteFriend = "DELETE FROM friend_list WHERE src_id = ? and dst_id = ?";
         connection.query(deleteFriend, [req.session.user.id, url], function(err, result) {
             if (err) console.log("err : ", err);
             res.redirect('/friend');
-            
+
         });
     });
 });
