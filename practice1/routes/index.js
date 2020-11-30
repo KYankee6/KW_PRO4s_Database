@@ -223,8 +223,6 @@ app.post('/enroll/apply', function(req, res, next) {
                             callback('err4:OVER_MAX_CREDIT(!)', null);
                             //return connection.release();
                         }
-
-
                         else if (isNoSameLecture && isTimeAvailable && !isUnderMaxCredit) { //21 학점 넘는경우
                             // console.log(isNoSameLecture);
                             // console.log(isTimeAvailable);
@@ -238,9 +236,47 @@ app.post('/enroll/apply', function(req, res, next) {
                     });
                 }
             });
-
-            //  }
+            // }
         }
+
+        function CHECK_UNDER_MAX_CREDIT(callback) {
+            // if (isNoSameLecture && isTimeAvailable) {
+            connection.query(myLessonQuery, [lec_num], function(err3, my_lesson) {
+                if (err3) {
+                    console.error(err3);
+                    callback('err3:OVER_MAX_CREDIT(!)', null);
+                }
+                else {
+                    connection.query(totalCreditQuery, [stu_id], function(err4, my_credit) {
+                        if (my_credit.length != 0) {
+                            isUnderMaxCredit = ((Number(my_credit[0].sum_credit) + Number(my_lesson[0].credit)) <= 21);
+                        }
+                        else {
+                            isUnderMaxCredit = true;
+                        }
+                        if (err4) {
+                            console.error(err4);
+                            callback('err4:OVER_MAX_CREDIT(!)', null);
+                            //return connection.release();
+                        }
+                        else if (isNoSameLecture && isTimeAvailable && !isUnderMaxCredit) { //21 학점 넘는경우
+                            //console.log(isNoSameLecture);
+                            //console.log(isTimeAvailable);
+                            //console.log(isUnderMaxCredit);
+                            callback('OVER_MAX_CREDIT(!)', null);
+                            //return connection.release();
+                        }
+                        else {
+                            callback(null, 'O');
+                        }
+                    });
+
+
+                }
+            });
+        }
+        //  }
+
 
         function TAKE_LESSON(callback) {
             // if (isNoSameLecture && isTimeAvailable && isUnderMaxCredit) {

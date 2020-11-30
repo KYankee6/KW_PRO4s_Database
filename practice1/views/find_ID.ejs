@@ -1,80 +1,108 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <title>
+        <%= title %>
+    </title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
 </head>
+
+<style>
+    body {
+        background-image: url("/university-blur.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    
+    table.HY {
+        background-color: rgba(126, 126, 126, 0.639);
+        width: 30%;
+        border-radius: 15px;
+    }
+</style>
+
 <body>
-    <h1><%= title %></h1>
-    <form action="/find_ID" method="post" onsubmit="return ID_check();">
-        <table border="3" width ="600" height="150" bordercolor=lightgray>
-            <% if(!locals.result){%>
-            <tr>
-                <th>이름</th>
-                <td><input type="text" name="stu_name" id="stu_name" size="10" maxlength="10"></td>
-            </tr>
-            <tr>
-                <th>주민번호</th>
-                <td>
-                    <input type="hidden" name="RRN" id="RRN">
-                    <input type="text" name="RRN1" id="RRN1" size="6" maxlength="6">
-                    -
-                    <input type="password" name="RRN2" id="RRN2" size="7" maxlength="7">
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input type="submit" name="submit" value="확인">
-                    <button type="button" onclick="location.href='/login'">취소</button>
-                </td>
-            </tr>
-            <%
+    <center>
+        <font color="white">
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+
+            <h1>
+                <%= title %>
+            </h1>
+
+            <form action="/find_ID" method="post" onsubmit="return ID_check();">
+                <table border="3" width="600" height="150" bordercolor=lightgray class="HY">
+                    <% if(!locals.result){%>
+                        <tr>
+                            <th>이름</th>
+                            <td><input type="text" name="stu_name" id="stu_name" size="10" maxlength="10" style="width:60%"></td>
+                        </tr>
+                        <tr>
+                            <th>주민번호</th>
+                            <td>
+                                <input type="hidden" name="RRN" id="RRN">
+                                <input type="text" name="RRN1" id="RRN1" size="6" maxlength="6" style="width:30%"> -
+                                <input type="password" name="RRN2" id="RRN2" size="7" maxlength="7" style="width:30%">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" align="center">
+                                <input type="submit" name="submit" value="확인" width="50px" style="width:40%;border-radius: 15px;">
+                                <button type="button" onclick="location.href='/login'" width="50px" style="width:40%;border-radius: 15px;">취소</button>
+                            </td>
+                        </tr>
+                        <%
                 }%>
-            <% if(locals.result){%>
-            <tr>
-                    <td colspan="3">
-                        <h8>찾으시는 아이디는 <%= result.id%>입니다.</h8>
-                    </td>
-                    <td colspan="3">
-                        <button type="button" onclick="location.href='/login'">돌아가기</button>
-                    </td>
-            </tr>
-            <%
+                            <% if(locals.result){%>
+                                <tr>
+                                    <td colspan="3">
+                                        <h8>찾으시는 아이디는
+                                            <%= result.id%>입니다.</h8>
+                                    </td>
+                                    <td colspan="3">
+                                        <button type="button" onclick="location.href='/login'">돌아가기</button>
+                                    </td>
+                                </tr>
+                                <%
                 }%>
-        </table>
-    </form>
+                </table>
+            </form>
+    </center>
+    </font>
     <script>
-        function ID_check()
-        {   
-            if($("#stu_name").val().trim() == "")
-            {
+        function ID_check() {
+            if ($("#stu_name").val().trim() == "") {
                 var message = "이름을 입력해 주세요";
                 $("#stu_name").val("");
                 $("#stu_name").focus();
                 alert(message);
                 return false;
             }
-            if($("#RRN1").val().trim() == "")
-            {
+            if ($("#RRN1").val().trim() == "") {
                 var message = "주민번호 앞자리를 입력해 주세요";
                 $("#RRN1").val("");
                 $("#RRN1").focus();
                 alert(message);
                 return false;
             }
-            if($("#RRN2").val().trim() == "")
-            {
+            if ($("#RRN2").val().trim() == "") {
                 var message = "주민번호 뒷자리를 입력해 주세요";
                 $("#RRN2").val("");
                 $("#RRN2").focus();
                 alert(message);
                 return false;
             }
-            var RRN= $("#RRN1").val() +'-'+ $("#RRN2").val();
+            var RRN = $("#RRN1").val() + '-' + $("#RRN2").val();
             $("#RRN").val(RRN);
             return true;
         }
     </script>
 </body>
+
 </html>
