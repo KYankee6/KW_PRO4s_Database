@@ -24,7 +24,9 @@ var pool = mysql.createPool({
 });
 var app = express();
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 app.use(bodyParser.json());
 app.use(session({
     secret: 'secret',
@@ -34,8 +36,8 @@ app.use(session({
 }));
 
 
-app.get('/', function (req, res, next) {
-    pool.getConnection(function (err, connection) {
+app.get('/', function(req, res, next) {
+    pool.getConnection(function(err, connection) {
         //Use the connection
         var stunameSQL = "SELECT stu_name FROM register_info WHERE ID=?";
         var Timetable = "SELECT * FROM current_time_table natural join lecture_info WHERE stu_id = ?";
@@ -65,70 +67,80 @@ app.get('/', function (req, res, next) {
         if (req.session.user) {
             console.log(req.session.user);
             connection.query(locationQuery, function(err, loc) {
-                connection.query(stunameSQL, [req.session.user.id], function (err, row) {
-                        connection.query(Timetable, [req.session.user.id], function (err, table) {
-                            if (err) console.error("err : " + err);
-                            for (var i = 0; i < table.length; i++) {
-                                var num1 = Number(table[i].time_stamp[3]);
-                                num1 = num1 - 1;
-                                var num2;
-                                if (table[i].time_stamp[1] == 'O') {
-                                    num2 = 0;
-                                }
-                                else if (table[i].time_stamp[1] == 'U') {
-                                    num2 = 1;
-                                }
-                                else if (table[i].time_stamp[1] == 'E') {
-                                    num2 = 2;
-                                }
-                                else if (table[i].time_stamp[1] == 'H') {
-                                    num2 = 3;
-                                }
-                                else {
-                                    num2 = 4;
-                                }
-                                console.log(num2, num1, table[i].time_stamp);
-                                lec_name[num1][num2] = lec_name[num1][num2].replace(" ", table[i].lec_name);
-                                professor[num1][num2] = professor[num1][num2].replace(" ",  table[i].professor);
-                                location[num1][num2] = location[num1][num2].replace(" ",  "("+table[i].location+")");
-                                lec_num[num1][num2] = lec_num[num1][num2].replace(" ", table[i].lec_num);
-                                phone[num1][num2] = phone[num1][num2].replace(" ", table[i].professor_phone);
-                                color[num1][num2] = i + 1;
+                connection.query(stunameSQL, [req.session.user.id], function(err, row) {
+                    connection.query(Timetable, [req.session.user.id], function(err, table) {
+                        if (err) console.error("err : " + err);
+                        for (var i = 0; i < table.length; i++) {
+                            var num1 = Number(table[i].time_stamp[3]);
+                            num1 = num1 - 1;
+                            var num2;
+                            if (table[i].time_stamp[1] == 'O') {
+                                num2 = 0;
                             }
-                            for (var i = 0; i < table.length; i++) {
-                                var num1 = Number(table[i].time_stamp[7]);
-                                num1 = num1 - 1;
-                                var num2;
-                                if (table[i].time_stamp[5] == 'O') {
-                                    num2 = 0;
-                                }
-                                else if (table[i].time_stamp[5] == 'U') {
-                                    num2 = 1;
-                                }
-                                else if (table[i].time_stamp[5] == 'E') {
-                                    num2 = 2;
-                                }
-                                else if (table[i].time_stamp[5] == 'H') {
-                                    num2 = 3;
-                                }
-                                else {
-                                    num2 = 4;
-                                }
-                                lec_name[num1][num2] = lec_name[num1][num2].replace(" ", table[i].lec_name);
-                                professor[num1][num2] = professor[num1][num2].replace(" ",  table[i].professor);
-                                location[num1][num2] = location[num1][num2].replace(" ",  "("+table[i].location+")");
-                                lec_num[num1][num2] = lec_num[num1][num2].replace(" ", table[i].lec_num);
-                                phone[num1][num2] = phone[num1][num2].replace(" ", table[i].professor_phone);
-                                color[num1][num2] = i + 1;
+                            else if (table[i].time_stamp[1] == 'U') {
+                                num2 = 1;
                             }
+                            else if (table[i].time_stamp[1] == 'E') {
+                                num2 = 2;
+                            }
+                            else if (table[i].time_stamp[1] == 'H') {
+                                num2 = 3;
+                            }
+                            else {
+                                num2 = 4;
+                            }
+                            console.log(num2, num1, table[i].time_stamp);
+                            lec_name[num1][num2] = lec_name[num1][num2].replace(" ", table[i].lec_name);
+                            professor[num1][num2] = professor[num1][num2].replace(" ", table[i].professor);
+                            location[num1][num2] = location[num1][num2].replace(" ", "(" + table[i].location + ")");
+                            lec_num[num1][num2] = lec_num[num1][num2].replace(" ", table[i].lec_num);
+                            phone[num1][num2] = phone[num1][num2].replace(" ", table[i].professor_phone);
+                            color[num1][num2] = i + 1;
+                        }
+                        for (var i = 0; i < table.length; i++) {
+                            var num1 = Number(table[i].time_stamp[7]);
+                            num1 = num1 - 1;
+                            var num2;
+                            if (table[i].time_stamp[5] == 'O') {
+                                num2 = 0;
+                            }
+                            else if (table[i].time_stamp[5] == 'U') {
+                                num2 = 1;
+                            }
+                            else if (table[i].time_stamp[5] == 'E') {
+                                num2 = 2;
+                            }
+                            else if (table[i].time_stamp[5] == 'H') {
+                                num2 = 3;
+                            }
+                            else {
+                                num2 = 4;
+                            }
+                            lec_name[num1][num2] = lec_name[num1][num2].replace(" ", table[i].lec_name);
+                            professor[num1][num2] = professor[num1][num2].replace(" ", table[i].professor);
+                            location[num1][num2] = location[num1][num2].replace(" ", "(" + table[i].location + ")");
+                            lec_num[num1][num2] = lec_num[num1][num2].replace(" ", table[i].lec_num);
+                            phone[num1][num2] = phone[num1][num2].replace(" ", table[i].professor_phone);
+                            color[num1][num2] = i + 1;
+                        }
 
-                        res.render('timetable', { title: '시간표', row: row[0], lec_name: lec_name, professor:professor, location:location, loc:loc, lec_num:lec_num, phone:phone, color:color});
+                        res.render('timetable', {
+                            title: '시간표',
+                            row: row[0],
+                            lec_name: lec_name,
+                            professor: professor,
+                            location: location,
+                            loc: loc,
+                            lec_num: lec_num,
+                            phone: phone,
+                            color: color
+                        });
                         connection.release();
                     });
                     if (err) console.error("err : " + err);
                     //Don't use the connection here, it has been returned to the pool.
+                });
             });
-        });
         }
         else {
             res.send("<script>alert('만료된 세션');history.back();</script>");
@@ -137,10 +149,10 @@ app.get('/', function (req, res, next) {
     });
 });
 
-app.get('/location/:page', function (req, res, next) {
+app.get('/location/:page', function(req, res, next) {
     const url = req.params.page;
     console.log("Hey!!!!");
-    pool.getConnection(function (err, connection) {
+    pool.getConnection(function(err, connection) {
         var loc_timetable = "select * from lectureroom_time_table where open_date = '2020-03-01' and location=?";
         var stunameSQL = "SELECT stu_name FROM register_info WHERE ID=?";
         var locationQuery = "SELECT DISTINCT location FROM current_time_table";
@@ -169,13 +181,13 @@ app.get('/location/:page', function (req, res, next) {
         if (req.session.user) {
             connection.query(locationQuery, function(err, locs) {
                 if (err) console.error("err : " + err);
-            connection.query(stunameSQL, [req.session.user.id], function (err, row) {
-                stu_name = row[0].stu_name; 
+                connection.query(stunameSQL, [req.session.user.id], function(err, row) {
+                    stu_name = row[0].stu_name;
 
-            });
+                });
                 connection.query(loc_timetable, url, function(err, table) {
                     if (err) console.error("err : " + err);
-                    
+
                     for (var i = 0; i < table.length; i++) {
                         var num1 = Number(table[i].time_stamp[3]);
                         num1 = num1 - 1;
@@ -197,8 +209,8 @@ app.get('/location/:page', function (req, res, next) {
                         }
                         console.log(num2, num1, table[i].time_stamp);
                         lec_name[num1][num2] = lec_name[num1][num2].replace(" ", table[i].lec_name);
-                        professor[num1][num2] = professor[num1][num2].replace(" ",  table[i].professor);
-                        location[num1][num2] = location[num1][num2].replace(" ",  "("+table[i].location+")");
+                        professor[num1][num2] = professor[num1][num2].replace(" ", table[i].professor);
+                        location[num1][num2] = location[num1][num2].replace(" ", "(" + table[i].location + ")");
                         lec_num[num1][num2] = lec_num[num1][num2].replace(" ", table[i].lec_num);
                         phone[num1][num2] = phone[num1][num2].replace(" ", table[i].professor_phone);
                         color[num1][num2] = i + 1;
@@ -223,15 +235,26 @@ app.get('/location/:page', function (req, res, next) {
                             num2 = 4;
                         }
                         lec_name[num1][num2] = lec_name[num1][num2].replace(" ", table[i].lec_name);
-                        professor[num1][num2] = professor[num1][num2].replace(" ",  table[i].professor);
-                        location[num1][num2] = location[num1][num2].replace(" ",  "("+table[i].location+")");
+                        professor[num1][num2] = professor[num1][num2].replace(" ", table[i].professor);
+                        location[num1][num2] = location[num1][num2].replace(" ", "(" + table[i].location + ")");
                         lec_num[num1][num2] = lec_num[num1][num2].replace(" ", table[i].lec_num);
                         phone[num1][num2] = phone[num1][num2].replace(" ", table[i].professor_phone);
                         color[num1][num2] = i + 1;
                     }
 
 
-                    res.render('location', { title: '강의실', stu_name:stu_name, lec_name: lec_name, professor:professor, url:url, locs:locs, phone:phone, color:color, lec_num:lec_num, location:location});
+                    res.render('location', {
+                        title: '강의실',
+                        stu_name: stu_name,
+                        lec_name: lec_name,
+                        professor: professor,
+                        url: url,
+                        locs: locs,
+                        phone: phone,
+                        color: color,
+                        lec_num: lec_num,
+                        location: location
+                    });
                 });
                 connection.release();
             });
@@ -243,7 +266,7 @@ app.get('/location/:page', function (req, res, next) {
     });
 });
 
-app.post('/logout', function (req, res) {
+app.post('/logout', function(req, res) {
     delete req.session.user;
     req.session.save(() => {
         res.redirect('/login');
