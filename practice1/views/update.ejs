@@ -1,128 +1,136 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
 </head>
+
 <body>
-<style>
-    .btn{
-      text-decoration: none;
-      font-size:1;
-      color:black;
-      margin:5px;
-      padding:5px 5px 5px 5px;
-      display:inline;
-      border-radius: 1px;
-      background-color: lightgray;
-      border-color: black;
-      transition:all 0.1s;
-      white-space: nowrap;
-      }
-</style>
-<br>
-<div style="float:right;">
-<%=rows.stu_name%>님 환영합니다~
-<form action="https://google.com" method "get" style="display:inline"><button type='submit' class='.btn'>개인정보</button></form>
-<form action="/index/logout" method ="post" style="display:inline"><button type='submit' class='.btn'>로그아웃</button></form>
-<br>
-</div>
-<center>
-    <table style="border-collapse : collapse; background-color:rgb(115, 35, 46); width: 100%">
-        <tr>
-            <td><a href="/index" style="text-decoration:none; text-align:center"><img src="/Kwangwoon_mark_1.jpg" width=121 height=40></a></td>
-            <td><a href="/grade/total_grade" style="text-decoration:none; color: white">학습결과</a></td>
-            <td><a href="/timetable" style="text-decoration:none; color: white">시간표</a></td>
-            <td><a href="/index/enroll" style="text-decoration:none; color: white">수강신청</a></td>
-            <td><a href="/board/list/1" style="text-decoration:none; color: white">공지사항</a></td>
-            <td><a href="/friend" style="text-decoration:none; color: white">친구 목록</a></td>
-        </tr>
-    </table>
-<br>
+    <style>
+        .btn {
+            text-decoration: none;
+            font-size: 1;
+            color: black;
+            margin: 5px;
+            padding: 5px 5px 5px 5px;
+            display: inline;
+            border-radius: 1px;
+            background-color: lightgray;
+            border-color: black;
+            transition: all 0.1s;
+            white-space: nowrap;
+        }
+    </style>
+    <br>
+    <div style="float:right;">
+        <%=rows.stu_name%>님 환영합니다~
+            <form action="update" method "get" style="display:inline"><button type='submit' class='.btn'>개인정보</button></form>
+            <form action="/index/logout" method="post" style="display:inline"><button type='submit' class='.btn'>로그아웃</button></form>
+            <br>
+    </div>
     <center>
-    <h1><%= title %></h1>
-    <form action="/update" method="post" onsubmit="return UPDATE_check();" enctype="multipart/form-data">
-        <table border="3" width ="600" height="150" bordercolor=lightgray>
+        <table style="border-collapse : collapse; background-color:rgb(115, 35, 46); width: 100%">
             <tr>
-                <th>아이디</th>
-                <td><%=rows.id%></td>
-            </tr>
-            <tr>
-                <th>비밀번호</th>
-                <td><input type="password" name="passwd" id="passwd" size="12" maxlength="12" value="<%=rows.passwd%>"></td>
-            </tr>
-            <tr>
-                <th>비밀번호확인</th>
-                <td><input type="password" name="passwd2" id="passwd2" size="12" maxlength="12" value="<%=rows.passwd%>"></td>
-            </tr>
-            <tr>
-                <th>이름</th>
-                <td><%=rows.stu_name%></td>
-            </tr>
-            <tr>
-                <th>주소</th>
-                <td><input type="text" name="address" id="address" size="30" maxlength="50" value="<%=rows.address%>"></td>
-            </tr>
-            <tr>
-                <th>주민번호</th>
-                <td><%=rows.RRN%></td>
-            </tr>
-            <tr>
-                <th>이메일주소</th>
                 <td>
-                    <input type="text" name="email" id="email" size="20" maxlength="25" value="<%=rows.email%>">
+                    <a href="/index" style="text-decoration:none; text-align:center"><img src="/Kwangwoon_mark_1.jpg" width=121 height=40></a>
                 </td>
-            </tr>
-            <tr>
-                <th>이미지</th>
-                <td><input type = "file" name="image" id="image" accept="*"></td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input type="submit" name="submit" value="수정">
-                    <button type="button" onclick="location.href='/index'">취소</button>
-                </td>
+                <td><a href="/grade/total_grade" style="text-decoration:none; color: white">학습결과</a></td>
+                <td><a href="/timetable" style="text-decoration:none; color: white">시간표</a></td>
+                <td><a href="/index/enroll" style="text-decoration:none; color: white">수강신청</a></td>
+                <td><a href="/board/list/1" style="text-decoration:none; color: white">공지사항</a></td>
+                <td><a href="/friend" style="text-decoration:none; color: white">친구 목록</a></td>
             </tr>
         </table>
-    </form>
-    </center>
-    <script>
-        function UPDATE_check()
-        { 
-            if($("#passwd").val().trim() == "")
-            {
-                var message = "비밀번호를 입력해 주세요";
-                $("#passwd").val("");
-                $("#passwd").focus();
-                alert(message);
-                return false;
+        <br>
+        <center>
+            <h1>
+                <%= title %>
+            </h1>
+            <form action="/update" method="post" onsubmit="return UPDATE_check();" enctype="multipart/form-data">
+                <table border="3" width="600" height="150" bordercolor=lightgray>
+                    <tr>
+                        <th>아이디</th>
+                        <td>
+                            <%=rows.id%>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>비밀번호</th>
+                        <td><input type="password" name="passwd" id="passwd" size="12" maxlength="12" value="<%=rows.passwd%>"></td>
+                    </tr>
+                    <tr>
+                        <th>비밀번호확인</th>
+                        <td><input type="password" name="passwd2" id="passwd2" size="12" maxlength="12" value="<%=rows.passwd%>"></td>
+                    </tr>
+                    <tr>
+                        <th>이름</th>
+                        <td>
+                            <%=rows.stu_name%>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>주소</th>
+                        <td><input type="text" name="address" id="address" size="30" maxlength="50" value="<%=rows.address%>"></td>
+                    </tr>
+                    <tr>
+                        <th>주민번호</th>
+                        <td>
+                            <%=rows.RRN%>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>이메일주소</th>
+                        <td>
+                            <input type="text" name="email" id="email" size="20" maxlength="25" value="<%=rows.email%>">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>이미지</th>
+                        <td><input type="file" name="image" id="image" accept="*"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <input type="submit" name="submit" value="수정">
+                            <button type="button" onclick="location.href='/index'">취소</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </center>
+        <script>
+            function UPDATE_check() {
+                if ($("#passwd").val().trim() == "") {
+                    var message = "비밀번호를 입력해 주세요";
+                    $("#passwd").val("");
+                    $("#passwd").focus();
+                    alert(message);
+                    return false;
+                }
+                if ($("#passwd2").val() != $("#passwd").val()) {
+                    var message = "비밀번호가 일치하지 않습니다";
+                    $("#passwd2").val("");
+                    $("#passwd2").focus();
+                    alert(message);
+                    return false;
+                }
+                if ($("#address").val().trim() == "") {
+                    var message = "주소를 입력해 주세요";
+                    $("#address").val("");
+                    $("#address").focus();
+                    alert(message);
+                    return false;
+                }
+                if ($("#email").val().trim() == "") {
+                    var message = "이메일을 입력해 주세요";
+                    $("#email").val("");
+                    $("#email").focus();
+                    alert(message);
+                    return false;
+                }
+                alert("수정이 완료되었습니다.");
+                return true;
             }
-            if($("#passwd2").val() != $("#passwd").val())
-            {
-                var message = "비밀번호가 일치하지 않습니다";
-                $("#passwd2").val("");
-                $("#passwd2").focus();
-                alert(message);
-                return false;
-            }
-            if($("#address").val().trim() == "")
-            {
-                var message = "주소를 입력해 주세요";
-                $("#address").val("");
-                $("#address").focus();
-                alert(message);
-                return false;
-            }
-            if($("#email").val().trim() == "")
-            {
-                var message = "이메일을 입력해 주세요";
-                $("#email").val("");
-                $("#email").focus();
-                alert(message);
-                return false;
-            }
-            alert("수정이 완료되었습니다.");
-            return true;
-        }
-    </script>
+        </script>
 </body>
+
 </html>

@@ -29,10 +29,15 @@ var options = {
 
 var app = express();
 
-const { request, response } = require('../app');
+const {
+    request,
+    response
+} = require('../app');
 var sessionStore = new MySQLStore(options);
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 app.use(bodyParser.json());
 app.use(session({
     secret: 'secret',
@@ -41,47 +46,64 @@ app.use(session({
     store: sessionStore
 }));
 
-app.get('/', function (req, res, next) {
+app.get('/', function(req, res, next) {
     res.redirect('/grade/total_grade');
 });
 
-app.get('/total_grade', function (req, res, next) {
+app.get('/total_grade', function(req, res, next) {
     //const url = req.params.page;
     //console.log("hello");
     //console.log(url);
-    pool.getConnection(function (err, connection) {
-        var gettotalgradesql = "select * from total_grade where stu_id = ?";
-        var getSemesterGradeSql = "select * from open_class_info where stu_id = ?"
+    pool.getConnection(function(err, connection) {
+        var gettotalgradesql = "select * from total_grade where stu_id = ? order by open_date";
+        var getSemesterGradeSql = "select * from open_class_info where stu_id = ?";
         var getSemesterCount = "select distinct open_date from open_class_info where stu_id=? ORDER BY `open_date`";
-        var getMajorMinorGrade = "select * from major_minor_grade where stu_id = ?";
+        var getMajorGrade = "select * from major_minor_grade where stu_id = ? and major_minor = 1";
+        var getMinorGrade = "select * from major_minor_grade where stu_id = ? and major_minor = 0";
+        var getFailedTable = "select * from failed_table where stu_id = ?;"
         var stunameSQL = "SELECT stu_name FROM register_info WHERE ID=?";
         var stu_name;
         if (req.session.user) {
-            connection.query(stunameSQL, [req.session.user.id], function (err, row) {
+            connection.query(stunameSQL, [req.session.user.id], function(err, row) {
                 stu_name = row;
             });
-            connection.query(gettotalgradesql, [req.session.user.id], function (err, grade) {
+            connection.query(gettotalgradesql, [req.session.user.id], function(err, grade) {
                 //console.log("hello");
                 //console.log(grade);
                 if (err) console.error(err);
                 //console.log("1개 글 조회 결과 확인 : ", row);
                 //res.render('total_grade', { title: "수강/성적 조회", row: stu_name[0], grades: grade});
                 //console.log(grade);
-                connection.query(getSemesterGradeSql, [req.session.user.id], function (err, semester){
-                    connection.query(getSemesterCount,  [req.session.user.id], function (err, semester_cnt){
-                        connection.query(getMajorMinorGrade, [req.session.user.id], function (err, major_minor)
-                        {
-                            res.render('total_grade', { title: "수강/성적 조회", row: stu_name[0], grades: grade, semesters: semester, semesters_cnt: semester_cnt, major_minors: major_minor});
-                            console.log(semester_cnt);
-                            console.log(semester);
-                        })
+                connection.query(getSemesterGradeSql, [req.session.user.id], function(err, semester) {
+                    connection.query(getSemesterCount, [req.session.user.id], function(err, semester_cnt) {
+                        connection.query(getMajorGrade, [req.session.user.id], function(err, major) {
+                            connection.query(getMinorGrade, [req.session.user.id], function(err, minor) {
+                                connection.query(getFailedTable, [req.session.user.id], function(err, failed) {
+                                    res.render('total_grade', {
+                                        title: "수강/성적 조회",
+                                        row: stu_name[0],
+                                        grades: grade,
+                                        semesters: semester,
+                                        semesters_cnt: semester_cnt,
+                                        majors: major,
+                                        minors: minor,
+                                        faileds: failed
+                                    });
+                                });
+                                //console.log(semester_cnt);
+                                //console.log(semester);
+                                //console.log(grade);
+                                //console.log(major);
+                                //console.log(minor);
+                            });
+                        });
                     });
                     //res.render('total_grade', { title: "수강/성적 조회", row: stu_name[0], grades: grade, semesters: semester});
                     //console.log(semester);
                 });
                 //connection.query(getSemesterCount,  [req.session.user.id], function (err, semester_cnt){
-                   // res.render('total_grade', { title: "학기별 성적", row: stu_name[0], grades: grade, semesters_cnt: semester_cnt});
-                   // console.log(semester_cnt);
+                // res.render('total_grade', { title: "학기별 성적", row: stu_name[0], grades: grade, semesters_cnt: semester_cnt});
+                // console.log(semester_cnt);
                 connection.release();
             });
         }
@@ -92,28 +114,28 @@ app.get('/total_grade', function (req, res, next) {
     });
 });
 
-app.get('/give_eval/:page', function (req, res) {
+app.get('/give_eval/:page', function(req, res) {
     var url = req.params.page;
-    pool.getConnection(function (err, connection) {
+    pool.getConnection(function(err, connection) {
         var eval = Number(url[url.length - 1]);
         if (eval == 0) eval = 10;
-        url = url.substr(0, url.length -1);
+        url = url.substr(0, url.length - 1);
         console.log(url, eval);
         var updateEval = "UPDATE class_info SET lec_eval = ? WHERE stu_id = ? and lec_num = ?";
-        connection.query(updateEval, [eval, req.session.user.id, url], function (err, result) {
+        connection.query(updateEval, [eval, req.session.user.id, url], function(err, result) {
+            console.log('result : ', result);
             if (err) console.log('err : ', err);
             res.redirect('back');
         });
     });
 });
 
-app.post('/comment/:page', function (req, res) {
+app.post('/comment/:page', function(req, res) {
     var url = req.params.page;
-    console.log('?');
-    pool.getConnection(function (err, connection) {
+    pool.getConnection(function(err, connection) {
         var insertComment = "UPDATE class_info SET lec_eval_comment = ? WHERE stu_id = ? and lec_num = ?";
-        connection.query(insertComment, [req.body.comment, req.session.user.id, url], function (err, result) {
-            console.log(result);
+        connection.query(insertComment, [req.body.comment, req.session.user.id, url], function(err, result) {
+            console.log(result, url);
             if (err) console.log('err : ', err);
             res.redirect('back');
         });
