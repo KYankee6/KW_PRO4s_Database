@@ -247,6 +247,9 @@ app.post('/enroll/apply', function(req, res, next) {
                 }
                 else {
                     connection.query(totalCreditQuery, [stu_id], function(err4, my_credit) {
+                        console.log((Number(my_lesson[0].credit)));
+                        console.log((Number(my_credit[0].sum_credit)));
+                        console.log(((Number(my_credit[0].sum_credit) + Number(my_lesson[0].credit)) <= 21));
                         if (my_credit.length != 0) {
                             isUnderMaxCredit = ((Number(my_credit[0].sum_credit) + Number(my_lesson[0].credit)) <= 21);
                         }
@@ -369,12 +372,14 @@ app.get('/enroll/selectandshow/:lec_num', function(req, res, next) {
         }
     });
 });
+
 app.get('/', function(req, res, next) {
     pool.getConnection(function(err, connection) {
         //Use the connection
         var stunameSQL = "SELECT stu_name FROM register_info WHERE ID=?";
         var deansList = "SELECT * FROM ranking WHERE open_date='2020-03-01'";
         var Timetable = "SELECT * FROM current_time_table natural join lecture_info WHERE stu_id = ?";
+        var bestLecSQL = "SELECT MAX(lec_avg_eval) as max, lec_name, professor FROM lecture_info;";
         var professor = new Array(6);
         var location = new Array(6);
         var lec_num = new Array(6);
@@ -457,17 +462,20 @@ app.get('/', function(req, res, next) {
                             phone[num1][num2] = phone[num1][num2].replace(" ", table[i].professor_phone);
                             color[num1][num2] = i + 1;
                         }
-                        console.log("Result: ", lec_name);
-                        res.render('index', {
-                            title: '메인 화면',
-                            row: row[0],
-                            rows: rows,
-                            lec_name: lec_name,
-                            professor: professor,
-                            location: location,
-                            lec_num: lec_num,
-                            color: color,
-                            phone: phone
+                        connection.query(bestLecSQL, function(err, bestRow) {
+                            console.log("Result: ", lec_name);
+                            res.render('index', {
+                                title: '메인 화면',
+                                row: row[0],
+                                rows: rows,
+                                lec_name: lec_name,
+                                professor: professor,
+                                location: location,
+                                lec_num: lec_num,
+                                color: color,
+                                phone: phone,
+                                bestRow: bestRow
+                            });
                         });
                         connection.release();
                     });
@@ -482,6 +490,7 @@ app.get('/', function(req, res, next) {
         }
     });
 });
+
 app.post('/logout', function(req, res) {
     delete req.session.user;
     req.session.save(() => {

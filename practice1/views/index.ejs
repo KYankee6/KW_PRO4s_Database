@@ -92,6 +92,29 @@
         </table>
         <br>
         <br>
+        <h1> Best Lecture </h1>
+        <table style="border-collapse : collapse; width: 40%; border-right:none; border-left:none;border-top:none;border-bottom:none;border-radius: 15px;" border="1">
+            <tr>
+                <td style="border-color:rgb(255, 255, 255)"></td>
+                <td style="background-color: lightgray; border-color:rgb(210, 210, 210)">Lecture</td>
+                <td style="background-color: lightgray; border-color:rgb(210, 210, 210)">Professor</td>
+                <td style="background-color: lightgray; border-color:rgb(210, 210, 210)">Score</td>
+            </tr>
+            <tr>
+                <td align="center" style="border-color:rgb(255, 255, 255)"><img src="/trophy.png" width=30 height=30></td>
+                <td style="border-color:rgb(210, 210, 210);">
+                    <%=bestRow[0].lec_name%>
+                </td>
+                <td style="border-color:rgb(210, 210, 210)">
+                    <%=bestRow[0].professor%>
+                </td>
+                <td style="border-color:rgb(210, 210, 210)">
+                    <%=bestRow[0].max%>
+                </td>
+            </tr>
+        </table>
+        <br>
+        <br>
         <h1> Timetable </h1>
         <table style="border-collapse : collapse; width: 60%; border-radius: 15px;" border="1">
             <tr>
