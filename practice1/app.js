@@ -33,7 +33,9 @@ app.use(express.urlencoded({
 }));
 app.use(cookieParser());
 app.use(express.static(__dirname + '/image'));
-app.use('/board/read/', express.static('./image'));
+app.use('/update', express.static('./image'));
+app.use(express.static(__dirname + '/join_images'));
+app.use('/update', express.static('./join_images'));
 app.use('/', loginRouter);
 //app.use('/join', join);
 app.use('/users', usersRouter);

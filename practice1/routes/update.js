@@ -26,7 +26,9 @@ var pool = mysql.createPool({
 });
 var app = express();
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 app.use(bodyParser.json());
 app.use(session({
     secret: 'secret',
@@ -37,22 +39,26 @@ app.use(session({
 
 var join_image = multer({
     storage: multer.diskStorage({
-        destination: function (req, file, cb) {
-            cb(null, 'join_images/');
+        destination: function(req, file, cb) {
+            cb(null, './join_images/');
         },
-        filename: function (req, file, cb) {
-            cb(null, cur = file.originalname);
+        filename: function(req, file, cb) {
+            cb(null, file.originalname);
         }
     }),
 });
 
 router.get('/', join_image.single('image'), (req, res) => {
-    pool.getConnection(function (err, connection) {
+    pool.getConnection(function(err, connection) {
         if (err) console.error("커넥션 객체 얻어오기 에러 : ", err);
-        var sqlForReadBoard = "select id, passwd, stu_name, email, address, RRN from register_info where id = ?";
-        connection.query(sqlForReadBoard, [req.session.user.id], function (err, rows) {
+        var sqlForReadBoard = "select id, passwd, stu_name, email, address, RRN, image from register_info where id = ?";
+        connection.query(sqlForReadBoard, [req.session.user.id], function(err, rows) {
             if (err) console.error(err);
-            res.render('update', { title: "회원정보수정", rows: rows[0]});
+            console.log(rows[0].image)
+            res.render('update', {
+                title: "회원정보수정",
+                rows: rows[0]
+            });
             connection.release();
         });
     });
@@ -62,14 +68,10 @@ router.post('/', join_image.single('image'), (req, res) => {
     var passwd = req.body.passwd;
     var email = req.body.email;
     var address = req.body.address;
-    if (req.file)
-        var image = cur;
-    else
-        var image = "";
-    var datas = [passwd, email, address, image, req.session.user.id];
-    pool.getConnection(function (err, connection) {
-        var sqlForUpdateBoard = "update register_info set passwd=?, email=?, address=?, image=? where id = ?";
-        connection.query(sqlForUpdateBoard, datas, function (err, rows) {
+    var datas = [passwd, email, address, req.session.user.id];
+    pool.getConnection(function(err, connection) {
+        var sqlForUpdateBoard = "update register_info set passwd=?, email=?, address=? where id = ?";
+        connection.query(sqlForUpdateBoard, datas, function(err, rows) {
             if (err) console.error(err);
             else {
                 console.log("rows : " + JSON.stringify(rows));
@@ -80,12 +82,14 @@ router.post('/', join_image.single('image'), (req, res) => {
     });
 });
 
-router.get('/join_image', function (req, res) {
+router.get('/join_image', function(req, res) {
     res.render('join_image');
 });
 
-router.get('/', function (req, res) {
-    res.render('update', { title: '개인정보수정' });
+router.get('/', function(req, res) {
+    res.render('update', {
+        title: '개인정보수정'
+    });
 });
 
 module.exports = router;
