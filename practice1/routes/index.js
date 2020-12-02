@@ -94,7 +94,6 @@ app.get('/enroll', function(req, res, next) {
     pool.getConnection(function(err, connection) {
         //Use the connection
         var baseQuery = "SELECT * FROM enrolled_list WHERE stu_id = ?";
-        var stunameSQL = "SELECT stu_name FROM register_info WHERE ID=?";
         var stu_id = req.session.user.id;
         var stu_name = req.session.user.name;
         var array = [];
