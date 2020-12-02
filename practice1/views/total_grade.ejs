@@ -144,6 +144,8 @@
             <tr bgcolor="#e9e9e9">
                 <td align="center" class="p"><strong>학번</strong></td>
                 <td align="center" class="p"><strong>이름</strong></td>
+                <td align="center" class="p"><strong>남은전공학점</strong></td>
+                <td align="center" class="p"><strong>남은교양학점</strong></td>
             </tr>
             <tr>
                 <td align="center" class="p">
@@ -151,6 +153,12 @@
                 </td>
                 <td align="center" class="p">
                     <%=grades[0].stu_name%>
+                </td>
+                <td align="center" class="p">
+                    <%=leftmajor%>/60
+                </td>
+                <td align="center" class="p">
+                    <%=leftminor%>/50
                 </td>
             </tr>
         </table>

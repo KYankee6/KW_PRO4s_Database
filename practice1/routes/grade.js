@@ -50,6 +50,7 @@ app.get('/', function(req, res, next) {
     res.redirect('/grade/total_grade');
 });
 
+
 app.get('/total_grade', function(req, res, next) {
     //const url = req.params.page;
     //console.log("hello");
@@ -62,6 +63,10 @@ app.get('/total_grade', function(req, res, next) {
         var getMinorGrade = "select * from major_minor_grade where stu_id = ? and major_minor = 0";
         var getFailedTable = "select * from failed_table where stu_id = ?;"
         var stunameSQL = "SELECT stu_name FROM register_info WHERE ID=?";
+        var leftminorSQL = "SELECT * FROM lefted_major_minor_grade WHERE stu_id=? and major_minor=0;"
+        var leftmajorSQL = "SELECT * FROM lefted_major_minor_grade WHERE stu_id=? and major_minor=1;"
+        var leftminor = 0;
+        var leftmajor = 0;
         var stu_name;
         if (req.session.user) {
             connection.query(stunameSQL, [req.session.user.id], function(err, row) {
@@ -74,6 +79,13 @@ app.get('/total_grade', function(req, res, next) {
                 //console.log("1개 글 조회 결과 확인 : ", row);
                 //res.render('total_grade', { title: "수강/성적 조회", row: stu_name[0], grades: grade});
                 //console.log(grade);
+                connection.query(leftminorSQL, req.session.user.id, function(err, leftres) {
+                    leftminor = leftres[0].lefted_credit;
+                });
+                connection.query(leftmajorSQL, req.session.user.id, function(err, leftres) {
+                    leftmajor = leftres[0].lefted_credit;
+                });
+
                 connection.query(getSemesterGradeSql, [req.session.user.id], function(err, semester) {
                     connection.query(getSemesterCount, [req.session.user.id], function(err, semester_cnt) {
                         connection.query(getMajorGrade, [req.session.user.id], function(err, major) {
@@ -87,7 +99,9 @@ app.get('/total_grade', function(req, res, next) {
                                         semesters_cnt: semester_cnt,
                                         majors: major,
                                         minors: minor,
-                                        faileds: failed
+                                        faileds: failed,
+                                        leftmajor: leftmajor,
+                                        leftminor: leftminor
                                     });
                                 });
                                 //console.log(semester_cnt);
