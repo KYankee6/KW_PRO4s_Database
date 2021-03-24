@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+<style>
+    .btn{
+      text-decoration: none;
+      font-size:1;
+      color:black;
+      margin:5px;
+      padding:5px 5px 5px 5px;
+      display:inline;
+      border-radius: 1px;
+      background-color: lightgray;
+      border-color: black;
+      transition:all 0.1s;
+      white-space: nowrap;
+      }
+
+</style>
+<br>
+<div style="float:right;">
+<%=stu_name%>님 환영합니다~
+<form action="/update" method "get" style="display:inline"><button type='submit' class='.btn'>개인정보</button></form>
+<form action="/index/logout" method ="post" style="display:inline"><button type='submit' class='.btn'>로그아웃</button></form>
+<br>
+</div>
+<center>
+
+    <table style="border-collapse : collapse; background-color:rgb(115, 35, 46); width: 100%">
+        <tr>
+            <td><a href="/index" style="text-decoration:none; text-align:center"><img src="/Kwangwoon_mark_1.jpg" width=121 height=40></a></td>
+            <td><a href="/grade/total_grade" style="text-decoration:none; color: white">학습결과</a></td>
+            <td><a href="/timetable" style="text-decoration:none; color: white">시간표</a></td>
+            <td><a href="/index/enroll" style="text-decoration:none; color: white">수강신청</a></td>
+            <td><a href="/board/list/1" style="text-decoration:none; color: white">공지사항</a></td>
+            <td><a href="/friend" style="text-decoration:none; color: white">친구 목록</a></td>
+        </tr>
+    </table>
+<br><br>
+
+<center>
+    <h1> Friend List </h1>
+    <form action="/friend" method="POST">
+        <input id="stu_id" name="stu_id" type="text" pleaceholder="ID">
+        <button type="submit ">친구추가</button>
+    </form>
+    <br>
+    <table style="width: 50%; margin: 10px; padding:5px 5px 5px 5px;">
+        <tr>
+            <td align = "center" style = "background-color: lightgray;" height=30>Student ID</td>
+            <td align = "center" style = "background-color: lightgray;">Name</td>
+            <td align = "center" style = "background-color: lightgray;">Major</td>
+        </tr>
+<%
+for(var i = 0; i < rows.length; i++) {
+    var oneItem = rows[i];
+%>
+        <tr>
+            <td align = "center" height=30><%=oneItem.stu_id%></td>
+            <td align = "center"><%=oneItem.stu_name%></td>
+            <td align = "center"><%=oneItem.major%></td>
+            <td align = "center" style="background-color: grey; border-radius: 6px;"><a href="/friend/<%=oneItem.stu_id%>" style="text-decoration:none; color: rgb(255, 255, 255)">조회</a></td>
+            
+        </tr>
+<%
+    }
+%>
+    </table>
+</center>
+</body>

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        <%= title %>
+    </title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        let grades = <%- JSON.stringify(grades) %>;
+        let majors = <%- JSON.stringify(majors) %>;
+        let minors = <%- JSON.stringify(minors) %>;
+        let semesters_cnt = <%- JSON.stringify(semesters_cnt) %>;
+
+        console.log(grades);
+        console.log(majors);
+        console.log(minors);
+        console.log(semesters_cnt);
+
+        let lineData = []
+        let a = 0
+        let b = 0
+        for (let i = 0; i < semesters_cnt.length - 1; i++) {
+            let splitedStr = semesters_cnt[i].open_date.split('-')
+            let semester = `${splitedStr[0]}-${splitedStr[1] === '02' ? '1' : '2'}`
+
+            if ((grades[i].open_date != majors[a].open_date) && (grades[i].open_date != minors[b].open_date)) {
+                lineData.push([semester, (grades[i].avg_grade), null, null]);
+            } else if ((grades[i].open_date == majors[a].open_date) && (grades[i].open_date != minors[b].open_date)) {
+                lineData.push([semester, (grades[i].avg_grade), (majors[a].avg_grade), null]);
+                a++;
+            } else if ((grades[i].open_date != majors[a].open_date) && (grades[i].open_date == minors[b].open_date)) {
+                lineData.push([semester, (grades[i].avg_grade), null, (minors[b].avg_grade)]);
+                b++;
+            } else if ((grades[i].open_date == majors[a].open_date) && (grades[i].open_date == minors[b].open_date)) {
+                lineData.push([semester, (grades[i].avg_grade), (majors[a].avg_grade), (minors[b].avg_grade)]);
+                a++;
+                b++;
+            }
+        }
+        let splitedStr = semesters_cnt[semesters_cnt.length - 1].open_date.split('-')
+        let semester = `${splitedStr[0]}-${splitedStr[1] === '02' ? '1' : '2'}`
+        lineData.push([semester, null, null, null]);
+
+        console.log(lineData);
+
+        google.charts.load('current', {
+            'packages': ['corechart']
+        });
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', '학기');
+            data.addColumn('number', '종합');
+            data.addColumn('number', '전공');
+            data.addColumn('number', '교양');
+
+            data.addRows(lineData);
+
+
+            var options = {
+                pointSize: 5,
+                vAxis: {
+                    viewWindowMode: 'explicit',
+                    viewWindow: {
+                        max: 4.5
+                    }
+                }
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+        }
+    </script>
+</head>
+
+<body>
+    <center>
+        <style>
+            .btn {
+                text-decoration: none;
+                font-size: 1;
+                color: black;
+                margin: 5px;
+                padding: 5px 5px 5px 5px;
+                display: inline-block;
+                border-radius: 1px;
+                background-color: lightgray;
+                border-color: black;
+                transition: all 0.1s;
+            }
+            
+            .Tstyle {
+                width: 100%;
+                border-collapse: collapse;
+                border-spacing: 0;
+                table-layout: fixed;
+                border-top: 2px #96878e solid;
+                border-bottom: 1px solid #d7d7d7;
+                border-left: 0px solid #d7d7d7;
+                border-right: 0px solid #d7d7d7;
+            }
+            
+            table {
+                width: 100%;
+                border-top: 1px solid #444444;
+                border-collapse: collapse;
+            }
+            
+            th.p,
+            td.p {
+                border-bottom: 1px solid #444444;
+                padding: 10px;
+            }
+        </style>
+        <div style="float:right">
+            <%=row.stu_name%>님 환영합니다~
+                <form action="/update" method "get" style="display:inline"><button type='submit' class='.btn'>개인정보</button></form>
+                <form action="/index/logout" method="post" style="display:inline"><button type='submit' class='.btn'>로그인</button></form>
+        </div>
+        <br>
+        <br>
+        <table style="border-collapse : collapse; background-color:rgb(115, 35, 46); width: 100%">
+            <tr>
+                <td>
+                    <a href="/index" style="text-decoration:none; text-align:center"><img src="/Kwangwoon_mark_1.jpg" width=121 height=40></a>
+                </td>
+                <td><a href="/grade/total_grade" style="text-decoration:none; color: white">학습결과</a></td>
+                <td><a href="/timetable" style="text-decoration:none; color: white">시간표</a></td>
+                <td><a href="/index/enroll" style="text-decoration:none; color: white">수강신청</a></td>
+                <td><a href="/board/list/1" style="text-decoration:none; color: white">공지사항</a></td>
+                <td><a href="/friend" style="text-decoration:none; color: white">친구 목록</a></td>
+            </tr>
+        </table>
+        <h1>
+            <%= title%>
+        </h1>
+        <br>
+        <br>
+        <table class="Tstyle" ;>
+            <tr bgcolor="#e9e9e9">
+                <td align="center" class="p"><strong>학번</strong></td>
+                <td align="center" class="p"><strong>이름</strong></td>
+                <td align="center" class="p"><strong>남은전공학점</strong></td>
+                <td align="center" class="p"><strong>남은교양학점</strong></td>
+            </tr>
+            <tr>
+                <td align="center" class="p">
+                    <%=grades[0].stu_id%>
+                </td>
+                <td align="center" class="p">
+                    <%=grades[0].stu_name%>
+                </td>
+                <td align="center" class="p">
+                    <%=leftmajor%>/60
+                </td>
+                <td align="center" class="p">
+                    <%=leftminor%>/50
+                </td>
+            </tr>
+        </table>
+        <table class="Tstyle" ;>
+            <tr bgcolor="#e9e9e9">
+                <td align="center" class="p"><strong>학기</strong></td>
+                <td align="center" class="p"><strong>취득학점</strong></td>
+                <td align="center" class="p"><strong>성적</strong></td>
+            </tr>
+            <%
+        for(var i=0; i<grades.length; i++)
+        {
+            var oneItem2 = grades[i];
+        %>
+                <tr>
+                    <td align="center" class="p">
+                        <%
+                if(oneItem2.open_date.getMonth()+1 == 3)
+                {
+                %>
+                            <%=oneItem2.open_date.getFullYear()%>-1
+                                <%
+                }
+                %>
+                                    <%
+                if(oneItem2.open_date.getMonth()+1 == 9)
+                {
+                %>
+                                        <%=oneItem2.open_date.getFullYear()%>-2
+                                            <%
+                }
+                %>
+                    </td>
+                    <td align="center" class="p">
+                        <%=oneItem2.sum_credit%>
+                    </td>
+                    <td align="center" class="p">
+                        <%=oneItem2.avg_grade%>
+                    </td>
+                </tr>
+                <%
+        }
+        %>
+        </table>
+        <br>
+        <div id="chart_div" style="width: 1500px; height: 300px"></div>
+        <%
+    for(var i=0; i<semesters_cnt.length; i++)
+    {
+        var oneItem4 = semesters_cnt[i];
+    %>
+            <table class="Tstyle" ;>
+                <tr>
+                    <td colspan="6" align="center" class="p">
+                        <%
+            if(oneItem4.open_date.getMonth()+1 == 3)
+            {
+            %>
+                            <h3>
+                                <%=oneItem4.open_date.getFullYear()%>-1</h3>
+                            <%
+            }
+            %>
+                                <%
+            if(oneItem4.open_date.getMonth()+1 == 9)
+            {
+            %>
+                                    <h3>
+                                        <%=oneItem4.open_date.getFullYear()%>-2</h3>
+                                    <%
+            }
+            %>
+                    </td>
+                </tr>
+                <tr bgcolor="#e9e9e9">
+                    <td align="center" class="p"><strong>학정번호</strong></td>
+                    <td align="center" class="p"><strong>과목</strong></td>
+                    <td align="center" class="p"><strong>학점</strong></td>
+                    <td align="center" class="p"><strong>성적</strong></td>
+                    <td align="center" class="p"><strong>강의평가</strong></td>
+                    <td align="center" class="p"><strong>강의평</strong></td>
+                </tr>
+                <%
+        for(var j=0; j<semesters.length; j++)
+        {
+            var oneItem3 = semesters[j];
+        %>
+                    <%
+            if(oneItem4.open_date.getTime() == oneItem3.open_date.getTime())
+            {
+            %>
+                        <tr>
+                            <td align="center" class="p">
+                                <%=oneItem3.lec_num%>
+                            </td>
+                            <td align="center" class="p">
+                                <%=oneItem3.lec_name%>
+                            </td>
+                            <td align="center" class="p">
+                                <%=oneItem3.credit%>
+                            </td>
+                            <td align="center" class="p">
+                                <%=oneItem3.grade%>
+                            </td>
+                            <% if(oneItem3.lec_eval != null || oneItem3.grade == null) { %>
+                                <td align="center" class="p">
+                                    <%=oneItem3.lec_eval%>
+                                </td>
+                                <% } else { %>
+                                    <td align="center" class="p">
+                                        <select id="lec_eval" name="lec_eval" onchange="if(this.value) location.href=(this.value); ">
+                            <option value="none "> </option>
+                            <option value="/grade/give_eval/<%=oneItem3.lec_num%>0">10</option>
+                            <option value="/grade/give_eval/<%=oneItem3.lec_num%>9">9</option>
+                            <option value="/grade/give_eval/<%=oneItem3.lec_num%>8">8</option>
+                            <option value="/grade/give_eval/<%=oneItem3.lec_num%>7">7</option>
+                            <option value="/grade/give_eval/<%=oneItem3.lec_num%>6">6</option>
+                            <option value="/grade/give_eval/<%=oneItem3.lec_num%>5">5</option>
+                            <option value="/grade/give_eval/<%=oneItem3.lec_num%>4">4</option>
+                            <option value="/grade/give_eval/<%=oneItem3.lec_num%>3">3</option>
+                            <option value="/grade/give_eval/<%=oneItem3.lec_num%>2">2</option>
+                            <option value="/grade/give_eval/<%=oneItem3.lec_num%>1">1</option>
+                    <% } %>
+                        </select>
+                                    </td>
+                                    <% if(oneItem3.lec_eval_comment != null || oneItem3.grade == null) { %>
+                                        <td align="center" class="p">
+                                            <%=oneItem3.lec_eval_comment%>
+                                        </td>
+                                        <% } else { %>
+                                            <td align="center" class="p">
+                                                <form action="/grade/comment/<%=oneItem3.lec_num%>" method="POST">
+                                                    <input id="comment" name="comment" type="text" pleaceholder="ID" maxlength="40" value="40자 이내 입력" onfocus="this.value=''">
+                                                </form>
+                                            </td>
+                                            <% } %>
+                        </tr>
+                        <%
+            }
+            %>
+                            <%
+        }
+        %>
+                                <br>
+            </table>
+            <%
+    }
+    %>
+                <br>
+                <h1>Failed Table</h1>
+                <table class="Tstyle" ;>
+                    <tr bgcolor="#e9e9e9">
+                        <td align="center" class="p"><strong>이수학기</strong></td>
+                        <td align="center" class="p"><strong>과목</strong></td>
+                        <td align="center" class="p"><strong>이수</strong></td>
+                        <td align="center" class="p"><strong>성적</strong></td>
+                    </tr>
+                    <%
+    for(var i=0; i<faileds.length; i++)
+    {
+        var oneItem5 = faileds[i];
+    %>
+                        <tr>
+                            <td align="center" class="p">
+                                <%
+            if(oneItem5.open_date.getMonth()+1 == 3)
+            {
+            %>
+                                    <%=oneItem5.open_date.getFullYear()%>-1
+                                        <%
+            }
+            %>
+                                            <%
+            if(oneItem5.open_date.getMonth()+1 == 9)
+            {
+            %>
+                                                <%=oneItem5.open_date.getFullYear()%>-2
+                                                    <%
+            }
+            %>
+                            </td>
+                            <td align="left" class="p">
+                                <%=oneItem5.lec_name%>
+                            </td>
+                            <td align="center" class="p">
+                                <%
+                if(oneItem5.major_minor==1)
+                {
+                %>
+                                    전공
+                                    <%
+                }
+                %>
+                                        <%
+                if(oneItem5.major_minor==0)
+                {
+                %>
+                                            교양
+                                            <%
+                }
+                %>
+                            </td>
+                            <td align="center" class="p">F</td>
+                        </tr>
+                        <%
+    }
+    %>
+                </table>
+    </center>
+</body>
+
+</html>

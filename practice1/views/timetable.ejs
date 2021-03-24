@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        <%= title %>
+    </title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+    <style>
+        .btn {
+            text-decoration: none;
+            font-size: 1;
+            color: black;
+            margin: 5px;
+            padding: 5px 5px 5px 5px;
+            display: inline;
+            border-radius: 1px;
+            background-color: lightgray;
+            border-color: black;
+            transition: all 0.1s;
+            white-space: nowrap;
+        }
+    </style>
+    <br>
+    <div style="float:right;">
+        <%=row.stu_name%>님 환영합니다~
+            <form action="/update" method "get" style="display:inline"><button type='submit' class='.btn'>개인정보</button></form>
+            <form action="/index/logout" method="post" style="display:inline"><button type='submit' class='.btn'>로그아웃</button></form>
+            <br>
+    </div>
+    <center>
+        <table style="border-collapse : collapse; background-color:rgb(115, 35, 46); width: 100%">
+            <tr>
+                <td>
+                    <a href="/index" style="text-decoration:none; text-align:center"><img src="/Kwangwoon_mark_1.jpg" width=121 height=40></a>
+                </td>
+                <td><a href="/grade/total_grade" style="text-decoration:none; color: white">학습결과</a></td>
+                <td><a href="/timetable" style="text-decoration:none; color: white">시간표</a></td>
+                <td><a href="/index/enroll" style="text-decoration:none; color: white">수강신청</a></td>
+                <td><a href="/board/list/1" style="text-decoration:none; color: white">공지사항</a></td>
+                <td><a href="/friend" style="text-decoration:none; color: white">친구 목록</a></td>
+            </tr>
+        </table>
+        <br>
+        <form>
+            <select onchange="if(this.value) location.href=(this.value);">
+        <option value="none">나의 시간표</option>
+<%
+    for(var i=0; i<loc.length; i++)
+    {
+        var oneItem = loc[i];
+%>
+
+        <option value="/timetable/location/<%=oneItem.location%>"><%=oneItem.location%>시간표</option>
+        <%
+        }
+    %>
+    </select>
+        </form>
+        <br>
+        <h1> My Timetable </h1>
+        <table style="border-collapse : collapse; width: 60%; height: 50%" border="1">
+            <td width="20px" align="center"></td>
+            <td width="150px" align="center" style="background-color: lightgray; border-color:rgb(210, 210, 210)">MON</td>
+            <td width="150px" align="center" style="background-color: lightgray; border-color:rgb(210, 210, 210)">TUE</td>
+            <td width="150px" align="center" style="background-color: lightgray; border-color:rgb(210, 210, 210)">WEN</td>
+            <td width="150px" align="center" style="background-color: lightgray; border-color:rgb(210, 210, 210)">THU</td>
+            <td width="150px" align="center" style="background-color: lightgray; border-color:rgb(210, 210, 210)">FRI</td>
+            <%
+    var index = 0;
+    var colorpick = 0;
+    var a = [];
+    a[0] = 'lightgreen';
+    a[1] = 'lightblue';
+    a[2] = 'lightyellow';
+    a[3] = 'palegoldenrod';
+    a[4] = 'lightcyan';
+    a[5] = 'pink';
+    a[6] = 'burlywood';
+    a[7] = 'aquamarine';
+
+    for(var i = 0; i < 6; i++) {
+        index = i + 1;
+%>
+                <tr>
+                    <td align="center">
+                        <%=index%>
+                    </td>
+                    <%
+        for (var j = 0; j < 5; j++) {
+            if (lec_num[i][j] != " ") {
+%>
+                        <td width="150px" height="80px" bgcolor='<%=a[(color[i][j])]%>' style="border-color:rgb(210, 210, 210)">
+                            <h5>
+                                <a href="/board/list/<%=lec_num[i][j]%>" style="text-decoration:none; color: black;">
+                                    <%=lec_name[i][j]%>
+                                </a>
+                            </h5>
+                            <h6>
+                                <a href="" onMouseOver="this.innerHTML='<%=phone[i][j]%>'" onMouseOut="this.innerHTML='<%=professor[i][j]%>'" style="text-decoration:none;  color: black">
+                                    <%=professor[i][j]%>
+                                </a>
+                                <%=location[i][j]%>
+                            </h6>
+                        </td>
+                        <%
+            }
+            else {
+%>
+                            <td width="150px" height="80px" bgcolor='white' style="border-color:rgb(210, 210, 210)">
+                                <h5>
+                                    <a href="/board/list/<%=lec_num[i][j]%>" style="text-decoration:none; color: black;">
+                                        <%=lec_name[i][j]%>
+                                    </a>
+                                </h5>
+                                <h6>
+                                    <a href="" onMouseOver="this.innerHTML='<%=phone[i][j]%>'" onMouseOut="this.innerHTML='<%=professor[i][j]%>'" style="text-decoration:none;  color: black">
+                                        <%=professor[i][j]%>
+                                    </a>
+                                    <%=location[i][j]%>
+                                </h6>
+                            </td>
+                            <%
+            }
+        }
+%>
+                </tr>
+                <%
+    }
+%>
+        </table>
+    </center>
+</body>
+
+</html>
